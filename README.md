@@ -5,11 +5,12 @@ Versión 1
 
 Template considerando buenas prácticas en el desarrollo de una API, las tecnología usadas son:
 
-* Express 4
+* [Express 4](http://expressjs.com/es/)
 * Node 8x
 * Cors
 * Logger
-* Pg
+* Pg [Repositorio](https://github.com/brianc/node-postgres) [Mas documentación](https://node-postgres.com/features/queries)
+* pg-monitor [Repositorio] (https://github.com/vitaly-t/pg-monitor)
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
 
