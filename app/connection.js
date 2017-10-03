@@ -1,27 +1,46 @@
 'use strict'
-//import cn from '../config'
-
-cn = require('../config');
-import { Pool, Client } from 'pg'
+import cn from '../config'
+const { Client } = require('pg')
 
 
-const { Pool, Client } = require('pg')
-//const connectionString = `postgresql://${cn.postgresUser}:${cn.postgresPwd}@${cn.postgresHost}:${cn.postgresPort}/${cn.postgresDb}`
-
-// const { Client } = require('pg')
 const client = new Client({
-    user:     cn.postgresUser,
-    host:     cn.postgresHost,
+    user: cn.postgresUser,
+    host: cn.postgresHost,
     database: cn.postgresDb,
     password: cn.postgresPwd,
     port: cn.postgresPort,
   })
   client.connect()
+
+
+//console.log('CONF: ', cn)
+
+
+//   const db = pgp(conf);
+
+export default client 
+
+// cn = require('../config');
+// import { Pool, Client } from 'pg'
+
+
+// const { Pool, Client } = require('pg')
+// //const connectionString = `postgresql://${cn.postgresUser}:${cn.postgresPwd}@${cn.postgresHost}:${cn.postgresPort}/${cn.postgresDb}`
+
+// // const { Client } = require('pg')
+// const client = new Client({
+//     user:     cn.postgresUser,
+//     host:     cn.postgresHost,
+//     database: cn.postgresDb,
+//     password: cn.postgresPwd,
+//     port: cn.postgresPort,
+//   })
+//   client.connect()
   
-  client.query('select * from empr_personas', (err, res) => {
-    console.log(err, res)
-    client.end()
-  })
+//   client.query('select * from empr_personas', (err, res) => {
+//     console.log(err, res)
+//     client.end()
+//   })
 
 
 

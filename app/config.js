@@ -39,7 +39,7 @@ switch (env) {
     SECRET = 'claveultrasecreta'
     SECRET_ENCRYPT = 'provWeb'
 
-    API_PORT = '3000'
+    API_PORT = '3001'
     API_HOST = 'http://localhost'
 
     POSTGRES_HOST = 'localhost'
@@ -72,22 +72,3 @@ module.exports = {
   mailPsw:MAIL_PSW,
   mailFrom:MAIL_FROM
 }
-
-
-// let config = {
-//         secret: SECRET,
-//         secretEncrypt:SECRET_ENCRYPT,
-//         apiPort:API_PORT,
-//         apiHost:API_HOST,
-//         mongoHost:MONGO_HOST,
-//         mongoDb:MONGO_DB,
-//         mongoPort:MONGO_PORT,
-//         mongoUser:MONGO_USER,
-//         mongoPwd:MONGO_PASSWORD,
-//         mail:MAIL,
-//         mailName:MAIL_NAME,
-//         mailPsw:MAIL_PSW,
-//         mailFrom:MAIL_FROM
-// }
-
-// exports["cn"] = config;
