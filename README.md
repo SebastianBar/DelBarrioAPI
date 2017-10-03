@@ -3,7 +3,7 @@
 
 Versión 1
 
-Template considerando beunas prácticas en el desarrollo de una API, las tecnología usadas son:
+Template considerando buenas prácticas en el desarrollo de una API, las tecnología usadas son:
 
 * Express 4
 * Node 8x
@@ -90,6 +90,15 @@ ___________________________________________________________________________
 * PUT:      Permite editar un recurso
 * DELETE:   Elimina un recurso  
 * PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
+
+
+___________________________________________________________________________
+## AUTO-DOCUMENTADOR  ##
+* PENDIENTE
+
+___________________________________________________________________________
+## TEST  ##
+* PENDIENTE
 
 ___________________________________________________________________________
 ## INFORMACION GENERAL  ##
