@@ -1,9 +1,10 @@
 # API PROYECTO DELBARRIO.PROVIDENCIA.CL
 
 
-Versión 1:
+Versión 1
 
-Template considerando las mejores prácticas en el desarrollo de una API. las tecnología usadas son:
+Template considerando beunas prácticas en el desarrollo de una API, las tecnología usadas son:
+
 * Express 4
 * Node 8x
 * Cors
