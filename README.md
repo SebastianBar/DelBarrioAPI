@@ -14,6 +14,7 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
 
+* Test [mochajs](https://mochajs.org/#timeouts)
 
 ### Caracteristicas consideradas:
 * Estructura de carpeta independiente por Ruta
@@ -99,7 +100,13 @@ ___________________________________________________________________________
 
 ___________________________________________________________________________
 ## TEST  ##
-* PENDIENTE
+Se considera test a las rutas expuestas, para esto se utilizan los módulos 'mocha', 'chai' y 'axios'. Los test deben ser generados en la carpeta test como se muestra a continuación
+```
+│   └── APIv1
+│       ├── test
+│       	├── persona.js
+```
+* Los test se ejecutan con el comando npm test / yarn test
 
 ___________________________________________________________________________
 ## INFORMACION GENERAL  ##

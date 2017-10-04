@@ -43,7 +43,7 @@ const insertaDatos = (req,res)=> {
     const _id = (typeof req.params.id === "undefined") ? 0 : parseInt(req.params.id)
     console.log('_id: ', _id)
 
-    return res.json( {  message: 'POST: Inserta una Persona'  })
+    return res.json( [{  message: 'POST: Inserta una Persona'  }])
     
 
   } catch (e) { throw new Error(e) }  
