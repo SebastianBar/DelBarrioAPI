@@ -45,29 +45,13 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cors())
 
-
 const router = express.Router();  
 
 // INCLUDE ROUTES - PRIVATE AND PUBLIC
 // =============================================================================
-const publicRoute  = publicRoutes.map (p => 	app.use('/api', p) );
-const privateRoute = privateRoutes.map(p => 	app.use('/api/private', p) );
+const publicRoute  = publicRoutes.map (p => app.use('/api', p) );
+const privateRoute = privateRoutes.map(p => app.use('/api/private', p) );
 
-// START THE SERVER
-// =============================================================================
-// mongoose.createConnection('mongodb://127.0.0.1:27017/GCA_Directorio',(err, res)=> {
-    // mongoose.createConnection(`mongodb://${cn.mongoHost}:${cn.mongoPort}/${cn.mongoDb}`,(err, res)=> {
-    // if(err){
-    //     return console.log(`Error al conectar con la Base de Datos ${err}`)
-    // }
-    
-    app.listen(cn.apiPort, () =>{ console.log(`API REST corriendo en el puerto ${cn.apiPort}`); })
-    // app.listen(port, () =>{ console.log(`API REST corriendo en el puerto ${port}`); })
-
-//})
-
-
-console.log('Running in port ' + cn.apiPort);
-
+app.listen(cn.apiPort, () => { console.log(`API REST corriendo en ${cn.apiHost}:${cn.apiPort}`); })
 
 export default app
