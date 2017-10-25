@@ -1,19 +1,16 @@
 'use strict'
+import knexFile from './knexfile'
+
 let   SECRET
 let   SECRET_ENCRYPT
 let   API_PORT     
 let   API_HOST
-let   POSTGRES_HOST
-let   POSTGRES_DB
-let   POSTGRES_PORT
-let   POSTGRES_USER
-let   POSTGRES_PASSWORD
+let   KNEX_CONFIG
 let   MAIL
 let   MAIL_NAME
 let   MAIL_PSW
 let   MAIL_FROM
 const env = process.env.NODE_ENV || 'development'
-
 
 switch (env) {
   case 'production':
@@ -23,11 +20,7 @@ switch (env) {
     API_PORT = process.env.API_PORT
     API_HOST = process.env.API_HOST
 
-    POSTGRES_HOST = process.env.POSTGRES_HOST
-    POSTGRES_DB = process.env.POSTGRES_DB
-    POSTGRES_PORT = process.env.POSTGRES_PORT
-    POSTGRES_USER = process.env.POSTGRES_USER
-    POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
+    KNEX_CONFIG = knexFile.production
 
     MAIL = process.env.MAIL
     MAIL_NAME = process.env.MAIL_NAME
@@ -42,11 +35,7 @@ switch (env) {
     API_PORT = '3000'
     API_HOST = 'http://localhost'
 
-    POSTGRES_HOST = 'localhost'
-    POSTGRES_DB = 'delbarrio'
-    POSTGRES_PORT = '5432'
-    POSTGRES_USER = 'root'
-    POSTGRES_PASSWORD = '1234'
+    KNEX_CONFIG = knexFile.development
 
     MAIL = ''
     MAIL_NAME = ''
@@ -62,32 +51,9 @@ module.exports = {
   secretEncrypt:SECRET_ENCRYPT,
   apiPort:API_PORT,
   apiHost:API_HOST,
-  postgresHost:POSTGRES_HOST,
-  postgresDb:POSTGRES_DB,
-  postgresPort:POSTGRES_PORT,
-  postgresUser:POSTGRES_USER,
-  postgresPwd:POSTGRES_PASSWORD,
+  knexConfig:KNEX_CONFIG,
   mail:MAIL,
   mailName:MAIL_NAME,
   mailPsw:MAIL_PSW,
   mailFrom:MAIL_FROM
 }
-
-
-// let config = {
-//         secret: SECRET,
-//         secretEncrypt:SECRET_ENCRYPT,
-//         apiPort:API_PORT,
-//         apiHost:API_HOST,
-//         mongoHost:MONGO_HOST,
-//         mongoDb:MONGO_DB,
-//         mongoPort:MONGO_PORT,
-//         mongoUser:MONGO_USER,
-//         mongoPwd:MONGO_PASSWORD,
-//         mail:MAIL,
-//         mailName:MAIL_NAME,
-//         mailPsw:MAIL_PSW,
-//         mailFrom:MAIL_FROM
-// }
-
-// exports["cn"] = config;

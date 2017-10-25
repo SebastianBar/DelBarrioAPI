@@ -1,6 +1,5 @@
 # API PROYECTO DELBARRIO.PROVIDENCIA.CL
 
-
 Versión 1
 
 Template considerando buenas prácticas en el desarrollo de una API, las tecnología usadas son:
@@ -13,6 +12,8 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 * pg-monitor [Repositorio] (https://github.com/vitaly-t/pg-monitor)
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
+* [Knex](http://knexjs.org) (SQL query builder)
+* [Bookshelf.js](http://bookshelfjs.org) (Mapeo objeto-relacional)
 
 * Test [mochajs](https://mochajs.org/#timeouts)
 
