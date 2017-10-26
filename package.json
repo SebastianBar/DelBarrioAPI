@@ -8,7 +8,8 @@
     "test": "mocha --compilers js:babel-register",
     "test:watch": "mocha --watch --compilers js:babel-register",
     "lint:js": "eslint app/****.js",
-    "migrate": "knex migrate:latest",
+    "migrate:run": "knex migrate:latest",
+    "migrate:clean": "knex migrate:rollback",
     "seed": "knex seed:run"
   },
   "repository": {},

@@ -1,10 +1,8 @@
-//Rutas Privadas - se requiere Token
-import routesProduct from './product/routes'
+// Rutas Privadas - se requiere Token
+// import routesProduct from './product/routes'
 
 const routes = [
-    routesProduct
+    //routesProduct
 ]
 
 export default routes
-
-

@@ -1,9 +1,9 @@
 import routesInicio from './_inicio/routes'
-import routesPersona from './persona/routes'
+import routesRol from './rol/routes'
 
 const routes = [
     routesInicio,
-    routesPersona
+    routesRol
 ]
 
 export default routes
