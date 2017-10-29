@@ -57,9 +57,9 @@ var putRol = function (req, res) {
 	.fetch({require: true})
 	.then(function (rol) {
 		rol.save({
-			CODI_ROL:	(typeof req.body.CODI_ROL === 'undefined') ? rol.get('CODI_ROL') : req.body.CODI_ROL,
-			NOMB_ROL:	(typeof req.body.NOMB_ROL === 'undefined') ? rol.get('NOMB_ROL') : req.body.NOMB_ROL,
-			DESC_ROL:	(typeof req.body.DESC_ROL === 'undefined') ? rol.get('DESC_ROL') : req.body.DESC_ROL,
+			CODI_ROL:	req.body.CODI_ROL || rol.get('CODI_ROL'),
+			NOMB_ROL:	req.body.NOMB_ROL || rol.get('NOMB_ROL'),
+			DESC_ROL:	req.body.DESC_ROL || rol.get('DESC_ROL'),
 		})
 		.then(function () {
 			res.json({error: false, data: {message: 'Rol successfully updated'}})

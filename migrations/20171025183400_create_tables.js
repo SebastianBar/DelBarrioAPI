@@ -197,7 +197,6 @@ exports.up = function(knex, Promise) {
       table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
       table.string('DESC_COMENTARIO').notNull()
-      table.integer('CODI_COMENTARIO').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
@@ -210,7 +209,6 @@ exports.up = function(knex, Promise) {
       table.bigIncrements('IDEN_RESPUESTA').unsigned().primary()
       table.bigInteger('IDEN_COMENTARIO').unsigned().notNull()
       table.string('DESC_RESPUESTA').notNull()
-      table.integer('CODI_RESPUESTA').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
       table.foreign('IDEN_COMENTARIO').references('REQ_COMENTARIOS.IDEN_COMENTARIO').onDelete('CASCADE').onUpdate('CASCADE')
