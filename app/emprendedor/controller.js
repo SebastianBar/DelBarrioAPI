@@ -42,7 +42,6 @@ var getEmprendedor = function (req, res) {
 var postEmprendedor = function (req, res) {
 	new model.Emprendedor({
 		IDEN_USUARIO:             req.body.IDEN_USUARIO,
-		IDEN_RUBRO:               req.body.IDEN_RUBRO,
     DESC_EMPRENDEDOR:         req.body.DESC_EMPRENDEDOR,
     DESC_CLAVE_MUNICIPALIDAD: req.body.DESC_CLAVE_MUNICIPALIDAD,
     DESC_NOMBRE_FANTASIA:     req.body.DESC_NOMBRE_FANTASIA,
@@ -62,7 +61,6 @@ var putEmprendedor = function (req, res) {
 	.then(function (emprendedor) {
 		emprendedor.save({
       IDEN_USUARIO:             req.body.IDEN_USUARIO || emprendedor.get('IDEN_USUARIO'),
-      IDEN_RUBRO:               req.body.IDEN_RUBRO || emprendedor.get('IDEN_RUBRO'),
       DESC_EMPRENDEDOR:         req.body.DESC_EMPRENDEDOR || emprendedor.get('DESC_EMPRENDEDOR'),
       DESC_CLAVE_MUNICIPALIDAD: req.body.DESC_CLAVE_MUNICIPALIDAD || emprendedor.get('DESC_CLAVE_MUNICIPALIDAD'),
       DESC_NOMBRE_FANTASIA:     req.body.DESC_NOMBRE_FANTASIA || emprendedor.get('DESC_NOMBRE_FANTASIA'),

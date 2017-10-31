@@ -2,7 +2,7 @@
 var bookshelf = require('../connection').bookshelf
 
 var Telefono = bookshelf.Model.extend({
-	tableName: 'PER_FONOS',
+	tableName: 'PER_TELEFONOS',
 	idAttribute: 'IDEN_FONO'
 })
 
