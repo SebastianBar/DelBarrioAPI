@@ -1,5 +1,5 @@
 'use strict'
-var bookshelf = require('../connection').bookshelf
+var bookshelf = require('../../connection').bookshelf
 
 var Permiso = bookshelf.Model.extend({
 	tableName: 'SIS_PERMISOS',

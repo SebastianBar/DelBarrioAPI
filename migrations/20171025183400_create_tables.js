@@ -2,7 +2,7 @@ exports.up = function(knex, Promise) {
   return createSisRoles()
     .then(createSisPermisos)
     .then(createSisPermisosRoles)
-    .then(createPerUsuarios)
+    .then(createUsrUsuarios)
     .then(createPerTelefonos)
     .then(createPerRubros)
     .then(createPerEmprendedores)
@@ -51,8 +51,8 @@ exports.up = function(knex, Promise) {
     })
   }
 
-  function createPerUsuarios () {
-    return knex.schema.createTableIfNotExists('PER_USUARIOS', function(table) {
+  function createUsrUsuarios () {
+    return knex.schema.createTableIfNotExists('USR_USUARIOS', function(table) {
       table.bigIncrements('IDEN_USUARIO').unsigned().primary()
       table.integer('IDEN_ROL').unsigned()
       table.integer('RUT_USUARIO').notNull()
@@ -72,7 +72,7 @@ exports.up = function(knex, Promise) {
       table.string('NUMR_FONO').notNull()
       table.integer('CODI_FONO').notNull()
     
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -93,7 +93,7 @@ exports.up = function(knex, Promise) {
       table.string('DESC_NOMBRE_FANTASIA').notNull()
       table.string('DESC_NOMBRE_EMPRESA').notNull()
         
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -115,9 +115,9 @@ exports.up = function(knex, Promise) {
       table.string('NOMBRES').notNull()
       table.string('APELLIDO_PATERNO').notNull()
       table.string('APELLIDO_MATERNO').notNull()
-      table.string('FECH_FECHA_NACIMIENTO').notNull()
+      table.date('FECH_FECHA_NACIMIENTO').notNull()
 
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -210,7 +210,7 @@ exports.up = function(knex, Promise) {
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -235,7 +235,7 @@ exports.up = function(knex, Promise) {
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -261,7 +261,7 @@ exports.up = function(knex, Promise) {
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_CALIFICACION').references('REQ_CALIFICACIONES.IDEN_CALIFICACION').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_COMENTARIO').references('REQ_COMENTARIOS.IDEN_COMENTARIO').onDelete('CASCADE').onUpdate('CASCADE')
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_MOTIVO_DENUNCIA').references('REQ_MOTIVOS_DENUNCIA.IDEN_MOTIVO_DENUNCIA').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
@@ -276,7 +276,7 @@ exports.up = function(knex, Promise) {
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
       table.foreign('IDEN_DENUNCIA').references('REQ_DENUNCIAS.IDEN_DENUNCIA').onDelete('CASCADE').onUpdate('CASCADE')
-      table.foreign('IDEN_USUARIO').references('PER_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -310,7 +310,7 @@ exports.down = function(knex, Promise) {
     .dropTableIfExists('PER_EMPRENDEDORES')
     .dropTableIfExists('PER_RUBROS')
     .dropTableIfExists('PER_TELEFONOS')
-    .dropTableIfExists('PER_USUARIOS')
+    .dropTableIfExists('USR_USUARIOS')
     .dropTableIfExists('SIS_PERMISOS_ROLES')
     .dropTableIfExists('SIS_PERMISOS')
     .dropTableIfExists('SIS_ROLES')

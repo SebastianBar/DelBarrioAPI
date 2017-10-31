@@ -1,5 +1,5 @@
 'use strict'
-var bookshelf = require('../connection').bookshelf
+var bookshelf = require('../../connection').bookshelf
 
 var Emprendedor = bookshelf.Model.extend({
 	tableName: 'PER_EMPRENDEDORES',

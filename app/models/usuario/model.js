@@ -1,8 +1,8 @@
 'use strict'
-var bookshelf = require('../connection').bookshelf
+var bookshelf = require('../../connection').bookshelf
 
 var Usuario = bookshelf.Model.extend({
-	tableName: 'PER_USUARIOS',
+	tableName: 'USR_USUARIOS',
 	idAttribute: 'IDEN_USUARIO'
 })
 

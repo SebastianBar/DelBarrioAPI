@@ -1,5 +1,5 @@
 'use strict'
-var bookshelf = require('../connection').bookshelf
+var bookshelf = require('../../connection').bookshelf
 
 var Rol = bookshelf.Model.extend({
 	tableName: 'SIS_ROLES',
