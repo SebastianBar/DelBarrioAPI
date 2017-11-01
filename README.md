@@ -9,11 +9,15 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 * Cors
 * Logger
 * Pg [Repositorio](https://github.com/brianc/node-postgres) [Mas documentación](https://node-postgres.com/features/queries)
-* pg-monitor [Repositorio] (https://github.com/vitaly-t/pg-monitor)
+* pg-monitor [Repositorio](https://github.com/vitaly-t/pg-monitor)
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
 * [Knex](http://knexjs.org) (SQL query builder)
 * [Bookshelf.js](http://bookshelfjs.org) (Mapeo objeto-relacional)
+* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
+* [Passport](http://www.passportjs.org/) (Sistema de autenticación basado en estrategias)
+* [Passport-jwt](https://github.com/themikenicholson/passport-jwt) (Estrategia de Passport para jsonwebtoken)
+* [bcrypt.js](https://github.com/dcodeIO/bcrypt.js)
 
 * Test [mochajs](https://mochajs.org/#timeouts)
 
@@ -27,26 +31,30 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 ___________________________________________________________________________
 ## INSTALACION  ##
 
-1.- Instalar NodeJS y NPM: 
+1.- Instalar NodeJS y NPM:
 
-* Para sistemas operativos Linux 	y Windows [Ingrese Aqui](http://www.w3resource.com/node.js/installing-node.js-windows-and-linux.php)
+* Para sistemas operativos Linux y Windows [Ingrese Aqui](http://www.w3resource.com/node.js/installing-node.js-windows-and-linux.php)
 * Para sistemas operativos OSX [Ingrese Aqui](https://coolestguidesontheplanet.com/installing-node-js-on-macos/). 
 * Si necesita utilizar varias versiones de node puede usar [nvm](https://github.com/creationix/nvm)
 
-2.- Instalar dependencias:   
+2.- Instalar dependencias:
 ```
 $ yarn install o npm install
 ```
 
-3.- Instalar Docker-Compose:
-	
+3.- Instalar Docker-Composer:
 ```
 [Resumen instalación](https://gist.github.com/mortegac/db6a824fcc94b900672326eabe44464b)
 ```
 
+4.- Correr migraciones y seed de base de datos:
+```
+$ npm run-script migrate:run
+$ npm run-script seed
+```
 
 ___________________________________________________________________________
-## EJECUCION ENTORNO DE DESARROLLO  ##
+## EJECUCION ENTORNO DE DESARROLLO ##
 
 Para ejecutar el entorno de Desarrollo fue considerado el uso de contenedores en Docker, actualmente fue solamente considerado una instancia de PostgreSQl para gestionar la base de datos.
 

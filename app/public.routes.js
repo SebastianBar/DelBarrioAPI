@@ -1,4 +1,5 @@
 import routesInicio from './_inicio/routes'
+import routesAuth from './auth/routes'
 import routesRol from './models/rol/routes'
 import routesPermiso from './models/permiso/routes'
 import routesUsuario from './models/usuario/routes'
@@ -11,6 +12,7 @@ import routesEmprendedor from './models/emprendedor/routes'
 */
 const routes = [
     routesInicio,
+    routesAuth,
     routesRol,
     routesPermiso,
     routesUsuario,
