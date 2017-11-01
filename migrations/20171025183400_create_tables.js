@@ -79,7 +79,7 @@ exports.up = function(knex, Promise) {
   function createPerRubros () {
     return knex.schema.createTableIfNotExists('PER_RUBROS', function(table) {
       table.increments('IDEN_RUBRO').unsigned().primary()
-      table.integer('NOMB_RUBRO').notNull()
+      table.string('NOMB_RUBRO').notNull()
       table.string('DESC_RUBRO').notNull()
     })
   }

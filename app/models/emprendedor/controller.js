@@ -17,7 +17,7 @@ var model = require('./model')
 var getEmprendedor = function (req, res) {
   const emprendedorId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(emprendedorId != 0) {
-	  new model.Emprendedor({IDEN_EMPRENDEDOR: emprendedorId}).fetch()
+	  new model.Emprendedor({IDEN_EMPRENDEDOR: emprendedorId}).fetch({withRelated: ['rubros']})
 		.then(function (emprendedor) {
 		if(!emprendedor) {
             res.status(404).json({error: true, data: {message: 'Emprendedor not found'}})
@@ -29,7 +29,7 @@ var getEmprendedor = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Emprendedores().fetch()
+		new model.Emprendedores().fetch({withRelated: ['rubros']})
 		.then(function (emprendedores) {
 			res.json({error: false, data: emprendedores.toJSON()})
 		}).catch(function (err) {

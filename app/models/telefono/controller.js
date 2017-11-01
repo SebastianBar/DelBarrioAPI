@@ -17,7 +17,7 @@ var model = require('./model')
 var getTelefono = function (req, res) {
   const telefonoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(telefonoId != 0) {
-	  new model.Telefono({IDEN_FONO: telefonoId}).fetch()
+	  new model.Telefono({IDEN_FONO: telefonoId}).fetch({withRelated: ['usuario']})
 		.then(function (telefono) {
 		if(!telefono) {
             res.status(404).json({error: true, data: {message: 'Telefono not found'}})
@@ -29,7 +29,7 @@ var getTelefono = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Telefonos().fetch()
+		new model.Telefonos().fetch({withRelated: ['usuario']})
 		.then(function (telefonos) {
 			res.json({error: false, data: telefonos.toJSON()})
 		}).catch(function (err) {

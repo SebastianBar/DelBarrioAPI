@@ -18,7 +18,7 @@ var model = require('./model')
 var getUsuario = function (req, res) {
   const usuarioId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(usuarioId != 0) {
-	  new model.Usuario({IDEN_USUARIO: usuarioId}).fetch()
+	  new model.Usuario({IDEN_USUARIO: usuarioId}).fetch({withRelated: ['telefonos']})
 		.then(function (usuario) {
 		if(!usuario) {
             res.status(404).json({error: true, data: {message: 'Usuario not found'}})
@@ -30,7 +30,7 @@ var getUsuario = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Usuarios().fetch()
+		new model.Usuarios().fetch({withRelated: ['telefonos']})
 		.then(function (usuarios) {
 			res.json({error: false, data: usuarios.toJSON()})
 		}).catch(function (err) {

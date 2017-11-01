@@ -17,7 +17,7 @@ var model = require('./model')
 var getRubro = function (req, res) {
   const rubroId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(rubroId != 0) {
-	  new model.Rubro({IDEN_RUBRO: rubroId}).fetch()
+	  new model.Rubro({IDEN_RUBRO: rubroId}).fetch({withRelated: ['emprendedores']})
 		.then(function (rubro) {
 		if(!rubro) {
             res.status(404).json({error: true, data: {message: 'Rubro not found'}})
@@ -29,7 +29,7 @@ var getRubro = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Rubros().fetch()
+		new model.Rubros().fetch({withRelated: ['emprendedores']})
 		.then(function (rubros) {
 			res.json({error: false, data: rubros.toJSON()})
 		}).catch(function (err) {

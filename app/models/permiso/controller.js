@@ -9,7 +9,7 @@ var model = require('./model')
 var getPermiso = function (req, res) {
   const permisoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(permisoId != 0) {
-	  new model.Permiso({IDEN_PERMISO: permisoId}).fetch()
+	  new model.Permiso({IDEN_PERMISO: permisoId}).fetch({withRelated: ['roles']})
 		.then(function (permiso) {
 		if(!permiso) {
             res.status(404).json({error: true, data: {message: 'Permiso not found'}})
@@ -21,7 +21,7 @@ var getPermiso = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Permisos().fetch()
+		new model.Permisos().fetch({withRelated: ['roles']})
 		.then(function (permisos) {
 			res.json({error: false, data: permisos.toJSON()})
 		}).catch(function (err) {
