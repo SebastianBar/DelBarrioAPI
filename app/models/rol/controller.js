@@ -16,7 +16,7 @@ var model = require('./model')
 var getRol = function (req, res) {
   const rolId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(rolId != 0) {
-	  new model.Rol({IDEN_ROL: rolId}).fetch()
+	  new model.Rol({IDEN_ROL: rolId}).fetch({withRelated: ['permisos']})
 		.then(function (rol) {
 		if(!rol) {
             res.status(404).json({error: true, data: {message: 'Rol not found'}})
@@ -28,7 +28,7 @@ var getRol = function (req, res) {
 			res.status(500).json({error: true, data: {message: err.message}})
     })
   } else {
-		new model.Roles().fetch()
+		new model.Roles().fetch({withRelated: ['permisos']})
 		.then(function (roles) {
 			res.json({error: false, data: roles.toJSON()})
 		}).catch(function (err) {
@@ -57,9 +57,9 @@ var putRol = function (req, res) {
 	.fetch({require: true})
 	.then(function (rol) {
 		rol.save({
-			CODI_ROL:	(typeof req.body.CODI_ROL === 'undefined') ? rol.get('CODI_ROL') : req.body.CODI_ROL,
-			NOMB_ROL:	(typeof req.body.NOMB_ROL === 'undefined') ? rol.get('NOMB_ROL') : req.body.NOMB_ROL,
-			DESC_ROL:	(typeof req.body.DESC_ROL === 'undefined') ? rol.get('DESC_ROL') : req.body.DESC_ROL,
+			CODI_ROL:	req.body.CODI_ROL || rol.get('CODI_ROL'),
+			NOMB_ROL:	req.body.NOMB_ROL || rol.get('NOMB_ROL'),
+			DESC_ROL:	req.body.DESC_ROL || rol.get('DESC_ROL'),
 		})
 		.then(function () {
 			res.json({error: false, data: {message: 'Rol successfully updated'}})
