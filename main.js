@@ -52,8 +52,8 @@ const router = express.Router()
 
 // INCLUDE ROUTES - PRIVATE AND PUBLIC
 // =============================================================================
-const publicRoute  = publicRoutes.map (p => app.use('/api', p) )
-const privateRoute = privateRoutes.map(p => app.use('/api/private', passport.authenticate('jwt', { session: false }), p) )
+const publicRoute  = publicRoutes.map (p => app.use('/', p) )
+const privateRoute = privateRoutes.map(p => app.use('/private', passport.authenticate('jwt', { session: false }), p) )
 
 app.listen(cn.apiPort, () => { console.log(`API REST corriendo en ${cn.apiHost}:${cn.apiPort}`) })
 
