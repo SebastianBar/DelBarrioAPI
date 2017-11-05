@@ -7,9 +7,6 @@ module.exports = {
     "parserOptions": {
         "sourceType": "module"
     },
-    "plugins": [
-        "mocha"
-    ],
     "rules": {
         "indent": [
             "error",
