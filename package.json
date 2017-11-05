@@ -1,7 +1,7 @@
 {
-  "name": "nodejsconjwt",
+  "name": "apidelbarrio",
   "version": "1.0.0",
-  "description": "Aplicación API con nodejs y MongoDb",
+  "description": "Aplicación API con Express, Bookshelf.js y PG bajo NodeJS",
   "main": "main.js",
   "scripts": {
     "start": "nodemon index.js",
@@ -19,7 +19,7 @@
     "api",
     "APIREST"
   ],
-  "author": "Manuel Ortega Carcamo",
+  "author": "S. Barrenechea, R. Jara",
   "license": "MIT",
   "bugs": {},
   "homepage": "",
@@ -34,7 +34,6 @@
     "body-parser": "^1.17.2",
     "bookshelf": "^0.10.4",
     "cors": "^2.8.4",
-    "eslint": "^4.7.1",
     "express": "^4.15.3",
     "fs": "^0.0.1-security",
     "install": "^0.10.1",
@@ -46,13 +45,14 @@
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
     "path": "^0.12.7",
-    "pg": "^7.3.0",
+    "pg": "^7.4.0",
     "rotating-file-stream": "^1.3.0",
     "simple-express-logger": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^2.0.1",
+    "eslint": "^4.10.0",
     "mocha": "^3.5.3"
   }
 }
