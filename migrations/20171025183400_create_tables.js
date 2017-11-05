@@ -1,4 +1,4 @@
-exports.up = function(knex, Promise) {
+exports.up = function(knex) {
   return createSisRoles()
     .then(createSisPermisos)
     .then(createSisPermisosRoles)
@@ -289,7 +289,7 @@ exports.up = function(knex, Promise) {
   }
 }
 
-exports.down = function(knex, Promise) {
+exports.down = function(knex) {
   return knex.schema
     .dropTableIfExists('REQ_FAQ')
     .dropTableIfExists('REQ_RESOLUCION_DENUNCIAS')

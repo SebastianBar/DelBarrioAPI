@@ -1,5 +1,4 @@
 import cn from '../config'
-import passport from 'passport'
 var passportJWT = require('passport-jwt')
 var usuarioModel = require('../models/usuario/model')
 
@@ -16,19 +15,17 @@ var jwtOptions = {
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
 var strategy = new passportJWT.Strategy(jwtOptions, function(jwt_payload, next) {
-  console.log('Payload received: ', jwt_payload)
-
   new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
-  .then(function (usuario) {
-    if (usuario) {
-      next(null, usuario)
-    } else {
+    .then(function (usuario) {
+      if (usuario) {
+        next(null, usuario)
+      } else {
+        next(null, false)
+      }
+    }).catch(function (err) {
       next(null, false)
-    }
-  }).catch(function (err) {
-    console.log(err)
-    next(null, false)
-  })
+      throw err
+    })
 })
 
 module.exports = {

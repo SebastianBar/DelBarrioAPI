@@ -2,11 +2,11 @@
 var bookshelf = require('../../connection').bookshelf
 
 var Usuario = bookshelf.Model.extend({
-	tableName: 'USR_USUARIOS',
-	idAttribute: 'IDEN_USUARIO',
-	telefonos: function() {
-		return this.hasMany(require('../telefono/model').Telefono, 'IDEN_USUARIO')
-	}
+  tableName: 'USR_USUARIOS',
+  idAttribute: 'IDEN_USUARIO',
+  telefonos: function() {
+    return this.hasMany(require('../telefono/model').Telefono, 'IDEN_USUARIO')
+  }
 })
 
 var Usuarios = bookshelf.Collection.extend({
@@ -16,5 +16,5 @@ var Usuarios = bookshelf.Collection.extend({
 /* Exports all methods */
 module.exports = {
   Usuario,
-	Usuarios,
+  Usuarios,
 }

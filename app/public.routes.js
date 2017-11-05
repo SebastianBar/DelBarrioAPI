@@ -11,14 +11,14 @@ import routesEmprendedor from './models/emprendedor/routes'
 * Todas las rutas públicas para desarrollo
 */
 const routes = [
-    routesInicio,
-    routesAuth,
-    routesRol,
-    routesPermiso,
-    routesUsuario,
-    routesTelefono,
-    routesRubro,
-    routesEmprendedor
+  routesInicio,
+  routesAuth,
+  routesRol,
+  routesPermiso,
+  routesUsuario,
+  routesTelefono,
+  routesRubro,
+  routesEmprendedor
 ]
 
 export default routes

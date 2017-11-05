@@ -18,43 +18,43 @@ var model = require('./model')
 var getUsuario = function (req, res) {
   const usuarioId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(usuarioId != 0) {
-	  new model.Usuario({IDEN_USUARIO: usuarioId}).fetch({withRelated: ['telefonos']})
-		.then(function (usuario) {
-		if(!usuario) {
-            res.status(404).json({error: true, data: {message: 'Usuario not found'}})
+    new model.Usuario({IDEN_USUARIO: usuarioId}).fetch({withRelated: ['telefonos']})
+      .then(function (usuario) {
+        if(!usuario) {
+          res.status(404).json({error: true, data: {message: 'Usuario not found'}})
         } else {
-            res.json({error: false, data: usuario.toJSON()})
+          res.json({error: false, data: usuario.toJSON()})
         }
-		}).catch(function (err) {
-			console.log(err)
-			res.status(500).json({error: true, data: {message: err.message}})
-    })
+      }).catch(function (err) {
+        res.status(500).json({error: true, data: {message: err.message}})
+        throw err
+      })
   } else {
-		new model.Usuarios().fetch({withRelated: ['telefonos']})
-		.then(function (usuarios) {
-			res.json({error: false, data: usuarios.toJSON()})
-		}).catch(function (err) {
-			console.log(err)
-			res.status(500).json({error: true, data: {message: err.message}})
-		})
+    new model.Usuarios().fetch({withRelated: ['telefonos']})
+      .then(function (usuarios) {
+        res.json({error: false, data: usuarios.toJSON()})
+      }).catch(function (err) {
+        res.status(500).json({error: true, data: {message: err.message}})
+        throw err
+      })
   }
 }
 
 var postUsuario = function (req, res) {
-	new model.Usuario({
-		IDEN_ROL:       req.body.IDEN_ROL,
-		RUT_USUARIO:    req.body.RUT_USUARIO,
+  new model.Usuario({
+    IDEN_ROL:       req.body.IDEN_ROL,
+    RUT_USUARIO:    req.body.RUT_USUARIO,
     DV_USUARIO:     req.body.DV_USUARIO,
     EMAIL_USUARIO:  req.body.EMAIL_USUARIO,
     DESC_PASSWORD:  req.body.DESC_PASSWORD,
     FLAG_VIGENTE:   req.body.FLAG_VIGENTE
-	}).save()
-		.then(function (usuario) {
-			res.json({error: false, data: usuario.toJSON()})
-		}).catch(function (err) {
-			console.log(err)
-			res.status(500).json({error: true, data: {message: err.message}})
-		})
+  }).save()
+    .then(function (usuario) {
+      res.json({error: false, data: usuario.toJSON()})
+    }).catch(function (err) {
+      res.status(500).json({error: true, data: {message: err.message}})
+      throw err
+    })
 }
 
 /* var putUsuario = function (req, res) {
@@ -82,23 +82,23 @@ var postUsuario = function (req, res) {
 } */
 
 var deleteUsuario = function (req, res) {
-	new model.Usuario({IDEN_USUARIO: req.params.id})
-	.destroy({require: true})
-	.then(function () {
-		res.json({error: false, data: {message: 'Usuario successfully deleted'}})
-	})
-	.catch(model.Usuario.NoRowsDeletedError, function() {
-		res.status(404).json({error: true, data: {message: 'Usuario not found'}})
-	})
-	.catch(function (err) {
-		res.status(500).json({error: true, data: {message: err.message}})
-	})
+  new model.Usuario({IDEN_USUARIO: req.params.id})
+    .destroy({require: true})
+    .then(function () {
+      res.json({error: false, data: {message: 'Usuario successfully deleted'}})
+    })
+    .catch(model.Usuario.NoRowsDeletedError, function() {
+      res.status(404).json({error: true, data: {message: 'Usuario not found'}})
+    })
+    .catch(function (err) {
+      res.status(500).json({error: true, data: {message: err.message}})
+    })
 }
 
 /* Exports all methods */
 module.exports = {
   getUsuario,
-	postUsuario,
-	// putUsuario,
-	deleteUsuario
+  postUsuario,
+  // putUsuario,
+  deleteUsuario
 }

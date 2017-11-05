@@ -9,25 +9,25 @@ var model = require('./model')
 var getPermiso = function (req, res) {
   const permisoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(permisoId != 0) {
-	  new model.Permiso({IDEN_PERMISO: permisoId}).fetch({withRelated: ['roles']})
-		.then(function (permiso) {
-		if(!permiso) {
-            res.status(404).json({error: true, data: {message: 'Permiso not found'}})
+    new model.Permiso({IDEN_PERMISO: permisoId}).fetch({withRelated: ['roles']})
+      .then(function (permiso) {
+        if(!permiso) {
+          res.status(404).json({error: true, data: {message: 'Permiso not found'}})
         } else {
-            res.json({error: false, data: permiso.toJSON()})
+          res.json({error: false, data: permiso.toJSON()})
         }
-		}).catch(function (err) {
-			console.log(err)
-			res.status(500).json({error: true, data: {message: err.message}})
-    })
+      }).catch(function (err) {
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
+        throw err
+      })
   } else {
-		new model.Permisos().fetch({withRelated: ['roles']})
-		.then(function (permisos) {
-			res.json({error: false, data: permisos.toJSON()})
-		}).catch(function (err) {
-			console.log(err)
-			res.status(500).json({error: true, data: {message: err.message}})
-		})
+    new model.Permisos().fetch({withRelated: ['roles']})
+      .then(function (permisos) {
+        res.json({error: false, data: permisos.toJSON()})
+      }).catch(function (err) {
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
+        throw err
+      })
   }
 }
 
