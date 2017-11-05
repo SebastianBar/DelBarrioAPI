@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs')
  * @param {string} databasePassword - Contraseña como hash bcrypt.
  * @return {boolean} Define si las contraseñas coinciden.
  */
-function comparePass(userPassword, databasePassword) {
+function comparePass (userPassword, databasePassword) {
   return bcrypt.compareSync(userPassword, databasePassword)
 }
 
@@ -15,7 +15,7 @@ function comparePass(userPassword, databasePassword) {
  * @param {string} password - Contraseña en texto plano.
  * @return {string} Contraseña como hash bcrypt.
  */
-function genHash(password) {
+function genHash (password) {
   const salt = bcrypt.genSaltSync()
   return bcrypt.hashSync(password, salt)
 }

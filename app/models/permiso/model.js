@@ -4,7 +4,7 @@ var bookshelf = require('../../connection').bookshelf
 var Permiso = bookshelf.Model.extend({
   tableName: 'SIS_PERMISOS',
   idAttribute: 'IDEN_PERMISO',
-  roles: function() {
+  roles: function () {
     return this.belongsToMany(require('../rol/model').Rol, 'SIS_PERMISOS_ROLES', 'IDEN_PERMISO', 'IDEN_ROL')
   }
 })

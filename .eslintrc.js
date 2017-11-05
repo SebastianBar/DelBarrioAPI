@@ -25,6 +25,25 @@ module.exports = {
         "semi": [
             "error",
             "never"
+        ],
+        "eol-last": [
+            "error",
+            "always"
+        ],
+        "space-before-function-paren": [
+            "error",
+            "always"
+        ],
+        "no-multiple-empty-lines": [
+            "error",
+            { "max": 1, "maxEOF": 0, "maxBOF" : 0}
+        ],
+        "arrow-parens": [
+            "error",
+            "as-needed"
+        ],
+        "prefer-arrow-callback": [
+            "error"
         ]
     }
 };

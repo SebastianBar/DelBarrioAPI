@@ -19,21 +19,21 @@ var getUsuario = function (req, res) {
   const usuarioId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(usuarioId != 0) {
     new model.Usuario({IDEN_USUARIO: usuarioId}).fetch({withRelated: ['telefonos']})
-      .then(function (usuario) {
+      .then(usuario => {
         if(!usuario) {
           res.status(404).json({error: true, data: {message: 'Usuario not found'}})
         } else {
           res.json({error: false, data: usuario.toJSON()})
         }
-      }).catch(function (err) {
+      }).catch(err => {
         res.status(500).json({error: true, data: {message: err.message}})
         throw err
       })
   } else {
     new model.Usuarios().fetch({withRelated: ['telefonos']})
-      .then(function (usuarios) {
+      .then(usuarios => {
         res.json({error: false, data: usuarios.toJSON()})
-      }).catch(function (err) {
+      }).catch(err => {
         res.status(500).json({error: true, data: {message: err.message}})
         throw err
       })
@@ -49,9 +49,9 @@ var postUsuario = function (req, res) {
     DESC_PASSWORD:  req.body.DESC_PASSWORD,
     FLAG_VIGENTE:   req.body.FLAG_VIGENTE
   }).save()
-    .then(function (usuario) {
+    .then(usuario => {
       res.json({error: false, data: usuario.toJSON()})
-    }).catch(function (err) {
+    }).catch(err => {
       res.status(500).json({error: true, data: {message: err.message}})
       throw err
     })
@@ -84,13 +84,13 @@ var postUsuario = function (req, res) {
 var deleteUsuario = function (req, res) {
   new model.Usuario({IDEN_USUARIO: req.params.id})
     .destroy({require: true})
-    .then(function () {
+    .then(() => {
       res.json({error: false, data: {message: 'Usuario successfully deleted'}})
     })
-    .catch(model.Usuario.NoRowsDeletedError, function() {
+    .catch(model.Usuario.NoRowsDeletedError, () => {
       res.status(404).json({error: true, data: {message: 'Usuario not found'}})
     })
-    .catch(function (err) {
+    .catch(err => {
       res.status(500).json({error: true, data: {message: err.message}})
     })
 }

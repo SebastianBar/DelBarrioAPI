@@ -14,19 +14,19 @@ var jwtOptions = {
  * Inicializa la estrategia a ejecutarse para cada request dentro de rutas privadas.
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
-var strategy = new passportJWT.Strategy(jwtOptions, function(jwt_payload, next) {
+var strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
   new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
-    .then(function (usuario) {
+    .then(usuario => {
       if (usuario) {
         next(null, usuario)
       } else {
         next(null, false)
       }
-    }).catch(function (err) {
+    }).catch(err => {
       next(null, false)
       throw err
     })
-})
+}))
 
 module.exports = {
   jwtOptions,

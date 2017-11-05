@@ -10,21 +10,21 @@ var getPermiso = function (req, res) {
   const permisoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(permisoId != 0) {
     new model.Permiso({IDEN_PERMISO: permisoId}).fetch({withRelated: ['roles']})
-      .then(function (permiso) {
+      .then(permiso => {
         if(!permiso) {
           res.status(404).json({error: true, data: {message: 'Permiso not found'}})
         } else {
           res.json({error: false, data: permiso.toJSON()})
         }
-      }).catch(function (err) {
+      }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
     new model.Permisos().fetch({withRelated: ['roles']})
-      .then(function (permisos) {
+      .then(permisos => {
         res.json({error: false, data: permisos.toJSON()})
-      }).catch(function (err) {
+      }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })

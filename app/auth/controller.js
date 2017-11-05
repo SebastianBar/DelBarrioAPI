@@ -15,7 +15,7 @@ var authenticate = function (req, res) {
     var email = req.body.email
     var password = req.body.password
     new modelUsuario.Usuario({EMAIL_USUARIO: email}).fetch()
-      .then(function (usuario) {
+      .then(usuario => {
         if (usuario) {
           if(authHelpers.comparePass(password, usuario.attributes.DESC_PASSWORD)) {
             var payload = {id: usuario.attributes.IDEN_USUARIO}
@@ -27,7 +27,7 @@ var authenticate = function (req, res) {
         } else {
           res.status(404).json({error: true, data: {message: 'Usuario no encontrado'}})
         }
-      }).catch(function (err) {
+      }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
