@@ -17,12 +17,16 @@ var authenticate = function (req, res) {
     new modelUsuario.Usuario({EMAIL_USUARIO: email}).fetch()
       .then(usuario => {
         if (usuario) {
-          if(authHelpers.comparePass(password, usuario.attributes.DESC_PASSWORD)) {
-            var payload = {id: usuario.attributes.IDEN_USUARIO}
-            var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
-            res.json({error: false, data: {token: token}})
+          if(usuario.attributes.FLAG_VIGENTE) {
+            if(authHelpers.comparePass(password, usuario.attributes.DESC_PASSWORD)) {
+              var payload = {id: usuario.attributes.IDEN_USUARIO}
+              var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
+              res.json({error: false, data: {token: token}})
+            } else {
+              res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
+            }
           } else {
-            res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
+            res.status(401).json({error: true, data: {message: 'Cuenta deshabilitada'}})
           }
         } else {
           res.status(404).json({error: true, data: {message: 'Usuario no encontrado'}})

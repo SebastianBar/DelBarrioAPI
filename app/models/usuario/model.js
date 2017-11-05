@@ -4,6 +4,9 @@ var bookshelf = require('../../connection').bookshelf
 var Usuario = bookshelf.Model.extend({
   tableName: 'USR_USUARIOS',
   idAttribute: 'IDEN_USUARIO',
+  rol: function () {
+    return this.belongsTo(require('../rol/model').Rol, 'IDEN_ROL')
+  },
   telefonos: function () {
     return this.hasMany(require('../telefono/model').Telefono, 'IDEN_USUARIO')
   }

@@ -11,7 +11,7 @@ exports.seed = function (knex) {
     })
     .then(() => {
       return knex('SIS_PERMISOS').insert([
-        {CODI_PERMISO: 101, DESC_PERMISO: 'Autenticar'},
+        {CODI_PERMISO: 101, DESC_PERMISO: 'Denunciar'},
         {CODI_PERMISO: 102, DESC_PERMISO: 'Moderar denuncias'},
         {CODI_PERMISO: 103, DESC_PERMISO: 'Ver reportería'},
         {CODI_PERMISO: 104, DESC_PERMISO: 'Agregar nuevos emprendedores'},
@@ -25,9 +25,7 @@ exports.seed = function (knex) {
             .then(roles => {
               return knex('SIS_PERMISOS_ROLES').insert([
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
-                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 105).IDEN_PERMISO},
-                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 102).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 103).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 104).IDEN_PERMISO},

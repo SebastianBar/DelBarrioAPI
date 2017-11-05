@@ -17,7 +17,7 @@ var jwtOptions = {
 var strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
   new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
     .then(usuario => {
-      if (usuario) {
+      if (usuario && usuario.attributes.FLAG_VIGENTE) {
         next(null, usuario)
       } else {
         next(null, false)
