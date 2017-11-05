@@ -1,7 +1,7 @@
 import routesInicio from './_inicio/routes'
 
 const routes = [
-    routesInicio
+  routesInicio
 ]
 
 export default routes

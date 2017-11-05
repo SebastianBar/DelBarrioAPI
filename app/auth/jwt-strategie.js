@@ -1,5 +1,4 @@
 import cn from '../config'
-import passport from 'passport'
 var passportJWT = require('passport-jwt')
 var usuarioModel = require('../models/usuario/model')
 
@@ -15,21 +14,19 @@ var jwtOptions = {
  * Inicializa la estrategia a ejecutarse para cada request dentro de rutas privadas.
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
-var strategy = new passportJWT.Strategy(jwtOptions, function(jwt_payload, next) {
-  console.log('Payload received: ', jwt_payload)
-
+var strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
   new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
-  .then(function (usuario) {
-    if (usuario) {
-      next(null, usuario)
-    } else {
+    .then(usuario => {
+      if (usuario && usuario.attributes.FLAG_VIGENTE) {
+        next(null, usuario)
+      } else {
+        next(null, false)
+      }
+    }).catch(err => {
       next(null, false)
-    }
-  }).catch(function (err) {
-    console.log(err)
-    next(null, false)
-  })
-})
+      throw err
+    })
+}))
 
 module.exports = {
   jwtOptions,

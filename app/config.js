@@ -14,7 +14,6 @@ let   MAIL_PSW
 let   MAIL_FROM
 const env = process.env.NODE_ENV || 'development'
 
-
 switch (env) {
   case 'production':
     SECRET = process.env.SECRET

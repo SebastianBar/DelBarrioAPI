@@ -5,7 +5,6 @@ import express from 'express'
 import cors from 'cors'
 import cn from './config'
 import passport from 'passport'
-import passportJWT from 'passport-jwt'
 import strategy from './app/auth/jwt-strategie'
 
 //LOG
@@ -36,7 +35,6 @@ const accessLogStream = rfs(`${moment().format('DD-MM-YYYY')}_access.log`, {
 
 // AUTH
 // =============================================================================
-
 passport.use(strategy.strategy)
 
 // MIDLEWARES
@@ -48,13 +46,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cors())
 
-const router = express.Router()
-
 // INCLUDE ROUTES - PRIVATE AND PUBLIC
 // =============================================================================
-const publicRoute  = publicRoutes.map (p => app.use('/api', p) )
-const privateRoute = privateRoutes.map(p => app.use('/api/private', passport.authenticate('jwt', { session: false }), p) )
+publicRoutes.map (p => app.use('/', p) )
+privateRoutes.map(p => app.use('/private', passport.authenticate('jwt', { session: false }), p) )
 
-app.listen(cn.apiPort, () => { console.log(`API REST corriendo en ${cn.apiHost}:${cn.apiPort}`) })
+app.listen(cn.apiPort, () => { console.log(`API REST corriendo en ${cn.apiHost}:${cn.apiPort}`) }) // eslint-disable-line no-console
 
 export default app

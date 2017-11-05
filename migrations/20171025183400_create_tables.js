@@ -1,4 +1,4 @@
-exports.up = function(knex, Promise) {
+exports.up = function (knex) {
   return createSisRoles()
     .then(createSisPermisos)
     .then(createSisPermisosRoles)
@@ -24,7 +24,7 @@ exports.up = function(knex, Promise) {
     .then(createReqFaq)
 
   function createSisRoles () {
-    return knex.schema.createTableIfNotExists('SIS_ROLES', function(table) {
+    return knex.schema.createTableIfNotExists('SIS_ROLES', table => {
       table.increments('IDEN_ROL').unsigned().primary()
       table.integer('CODI_ROL').notNull().unique()
       table.string('NOMB_ROL').notNull()
@@ -33,15 +33,15 @@ exports.up = function(knex, Promise) {
   }
 
   function createSisPermisos () {
-    return knex.schema.createTableIfNotExists('SIS_PERMISOS', function(t) {
-      t.increments('IDEN_PERMISO').unsigned().primary()
-      t.integer('CODI_PERMISO').notNull().unique()
-      t.string('DESC_PERMISO').notNull()
+    return knex.schema.createTableIfNotExists('SIS_PERMISOS', table => {
+      table.increments('IDEN_PERMISO').unsigned().primary()
+      table.integer('CODI_PERMISO').notNull().unique()
+      table.string('DESC_PERMISO').notNull()
     })
   }
 
   function createSisPermisosRoles () {
-    return knex.schema.createTableIfNotExists('SIS_PERMISOS_ROLES', function(table) {
+    return knex.schema.createTableIfNotExists('SIS_PERMISOS_ROLES', table => {
       table.increments('IDEN_PERMISOS_ROLES').unsigned().primary()
       table.integer('IDEN_PERMISO').unsigned().notNull()
       table.integer('IDEN_ROL').unsigned().notNull()
@@ -52,7 +52,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createUsrUsuarios () {
-    return knex.schema.createTableIfNotExists('USR_USUARIOS', function(table) {
+    return knex.schema.createTableIfNotExists('USR_USUARIOS', table => {
       table.bigIncrements('IDEN_USUARIO').unsigned().primary()
       table.integer('IDEN_ROL').unsigned()
       table.integer('RUT_USUARIO').notNull()
@@ -66,7 +66,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createPerTelefonos () {
-    return knex.schema.createTableIfNotExists('PER_TELEFONOS', function(table) {
+    return knex.schema.createTableIfNotExists('PER_TELEFONOS', table => {
       table.bigIncrements('IDEN_FONO').unsigned().primary()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
       table.string('NUMR_FONO').notNull()
@@ -77,7 +77,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createPerRubros () {
-    return knex.schema.createTableIfNotExists('PER_RUBROS', function(table) {
+    return knex.schema.createTableIfNotExists('PER_RUBROS', table => {
       table.increments('IDEN_RUBRO').unsigned().primary()
       table.string('NOMB_RUBRO').notNull()
       table.string('DESC_RUBRO').notNull()
@@ -85,7 +85,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createPerEmprendedores () {
-    return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', function(table) {
+    return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', table => {
       table.bigIncrements('IDEN_EMPRENDEDOR').unsigned().primary()
       table.bigInteger('IDEN_USUARIO').unsigned()
       table.string('DESC_EMPRENDEDOR').notNull()
@@ -98,7 +98,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createPerRubrosEmprendedores () {
-    return knex.schema.createTableIfNotExists('PER_RUBROS_EMPRENDEDORES', function(table) {
+    return knex.schema.createTableIfNotExists('PER_RUBROS_EMPRENDEDORES', table => {
       table.increments('IDEN_RUBROS_EMPRENDEDORES').unsigned().primary()
       table.integer('IDEN_RUBRO').unsigned().notNull()
       table.bigInteger('IDEN_EMPRENDEDOR').unsigned().notNull()
@@ -109,7 +109,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createPerPersonas () {
-    return knex.schema.createTableIfNotExists('PER_PERSONAS', function(table) {
+    return knex.schema.createTableIfNotExists('PER_PERSONAS', table => {
       table.bigIncrements('IDEN_PERSONA').unsigned().primary()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
       table.string('NOMBRES').notNull()
@@ -122,7 +122,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqCategorias () {
-    return knex.schema.createTableIfNotExists('REQ_CATEGORIAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_CATEGORIAS', table => {
       table.increments('IDEN_CATEGORIA').unsigned().primary()
       table.integer('IDEN_CATEGORIA_PADRE').unsigned()
       table.string('NOMB_CATEGORIA').notNull()
@@ -133,7 +133,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqTiposPublicacion () {
-    return knex.schema.createTableIfNotExists('REQ_TIPOS_PUBLICACION', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_TIPOS_PUBLICACION', table => {
       table.increments('IDEN_TIPO_PUBLICACION').unsigned().primary()
       table.string('NOMB_TIPO_PUBLICACION').notNull()
       table.string('DESC_TIPO_PUBLICACION').notNull()
@@ -141,7 +141,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqPublicaciones () {
-    return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES', table => {
       table.bigIncrements('IDEN_PUBLICACION').unsigned().primary()
       table.bigInteger('IDEN_EMPRENDEDOR').unsigned().notNull()
       table.integer('IDEN_TIPO_PUBLICACION').unsigned().notNull()
@@ -160,7 +160,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqImagenes () {
-    return knex.schema.createTableIfNotExists('REQ_IMAGENES', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_IMAGENES', table => {
       table.bigIncrements('IDEN_IMAGEN').unsigned().primary()
       table.bigInteger('IDEN_PUBLICACION').unsigned()
       table.bigInteger('IDEN_EMPRENDEDOR').unsigned()
@@ -172,7 +172,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqOfertas () {
-    return knex.schema.createTableIfNotExists('REQ_OFERTAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_OFERTAS', table => {
       table.increments('IDEN_OFERTA').unsigned().primary()
       table.bigInteger('IDEN_PUBLICACION').unsigned()
       table.dateTime('FECH_INICIO').notNull()
@@ -184,14 +184,14 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqEtiquetas () {
-    return knex.schema.createTableIfNotExists('REQ_ETIQUETAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_ETIQUETAS', table => {
       table.bigIncrements('IDEN_ETIQUETA').unsigned().primary()
       table.string('NOMB_ETIQUETA').notNull()
     })
   }
 
   function createReqPublicacionesEtiquetas () {
-    return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES_ETIQUETAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES_ETIQUETAS', table => {
       table.bigIncrements('IDEN_PUBLICACION_ETIQUETA').unsigned().primary()
       table.bigInteger('IDEN_ETIQUETA').unsigned().notNull()
       table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
@@ -202,7 +202,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqComentarios () {
-    return knex.schema.createTableIfNotExists('REQ_COMENTARIOS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_COMENTARIOS', table => {
       table.bigIncrements('IDEN_COMENTARIO').unsigned().primary()
       table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
@@ -215,7 +215,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqRespuestas () {
-    return knex.schema.createTableIfNotExists('REQ_RESPUESTAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_RESPUESTAS', table => {
       table.bigIncrements('IDEN_RESPUESTA').unsigned().primary()
       table.bigInteger('IDEN_COMENTARIO').unsigned().notNull()
       table.string('DESC_RESPUESTA').notNull()
@@ -226,7 +226,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqCalificaciones () {
-    return knex.schema.createTableIfNotExists('REQ_CALIFICACIONES', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_CALIFICACIONES', table => {
       table.bigIncrements('IDEN_CALIFICACION').unsigned().primary()
       table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
@@ -240,7 +240,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqMotivosDenuncia () {
-    return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DENUNCIA', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DENUNCIA', table => {
       table.increments('IDEN_MOTIVO_DENUNCIA').unsigned().primary()
       table.string('NOMB_MOTIVO_DENUNCIA').notNull()
       table.string('DESC_MOTIVO_DENUNCIA').notNull()
@@ -248,7 +248,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqDenuncias () {
-    return knex.schema.createTableIfNotExists('REQ_DENUNCIAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_DENUNCIAS', table => {
       table.bigIncrements('IDEN_DENUNCIA').unsigned().primary()
       table.bigInteger('IDEN_PUBLICACION').unsigned()
       table.bigInteger('IDEN_CALIFICACION').unsigned()
@@ -267,7 +267,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqResolucionDenuncias () {
-    return knex.schema.createTableIfNotExists('REQ_RESOLUCION_DENUNCIAS', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_RESOLUCION_DENUNCIAS', table => {
       table.bigIncrements('IDEN_RESOLUCION_DENUNCIA').unsigned().primary()
       table.bigInteger('IDEN_DENUNCIA').unsigned().notNull()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
@@ -281,7 +281,7 @@ exports.up = function(knex, Promise) {
   }
 
   function createReqFaq () {
-    return knex.schema.createTableIfNotExists('REQ_FAQ', function(table) {
+    return knex.schema.createTableIfNotExists('REQ_FAQ', table => {
       table.increments('IDEN_FAQ').unsigned().primary()
       table.string('NOMB_FAQ').notNull()
       table.string('DESC_FAQ').notNull()
@@ -289,7 +289,7 @@ exports.up = function(knex, Promise) {
   }
 }
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex) {
   return knex.schema
     .dropTableIfExists('REQ_FAQ')
     .dropTableIfExists('REQ_RESOLUCION_DENUNCIAS')
