@@ -81,6 +81,7 @@ exports.up = function (knex) {
       table.increments('IDEN_RUBRO').unsigned().primary()
       table.string('NOMB_RUBRO').notNull()
       table.string('DESC_RUBRO').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
 
@@ -127,6 +128,7 @@ exports.up = function (knex) {
       table.integer('IDEN_CATEGORIA_PADRE').unsigned()
       table.string('NOMB_CATEGORIA').notNull()
       table.string('DESC_CATEGORIA').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
 
       table.foreign('IDEN_CATEGORIA_PADRE').references('REQ_CATEGORIAS.IDEN_CATEGORIA').onDelete('CASCADE').onUpdate('CASCADE')
     })

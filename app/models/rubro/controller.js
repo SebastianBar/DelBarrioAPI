@@ -42,8 +42,9 @@ var getRubro = function (req, res) {
 var postRubro = function (req, res) {
   new model.Rubro({
     FLAG_CONTENIDO_ADULTO: req.body.FLAG_CONTENIDO_ADULTO,
-    NOMB_RUBRO: req.body.NOMB_RUBRO,
-    DESC_RUBRO: req.body.DESC_RUBRO
+    NOMB_RUBRO:   req.body.NOMB_RUBRO,
+    DESC_RUBRO:   req.body.DESC_RUBRO,
+    FLAG_VIGENTE: req.body.FLAG_VIGENTE
   }).save()
     .then(rubro => {
       res.json({error: false, data: rubro.toJSON()})
@@ -58,9 +59,9 @@ var putRubro = function (req, res) {
     .fetch({require: true})
     .then(rubro => {
       rubro.save({
-        CODI_RUBRO:	req.body.CODI_RUBRO || rubro.get('CODI_RUBRO'),
-        NOMB_RUBRO:	req.body.NOMB_RUBRO || rubro.get('NOMB_RUBRO'),
-        FLAG_CONTENIDO_ADULTO:	req.body.FLAG_CONTENIDO_ADULTO || rubro.get('FLAG_CONTENIDO_ADULTO'),
+        CODI_RUBRO:   req.body.CODI_RUBRO || rubro.get('CODI_RUBRO'),
+        NOMB_RUBRO:   req.body.NOMB_RUBRO || rubro.get('NOMB_RUBRO'),
+        FLAG_VIGENTE: req.body.FLAG_VIGENTE || rubro.get('FLAG_VIGENTE'),
       })
         .then(() => {
           res.json({error: false, data: {message: 'Rubro successfully updated'}})
