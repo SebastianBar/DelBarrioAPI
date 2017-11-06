@@ -4,8 +4,8 @@ var bookshelf = require('../../connection').bookshelf
 var Categoria = bookshelf.Model.extend({
   tableName: 'REQ_CATEGORIAS',
   idAttribute: 'IDEN_CATEGORIA',
-  categoria: function () {
-    return this.belongsTo(require('../categoria/model').Categoria, 'IDEN_CATEGORIA_PADRE')
+  subcategorias: function () {
+    return this.hasMany(require('../categoria/model').Categoria, 'IDEN_CATEGORIA_PADRE')
   }
 })
 

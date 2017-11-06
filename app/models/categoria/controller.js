@@ -17,7 +17,7 @@ var model = require('./model')
 var getCategoria = function (req, res) {
   const categoriaId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(categoriaId != 0) {
-    new model.Categoria({IDEN_CATEGORIA: categoriaId}).fetch({withRelated: ['categoria']})
+    new model.Categoria({IDEN_CATEGORIA: categoriaId}).fetch({withRelated: ['subcategorias']})
       .then(categoria => {
         if(!categoria) {
           res.status(404).json({error: true, data: {message: 'Categoria not found'}})
@@ -29,7 +29,7 @@ var getCategoria = function (req, res) {
         throw err
       })
   } else {
-    new model.Categorias().fetch({withRelated: ['categoria']})
+    new model.Categorias().fetch({withRelated: ['subcategorias']})
       .then(categorias => {
         res.json({error: false, data: categorias.toJSON()})
       }).catch(err => {
