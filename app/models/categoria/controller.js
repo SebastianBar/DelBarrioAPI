@@ -99,10 +99,34 @@ var deleteCategoria = function (req, res) {
     })
 }
 
+var patchCategoria = function (req, res) {
+  new model.Categoria({IDEN_CATEGORIA: req.params.id})
+    .fetch({require: true})
+    .then(categoria => {
+      categoria.save({
+        FLAG_VIGENTE:	req.body.FLAG_VIGENTE
+      }, {patch: true})
+        .then(() => {
+          res.json({error: false, data: {message: 'Categoria successfully updated'}})
+        })
+        .catch(err => {
+          res.status(500).json({error: true, data: {message: 'Internal error'}})
+          throw err
+        })
+    })
+    .catch(model.Categoria.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Categoria not found'}})
+    })
+    .catch(err => {
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
+      throw err
+    })
+}
 /* Exports all methods */
 module.exports = {
   getCategoria,
   postCategoria,
   putCategoria,
-  deleteCategoria
+  deleteCategoria,
+  patchCategoria
 }

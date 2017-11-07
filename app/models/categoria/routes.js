@@ -8,5 +8,6 @@ app.route('/categoria/:id?')
   .post   ((req,res) => controller.postCategoria(req, res))
   .put    ((req,res) => controller.putCategoria(req, res))
   .delete ((req,res) => controller.deleteCategoria(req, res))
+  .patch  ((req,res) => controller.patchCategoria(req, res))
 
 export default app
