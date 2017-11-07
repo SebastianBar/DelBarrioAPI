@@ -25,15 +25,18 @@ var getCategoria = function (req, res) {
           res.json({error: false, data: categoria.toJSON()})
         }
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Categorias().fetch({withRelated: ['subcategorias']})
+    new model.Categorias().query(query => {
+      query.where('IDEN_CATEGORIA_PADRE', null)
+    })
+      .fetch({withRelated: ['subcategorias']})
       .then(categorias => {
         res.json({error: false, data: categorias.toJSON()})
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   }
@@ -43,12 +46,13 @@ var postCategoria = function (req, res) {
   new model.Categoria({
     NOMB_CATEGORIA:       req.body.NOMB_CATEGORIA,
     DESC_CATEGORIA:       req.body.DESC_CATEGORIA,
-    IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE
+    IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE,
+    FLAG_VIGENTE:         req.body.FLAG_VIGENTE
   }).save()
     .then(categoria => {
       res.json({error: false, data: categoria.toJSON()})
     }).catch(err => {
-      res.status(500).json({error: true, data: {message: err.message}})
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
@@ -61,6 +65,7 @@ var putCategoria = function (req, res) {
         NOMB_CATEGORIA:	      req.body.NOMB_CATEGORIA || categoria.get('NOMB_CATEGORIA'),
         DESC_CATEGORIA:	      req.body.DESC_CATEGORIA || categoria.get('DESC_CATEGORIA'),
         IDEN_CATEGORIA_PADRE:	req.body.IDEN_CATEGORIA_PADRE || categoria.get('IDEN_CATEGORIA_PADRE'),
+        FLAG_VIGENTE:	req.body.FLAG_VIGENTE || categoria.get('FLAG_VIGENTE'),
       })
         .then(() => {
           res.json({error: false, data: {message: 'Categoria successfully updated'}})
