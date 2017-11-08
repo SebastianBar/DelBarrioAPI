@@ -1,16 +1,12 @@
-'use strict'
 // Retorna si el largo de un string está dentro del rango establecido
-const stringLen = function (strParam, upper, lower = 0) {
+function stringLen (strParam, upper, lower = 0) {
   var strLen = strParam.toString().length
-  if (strLen >= lower && strLen <= upper) {
-    return true
-  } else {
-    return false
-  }
+  
+  return (strLen >= lower && strLen <= upper)
 }
 
 // Retorna si un valor numérico se encuentra dentro de los límites establecidos
-const numericLim = function (numParam, upper = undefined, lower = undefined) {
+function numericLim (numParam, upper = undefined, lower = undefined) {
   if (isNaN(numParam)) {
     return false
   }

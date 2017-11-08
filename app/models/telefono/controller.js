@@ -1,77 +1,83 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
-* DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH
-* Implementar Relaciones
-*/
-
-var getTelefono = function (req, res) {
-  const telefonoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(telefonoId != 0) {
-    new model.Telefono({IDEN_FONO: telefonoId}).fetch({withRelated: ['usuario']})
-      .then(telefono => {
-        if(!telefono) {
-          res.status(404).json({error: true, data: {message: 'Telefono not found'}})
+/**
+ * Obtener teléfonos.
+ * @param {integer} req.params.id - ID de teléfono (opcional).
+ * @return {json} Teléfono(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_FONO: id}).fetch({withRelated: ['usuario']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: telefono.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Telefonos().fetch({withRelated: ['usuario']})
-      .then(telefonos => {
-        res.json({error: false, data: telefonos.toJSON()})
+    new Collection().fetch({withRelated: ['usuario']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   }
 }
 
-var postTelefono = function (req, res) {
-  new model.Telefono({
+/**
+ * Agregar nuevo teléfono.
+ * @param {integer} req.body.CODI_FONO - Código estandarizado de fono, el cual define si es fijo o móvil.
+ * @param {string} req.body.NUMR_FONO - Número de teléfono.
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono.
+ * @return {json} Teléfono. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     CODI_FONO:    req.body.CODI_FONO,
     NUMR_FONO:    req.body.NUMR_FONO,
     IDEN_USUARIO: req.body.IDEN_USUARIO
   }).save()
-    .then(telefono => {
-      res.json({error: false, data: telefono.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
-      res.status(500).json({error: true, data: {message: err.message}})
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-var putTelefono = function (req, res) {
-  new model.Telefono({IDEN_FONO: req.params.id})
+/**
+ * Actualiza un teléfono.
+ * @param {integer} req.params.id - ID de teléfono.
+ * @param {integer} req.body.CODI_FONO - Código estandarizado de fono, el cual define si es fijo o móvil (opcional).
+ * @param {string} req.body.NUMR_FONO - Número de teléfono (opcional).
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_FONO: req.params.id})
     .fetch({require: true})
-    .then(telefono => {
-      telefono.save({
-        CODI_FONO:	  req.body.CODI_FONO || telefono.get('CODI_FONO'),
-        NUMR_FONO:	  req.body.NUMR_FONO || telefono.get('NUMR_FONO'),
-        IDEN_USUARIO:	req.body.IDEN_USUARIO || telefono.get('IDEN_USUARIO'),
+    .then(entity => {
+      entity.save({
+        CODI_FONO:    (typeof req.body.CODI_FONO === 'undefined') ? entity.get('CODI_FONO') : req.body.CODI_FONO,
+        NUMR_FONO:    (typeof req.body.NUMR_FONO === 'undefined') ? entity.get('NUMR_FONO') : req.body.NUMR_FONO,
+        IDEN_USUARIO: (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO
       })
         .then(() => {
-          res.json({error: false, data: {message: 'Telefono successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Telefono.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Telefono not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -79,14 +85,19 @@ var putTelefono = function (req, res) {
     })
 }
 
-var deleteTelefono = function (req, res) {
-  new model.Telefono({IDEN_FONO: req.params.id})
+/**
+ * Elimina un teléfono.
+ * @param {integer} req.params.id - ID de teléfono.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_FONO: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'Telefono successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Telefono.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Telefono not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -94,10 +105,10 @@ var deleteTelefono = function (req, res) {
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getTelefono,
-  postTelefono,
-  putTelefono,
-  deleteTelefono
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

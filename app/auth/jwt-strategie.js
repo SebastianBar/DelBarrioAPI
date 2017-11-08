@@ -1,6 +1,6 @@
 import cn from '../config'
-var passportJWT = require('passport-jwt')
-var usuarioModel = require('../models/usuario/model')
+import passportJWT from 'passport-jwt'
+import { Model } from '../models/usuario/model'
 
 /**
  * Definir modalidad de la estrategia a utilizar, junto a la private key.
@@ -15,10 +15,10 @@ const jwtOptions = {
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
 const strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
-  new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
-    .then(usuario => {
-      if (usuario && usuario.attributes.FLAG_VIGENTE) {
-        next(null, usuario)
+  new Model({IDEN_USUARIO: jwt_payload.id}).fetch()
+    .then(user => {
+      if (user && user.attributes.FLAG_VIGENTE) {
+        next(null, user)
       } else {
         next(null, false)
       }

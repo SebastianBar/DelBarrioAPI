@@ -1,104 +1,125 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
+import { genHash } from '../../auth/_helpers'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
-* DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH
-* Implementar PUT
-* Relaciones (?)
-*/
-
-var getUsuario = function (req, res) {
-  const usuarioId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(usuarioId != 0) {
-    new model.Usuario({IDEN_USUARIO: usuarioId}).fetch({withRelated: ['telefonos']})
-      .then(usuario => {
-        if(!usuario) {
-          res.status(404).json({error: true, data: {message: 'Usuario not found'}})
+/**
+ * Obtener usuarios.
+ * @param {integer} req.params.id - ID de usuario (opcional).
+ * @return {json} Usuario(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: usuario.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Usuarios().fetch({withRelated: ['telefonos']})
-      .then(usuarios => {
-        res.json({error: false, data: usuarios.toJSON()})
+    new Collection().fetch({withRelated: ['telefonos']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
-        res.status(500).json({error: true, data: {message: err.message}})
+        res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   }
 }
 
-var postUsuario = function (req, res) {
-  new model.Usuario({
+/**
+ * Agregar nuevo usuario.
+ * @param {integer} req.body.IDEN_ROL - ID de Rol del usuario.
+ * @param {integer} req.body.RUT_USUARIO - RUT del usuario sin dígito verificador.
+ * @param {string} req.body.DV_USUARIO - Dígito verificador del RUT del usuario.
+ * @param {string} req.body.EMAIL_USUARIO - Correo electrónico del usuario.
+ * @param {string} req.body.DESC_PASSWORD - Contraseña del usuario (en texto plano).
+ * @param {string} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional, por defecto true).
+ * @return {json} Usuario. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     IDEN_ROL:       req.body.IDEN_ROL,
     RUT_USUARIO:    req.body.RUT_USUARIO,
     DV_USUARIO:     req.body.DV_USUARIO,
     EMAIL_USUARIO:  req.body.EMAIL_USUARIO,
-    DESC_PASSWORD:  req.body.DESC_PASSWORD,
+    DESC_PASSWORD:  genHash(req.body.DESC_PASSWORD),
     FLAG_VIGENTE:   req.body.FLAG_VIGENTE
   }).save()
-    .then(usuario => {
-      res.json({error: false, data: usuario.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
-      res.status(500).json({error: true, data: {message: err.message}})
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-/* var putUsuario = function (req, res) {
-	new model.Usuario({IDEN_USUARIO: req.params.id})
-	.fetch({require: true})
-	.then(function (usuario) {
-		usuario.save({
-			CODI_ROL:	(typeof req.body.CODI_ROL === 'undefined') ? rol.get('CODI_ROL') : req.body.CODI_ROL,
-			NOMB_ROL:	(typeof req.body.NOMB_ROL === 'undefined') ? rol.get('NOMB_ROL') : req.body.NOMB_ROL,
-			DESC_ROL:	(typeof req.body.DESC_ROL === 'undefined') ? rol.get('DESC_ROL') : req.body.DESC_ROL,
-		})
-		.then(function () {
-			res.json({error: false, data: {message: 'Rol successfully updated'}})
-		})
-		.catch(function (err) {
-			res.status(500).json({error: true, data: {message: err.message}})
-		})
+/**
+ * Actualiza un usuario.
+ * @param {integer} req.params.id - ID del usuario.
+ * @param {integer} req.body.RUT_USUARIO - RUT del usuario sin dígito verificador (opcional).
+ * @param {string} req.body.DV_USUARIO - Dígito verificador del RUT del usuario (opcional).
+ * @param {string} req.body.EMAIL_USUARIO - Correo electrónico del usuario (opcional).
+ * @param {string} req.body.DESC_PASSWORD - Contraseña del usuario (opcional, en texto plano).
+ * @param {string} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_USUARIO: req.params.id})
+    .fetch({require: true})
+    .then(entity => {
+      entity.save({
+        RUT_USUARIO:    (typeof req.body.RUT_USUARIO === 'undefined') ? entity.get('RUT_USUARIO') : req.body.RUT_USUARIO,
+        DV_USUARIO:     (typeof req.body.DV_USUARIO === 'undefined') ? entity.get('DV_USUARIO') : req.body.DV_USUARIO,
+        EMAIL_USUARIO:  (typeof req.body.EMAIL_USUARIO === 'undefined') ? entity.get('EMAIL_USUARIO') : req.body.EMAIL_USUARIO,
+        DESC_PASSWORD:  (typeof req.body.DESC_PASSWORD === 'undefined') ? entity.get('DESC_PASSWORD') : genHash(req.body.DESC_PASSWORD),
+        FLAG_VIGENTE:   (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
+      })
+        .then(() => {
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
+        })
+        .catch(err => {
+          res.status(500).json({error: true, data: {message: 'Internal error'}})
+          throw err
+        })
     })
-    .catch(model.Rol.NotFoundError, function (err) {
-        res.status(404).json({error: true, data: {message: 'Rol not found'}})
-    })
-	.catch(function (err) {
-		res.status(500).json({error: true, data: {message: err.message}})
-	})
-} */
-
-var deleteUsuario = function (req, res) {
-  new model.Usuario({IDEN_USUARIO: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Usuario successfully deleted'}})
-    })
-    .catch(model.Usuario.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Usuario not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
-      res.status(500).json({error: true, data: {message: err.message}})
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
+      throw err
+    })
+} 
+
+/**
+ * Elimina un usuario.
+ * @param {integer} req.params.id - ID del usuario.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_USUARIO: req.params.id})
+    .destroy({require: true})
+    .then(() => {
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
+    })
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
+    })
+    .catch(err => {
+      res.status(500).json({error: true, data: {message: 'Internal error'}})
+      throw err
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getUsuario,
-  postUsuario,
-  // putUsuario,
-  deleteUsuario
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

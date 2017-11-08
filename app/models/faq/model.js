@@ -1,17 +1,18 @@
-'use strict'
-var bookshelf = require('../../connection').bookshelf
+import { bookshelf } from '../../connection'
 
-var Faq = bookshelf.Model.extend({
+/* Se define el modelo */
+const Model = bookshelf.Model.extend({
   tableName: 'REQ_FAQ',
   idAttribute: 'IDEN_FAQ'
 })
 
-var Faqs = bookshelf.Collection.extend({
-  model: Faq
+/* Se define colección a partir del modelo */
+const Collection = bookshelf.Collection.extend({
+  model: Model
 })
 
-/* Exports all methods */
+/* Se exportan las constantes */
 module.exports = {
-  Faq,
-  Faqs,
+  Model,
+  Collection,
 }

@@ -1,4 +1,3 @@
-'use strict'
 import cn from '../config'
 
 // Se inicializa el Query Builder

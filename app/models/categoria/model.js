@@ -1,21 +1,21 @@
-const bookshelf = require('../../connection').bookshelf
+import { bookshelf } from '../../connection'
 
-/* Se define el modelo Categoria */
-const Categoria = bookshelf.Model.extend({
+/* Se define el modelo */
+const Model = bookshelf.Model.extend({
   tableName: 'REQ_CATEGORIAS',
   idAttribute: 'IDEN_CATEGORIA',
   subcategorias: function () {
-    return this.hasMany(require('../categoria/model').Categoria, 'IDEN_CATEGORIA_PADRE')
+    return this.hasMany(require('../categoria/model').Model, 'IDEN_CATEGORIA_PADRE')
   }
 })
 
-/* Se define la colección Categorias a partir del modelo Categoria */
-const Categorias = bookshelf.Collection.extend({
-  model: Categoria
+/* Se define colección a partir del modelo */
+const Collection = bookshelf.Collection.extend({
+  model: Model
 })
 
 /* Se exportan las constantes */
 module.exports = {
-  Categoria,
-  Categorias,
+  Model,
+  Collection,
 }

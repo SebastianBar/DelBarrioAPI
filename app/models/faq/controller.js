@@ -1,32 +1,28 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Obtener recursos
-* POST:     Crear un nuevo recurso
-* PUT:      Editar un recurso
-* DELETE:   Elimina un recurso
-*/
-
-var GET = function (req, res) {
-  const faqId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(faqId != 0) {
-    new model.Faq({IDEN_FAQ: faqId}).fetch()
-      .then(faq => {
-        if(!faq) {
-          res.status(404).json({error: true, data: {message: 'FAQ not found'}})
+/**
+ * Obtener FAQs.
+ * @param {integer} req.params.id - ID de FAQ (opcional).
+ * @return {json} FAQ(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_FAQ: id}).fetch()
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: faq.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Faqs().fetch()
-      .then(faqs => {
-        res.json({error: false, data: faqs.toJSON()})
+    new Collection().fetch()
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -34,37 +30,50 @@ var GET = function (req, res) {
   }
 }
 
-var POST = function (req, res) {
-  new model.Faq({
+/**
+ * Agregar nueva FAQ.
+ * @param {string} req.body.NOMB_FAQ - Título de FAQ.
+ * @param {string} req.body.DESC_FAQ - Descripción de FAQ.
+ * @return {json} FAQ. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     NOMB_FAQ: req.body.NOMB_FAQ,
     DESC_FAQ: req.body.DESC_FAQ
   }).save()
-    .then(faq => {
-      res.json({error: false, data: faq.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-var PUT = function (req, res) {
-  new model.Faq({IDEN_FAQ: req.params.id})
+/**
+ * Actualiza una FAQ.
+ * @param {integer} req.params.id - ID de FAQ.
+ * @param {string} req.body.NOMB_FAQ - Título de FAQ (opcional).
+ * @param {string} req.body.DESC_FAQ - Descripción de FAQ (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_FAQ: req.params.id})
     .fetch({require: true})
-    .then(faq => {
-      faq.save({
-        NOMB_FAQ:	req.body.NOMB_FAQ || faq.get('NOMB_FAQ'),
-        DESC_FAQ:	req.body.DESC_FAQ || faq.get('DESC_FAQ')
+    .then(entity => {
+      entity.save({
+        NOMB_FAQ: (typeof req.body.NOMB_FAQ === 'undefined') ? entity.get('NOMB_FAQ') : req.body.NOMB_FAQ,
+        DESC_FAQ: (typeof req.body.DESC_FAQ === 'undefined') ? entity.get('DESC_FAQ') : req.body.DESC_FAQ
       })
         .then(() => {
-          res.json({error: false, data: {message: 'FAQ successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Faq.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'FAQ not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -72,14 +81,19 @@ var PUT = function (req, res) {
     })
 }
 
-var DELETE = function (req, res) {
-  new model.Faq({IDEN_FAQ: req.params.id})
+/**
+ * Elimina una FAQ.
+ * @param {integer} req.params.id - ID de FAQ.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_FAQ: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'FAQ successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Faq.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'FAQ not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -87,7 +101,7 @@ var DELETE = function (req, res) {
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
   GET,
   POST,

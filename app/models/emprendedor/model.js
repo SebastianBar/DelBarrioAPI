@@ -1,20 +1,21 @@
-'use strict'
-var bookshelf = require('../../connection').bookshelf
+import { bookshelf } from '../../connection'
 
-var Emprendedor = bookshelf.Model.extend({
+/* Se define el modelo */
+const Model = bookshelf.Model.extend({
   tableName: 'PER_EMPRENDEDORES',
   idAttribute: 'IDEN_EMPRENDEDOR',
   rubros: function () {
-    return this.belongsToMany(require('../rubro/model').Rubro, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
+    return this.belongsToMany(require('../rubro/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
   }
 })
 
-var Emprendedores = bookshelf.Collection.extend({
-  model: Emprendedor
+/* Se define colección a partir del modelo */
+const Collection = bookshelf.Collection.extend({
+  model: Model
 })
 
-/* Exports all methods */
+/* Se exportan las constantes */
 module.exports = {
-  Emprendedor,
-  Emprendedores,
+  Model,
+  Collection,
 }

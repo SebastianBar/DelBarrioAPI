@@ -1,32 +1,28 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Obtener recursos
-* POST:     Crear un nuevo recurso
-* PUT:      Editar un recurso
-* DELETE:   Elimina un recurso
-*/
-
-var getRol = function (req, res) {
-  const rolId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(rolId != 0) {
-    new model.Rol({IDEN_ROL: rolId}).fetch({withRelated: ['permisos']})
-      .then(rol => {
-        if(!rol) {
-          res.status(404).json({error: true, data: {message: 'Rol not found'}})
+/**
+ * Obtener roles.
+ * @param {integer} req.params.id - ID de rol (opcional).
+ * @return {json} Rol(es). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_ROL: id}).fetch({withRelated: ['permisos']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: rol.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Roles().fetch({withRelated: ['permisos']})
-      .then(roles => {
-        res.json({error: false, data: roles.toJSON()})
+    new Collection().fetch({withRelated: ['permisos']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -34,37 +30,50 @@ var getRol = function (req, res) {
   }
 }
 
-var postRol = function (req, res) {
-  new model.Rol({
+/**
+ * Agregar nuevo rol.
+ * @param {integer} req.body.CODI_ROL - Código único estandarizado del rol.
+ * @param {string} req.body.NOMB_ROL - Nombre del rol.
+ * @return {json} Rol. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     CODI_ROL: req.body.CODI_ROL,
     NOMB_ROL: req.body.NOMB_ROL
   }).save()
-    .then(rol => {
-      res.json({error: false, data: rol.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-var putRol = function (req, res) {
-  new model.Rol({IDEN_ROL: req.params.id})
+/**
+ * Actualiza un rol.
+ * @param {integer} req.params.id - ID de rol.
+ * @param {integer} req.body.CODI_ROL - Código único estandarizado del rol (opcional).
+ * @param {string} req.body.NOMB_ROL - Nombre del rol (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_ROL: req.params.id})
     .fetch({require: true})
-    .then(rol => {
-      rol.save({
-        CODI_ROL:	req.body.CODI_ROL || rol.get('CODI_ROL'),
-        NOMB_ROL:	req.body.NOMB_ROL || rol.get('NOMB_ROL')
+    .then(entity => {
+      entity.save({
+        CODI_ROL: (typeof req.body.CODI_ROL === 'undefined') ? entity.get('CODI_ROL') : req.body.CODI_ROL,
+        NOMB_ROL: (typeof req.body.NOMB_ROL === 'undefined') ? entity.get('NOMB_ROL') : req.body.NOMB_ROL,
       })
         .then(() => {
-          res.json({error: false, data: {message: 'Rol successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Rol.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Rol not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -72,14 +81,19 @@ var putRol = function (req, res) {
     })
 }
 
-var deleteRol = function (req, res) {
-  new model.Rol({IDEN_ROL: req.params.id})
+/**
+ * Elimina un rol.
+ * @param {integer} req.params.id - ID de rol.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_ROL: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'Rol successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Rol.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Rol not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -87,10 +101,10 @@ var deleteRol = function (req, res) {
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getRol,
-  postRol,
-  putRol,
-  deleteRol
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

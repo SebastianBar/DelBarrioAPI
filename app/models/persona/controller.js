@@ -1,37 +1,28 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
-* DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH
-* Implementar Relaciones
-*/
-
-var getPersona = function (req, res) {
-  const personaId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(personaId != 0) {
-    new model.Persona({IDEN_PERSONA: personaId}).fetch({withRelated: ['USUARIO']})
-      .then(persona => {
-        if(!persona) {
-          res.status(404).json({error: true, data: {message: 'Persona not found'}})
+/**
+ * Obtener personas.
+ * @param {integer} req.params.id - ID de persona (opcional).
+ * @return {json} Persona(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_PERSONA: id}).fetch({withRelated: ['USUARIO']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: persona.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Personas().fetch({withRelated: ['USUARIO']})
-      .then(personas => {
-        res.json({error: false, data: personas.toJSON()})
+    new Collection().fetch({withRelated: ['USUARIO']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -39,43 +30,62 @@ var getPersona = function (req, res) {
   }
 }
 
-var postPersona = function (req, res) {
-  new model.Persona({
+/**
+ * Agregar nueva persona.
+ * @param {string} req.body.NOMBRES - Nombres de la persona.
+ * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona.
+ * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona.
+ * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona.
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona.
+ * @return {json} Persona. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     NOMBRES:                req.body.NOMBRES,
     APELLIDO_PATERNO:       req.body.APELLIDO_PATERNO,
     APELLIDO_MATERNO:       req.body.APELLIDO_MATERNO,
     FECH_FECHA_NACIMIENTO:  req.body.FECH_FECHA_NACIMIENTO,
     IDEN_USUARIO:           req.body.IDEN_USUARIO
   }).save()
-    .then(persona => {
-      res.json({error: false, data: persona.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-var putPersona = function (req, res) {
-  new model.Persona({IDEN_PERSONA: req.params.id})
+/**
+ * Actualiza una persona.
+ * @param {integer} req.params.id - ID de la persona.
+ * @param {string} req.body.NOMBRES - Nombres de la persona (opcional).
+ * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona (opcional).
+ * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona (opcional).
+ * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona (opcional).
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_PERSONA: req.params.id})
     .fetch({require: true})
-    .then(persona => {
-      persona.save({
-        NOMBRES:                req.body.NOMBRES || persona.get('NOMBRES'),
-        APELLIDO_PATERNO:       req.body.APELLIDO_PATERNO || persona.get('APELLIDO_PATERNO'),
-        APELLIDO_MATERNO:       req.body.APELLIDO_MATERNO || persona.get('APELLIDO_MATERNO'),
-        FECH_FECHA_NACIMIENTO:  req.body.FECH_FECHA_NACIMIENTO || persona.get('FECH_FECHA_NACIMIENTO'),
-        IDEN_USUARIO:           persona.get('IDEN_USUARIO')
+    .then(entity => {
+      entity.save({
+        NOMBRES:                (typeof req.body.NOMBRES === 'undefined') ? entity.get('NOMBRES') : req.body.NOMBRES,
+        APELLIDO_PATERNO:       (typeof req.body.APELLIDO_PATERNO === 'undefined') ? entity.get('APELLIDO_PATERNO') : req.body.APELLIDO_PATERNO,
+        APELLIDO_MATERNO:       (typeof req.body.APELLIDO_MATERNO === 'undefined') ? entity.get('APELLIDO_MATERNO') : req.body.APELLIDO_MATERNO,
+        FECH_FECHA_NACIMIENTO:  (typeof req.body.FECH_FECHA_NACIMIENTO === 'undefined') ? entity.get('FECH_FECHA_NACIMIENTO') : req.body.FECH_FECHA_NACIMIENTO,
+        IDEN_USUARIO:           (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO
       })
         .then(() => {
-          res.json({error: false, data: {message: 'Persona successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Persona.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Persona not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -83,14 +93,19 @@ var putPersona = function (req, res) {
     })
 }
 
-var deletePersona = function (req, res) {
-  new model.Persona({IDEN_PERSONA: req.params.id})
+/**
+ * Elimina una persona.
+ * @param {integer} req.params.id - ID de la persona.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_PERSONA: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'Persona successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Persona.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Persona not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -98,10 +113,10 @@ var deletePersona = function (req, res) {
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getPersona,
-  postPersona,
-  putPersona,
-  deletePersona
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

@@ -1,40 +1,32 @@
-var model = require('./model')
-
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Obtener recursos
-* POST:     Crear un nuevo recurso
-* PUT:      Editar un recurso
-* DELETE:   Elimina un recurso
-*/
+import { Model, Collection } from './model'
 
 /**
  * Obtener categorías.
- * @param {integer} req.params.id - ID de Categoría (opcional).
+ * @param {integer} req.params.id - ID de categoría (opcional).
  * @return {json} Categoría(s). En caso fallido, mensaje de error.
  */
 function GET (req, res) {
-  const categoriaId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(categoriaId != 0) {
-    new model.Categoria({IDEN_CATEGORIA: categoriaId}).fetch({withRelated: ['subcategorias']})
-      .then(categoria => {
-        if(!categoria) {
-          res.status(404).json({error: true, data: {message: 'Categoria not found'}})
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_CATEGORIA: id}).fetch({withRelated: ['subcategorias']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: categoria.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Categorias().query(query => { query
+    new Collection().query(query => { query
       .where('IDEN_CATEGORIA_PADRE', null)
       .orderBy('IDEN_CATEGORIA', 'asc')
     })
       .fetch({withRelated: ['subcategorias']})
-      .then(categorias => {
-        res.json({error: false, data: categorias.toJSON()})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -50,13 +42,13 @@ function GET (req, res) {
  * @return {json} Categoría. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
-  new model.Categoria({
+  new Model({
     NOMB_CATEGORIA:       req.body.NOMB_CATEGORIA,
     IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE,
     FLAG_VIGENTE:         req.body.FLAG_VIGENTE
   }).save()
-    .then(categoria => {
-      res.json({error: false, data: categoria.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
@@ -72,24 +64,24 @@ function POST (req, res) {
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
-  new model.Categoria({IDEN_CATEGORIA: req.params.id})
+  new Model({IDEN_CATEGORIA: req.params.id})
     .fetch({require: true})
-    .then(categoria => {
-      categoria.save({
-        NOMB_CATEGORIA:       (typeof req.body.NOMB_CATEGORIA === 'undefined') ? categoria.get('NOMB_CATEGORIA') : req.body.NOMB_CATEGORIA,
-        IDEN_CATEGORIA_PADRE: (typeof req.body.IDEN_CATEGORIA_PADRE === 'undefined') ? categoria.get('IDEN_CATEGORIA_PADRE') : req.body.IDEN_CATEGORIA_PADRE,
-        FLAG_VIGENTE:         (typeof req.body.FLAG_VIGENTE === 'undefined') ? categoria.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
+    .then(entity => {
+      entity.save({
+        NOMB_CATEGORIA:       (typeof req.body.NOMB_CATEGORIA === 'undefined') ? entity.get('NOMB_CATEGORIA') : req.body.NOMB_CATEGORIA,
+        IDEN_CATEGORIA_PADRE: (typeof req.body.IDEN_CATEGORIA_PADRE === 'undefined') ? entity.get('IDEN_CATEGORIA_PADRE') : req.body.IDEN_CATEGORIA_PADRE,
+        FLAG_VIGENTE:         (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
       })
         .then(() => {
-          res.json({error: false, data: {message: 'Categoria successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Categoria.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Categoria not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -103,13 +95,13 @@ function PUT (req, res) {
  * @return {json} Mensaje de éxito o error.
  */
 function DELETE (req, res) {
-  new model.Categoria({IDEN_CATEGORIA: req.params.id})
+  new Model({IDEN_CATEGORIA: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'Categoria successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Categoria.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Categoria not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
