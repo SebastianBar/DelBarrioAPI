@@ -1,4 +1,3 @@
-'use strict'
 import controller from './controller'
 import express from 'express'
 const app = express.Router()

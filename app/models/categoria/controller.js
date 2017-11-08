@@ -1,4 +1,3 @@
-'use strict'
 var model = require('./model')
 
 /*
@@ -7,10 +6,14 @@ var model = require('./model')
 * POST:     Crear un nuevo recurso
 * PUT:      Editar un recurso
 * DELETE:   Elimina un recurso
-* PATCH:    Editar partes concretas de un recurso
 */
 
-var getCategoria = function (req, res) {
+/**
+ * Obtener categorías.
+ * @param {integer} req.params.id - ID de Categoría (opcional).
+ * @return {json} Categoría(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
   const categoriaId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(categoriaId != 0) {
     new model.Categoria({IDEN_CATEGORIA: categoriaId}).fetch({withRelated: ['subcategorias']})
@@ -25,8 +28,9 @@ var getCategoria = function (req, res) {
         throw err
       })
   } else {
-    new model.Categorias().query(query => {
-      query.where('IDEN_CATEGORIA_PADRE', null)
+    new model.Categorias().query(query => { query
+      .where('IDEN_CATEGORIA_PADRE', null)
+      .orderBy('IDEN_CATEGORIA', 'asc')
     })
       .fetch({withRelated: ['subcategorias']})
       .then(categorias => {
@@ -38,7 +42,14 @@ var getCategoria = function (req, res) {
   }
 }
 
-var postCategoria = function (req, res) {
+/**
+ * Agregar nueva categoría.
+ * @param {string} req.body.NOMB_CATEGORIA - Nombre de la categoría.
+ * @param {integer} req.body.IDEN_CATEGORIA_PADRE - ID de Categoría padre (opcional).
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si la categoría está activa (opcional).
+ * @return {json} Categoría. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
   new model.Categoria({
     NOMB_CATEGORIA:       req.body.NOMB_CATEGORIA,
     IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE,
@@ -52,14 +63,22 @@ var postCategoria = function (req, res) {
     })
 }
 
-var putCategoria = function (req, res) {
+/**
+ * Actualiza una categoría.
+ * @param {integer} req.params.id - ID de la categoría.
+ * @param {string} req.body.NOMB_CATEGORIA - Nombre de la categoría (opcional).
+ * @param {integer} req.body.IDEN_CATEGORIA_PADRE - ID de Categoría padre (opcional).
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si la categoría está activa (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
   new model.Categoria({IDEN_CATEGORIA: req.params.id})
     .fetch({require: true})
     .then(categoria => {
       categoria.save({
-        NOMB_CATEGORIA:	      req.body.NOMB_CATEGORIA || categoria.get('NOMB_CATEGORIA'),
-        IDEN_CATEGORIA_PADRE:	req.body.IDEN_CATEGORIA_PADRE || categoria.get('IDEN_CATEGORIA_PADRE'),
-        FLAG_VIGENTE:	req.body.FLAG_VIGENTE || categoria.get('FLAG_VIGENTE'),
+        NOMB_CATEGORIA:       (typeof req.body.NOMB_CATEGORIA === 'undefined') ? categoria.get('NOMB_CATEGORIA') : req.body.NOMB_CATEGORIA,
+        IDEN_CATEGORIA_PADRE: (typeof req.body.IDEN_CATEGORIA_PADRE === 'undefined') ? categoria.get('IDEN_CATEGORIA_PADRE') : req.body.IDEN_CATEGORIA_PADRE,
+        FLAG_VIGENTE:         (typeof req.body.FLAG_VIGENTE === 'undefined') ? categoria.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
       })
         .then(() => {
           res.json({error: false, data: {message: 'Categoria successfully updated'}})
@@ -78,7 +97,12 @@ var putCategoria = function (req, res) {
     })
 }
 
-var deleteCategoria = function (req, res) {
+/**
+ * Elimina una categoría.
+ * @param {integer} req.params.id - ID de la categoría.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
   new model.Categoria({IDEN_CATEGORIA: req.params.id})
     .destroy({require: true})
     .then(() => {
@@ -93,35 +117,10 @@ var deleteCategoria = function (req, res) {
     })
 }
 
-var patchCategoria = function (req, res) {
-  new model.Categoria({IDEN_CATEGORIA: req.params.id})
-    .fetch({require: true})
-    .then(categoria => {
-      categoria.save({
-        FLAG_VIGENTE:	req.body.FLAG_VIGENTE
-      }, {patch: true})
-        .then(() => {
-          res.json({error: false, data: {message: 'Categoria successfully updated'}})
-        })
-        .catch(err => {
-          res.status(500).json({error: true, data: {message: 'Internal error'}})
-          throw err
-        })
-    })
-    .catch(model.Categoria.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Categoria not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
-}
-
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getCategoria,
-  postCategoria,
-  putCategoria,
-  deleteCategoria,
-  patchCategoria
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

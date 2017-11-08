@@ -5,7 +5,7 @@ var usuarioModel = require('../models/usuario/model')
 /**
  * Definir modalidad de la estrategia a utilizar, junto a la private key.
  */
-var jwtOptions = {
+const jwtOptions = {
   jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme('JWT'),
   secretOrKey: cn.secret
 }
@@ -14,7 +14,7 @@ var jwtOptions = {
  * Inicializa la estrategia a ejecutarse para cada request dentro de rutas privadas.
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
-var strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
+const strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
   new usuarioModel.Usuario({IDEN_USUARIO: jwt_payload.id}).fetch()
     .then(usuario => {
       if (usuario && usuario.attributes.FLAG_VIGENTE) {
@@ -28,6 +28,7 @@ var strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
     })
 }))
 
+/* Se exportan las constantes */
 module.exports = {
   jwtOptions,
   strategy

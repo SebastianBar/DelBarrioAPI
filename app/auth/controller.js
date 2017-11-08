@@ -1,4 +1,3 @@
-'use strict'
 import jwt from 'jsonwebtoken'
 import strategie from './jwt-strategie'
 var modelUsuario = require('../models/usuario/model')
@@ -10,7 +9,7 @@ const authHelpers = require('./_helpers')
  * @param {string} req.body.password - Contraseña del usuario a autenticar.
  * @return {json} Token JWT. En caso fallido, mensaje de error.
  */
-var authenticate = function (req, res) {
+function authenticate (req, res) {
   if(req.body.email && req.body.password){
     var email = req.body.email
     var password = req.body.password
@@ -40,7 +39,7 @@ var authenticate = function (req, res) {
   }
 }
 
-/* Exports all methods */
+/* Se exporta el método */
 module.exports = {
-  authenticate,
+  authenticate
 }

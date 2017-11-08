@@ -1,7 +1,7 @@
-'use strict'
-var bookshelf = require('../../connection').bookshelf
+const bookshelf = require('../../connection').bookshelf
 
-var Categoria = bookshelf.Model.extend({
+/* Se define el modelo Categoria */
+const Categoria = bookshelf.Model.extend({
   tableName: 'REQ_CATEGORIAS',
   idAttribute: 'IDEN_CATEGORIA',
   subcategorias: function () {
@@ -9,11 +9,12 @@ var Categoria = bookshelf.Model.extend({
   }
 })
 
-var Categorias = bookshelf.Collection.extend({
+/* Se define la colección Categorias a partir del modelo Categoria */
+const Categorias = bookshelf.Collection.extend({
   model: Categoria
 })
 
-/* Exports all methods */
+/* Se exportan las constantes */
 module.exports = {
   Categoria,
   Categorias,
