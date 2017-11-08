@@ -8,6 +8,7 @@ import routesRubro from './models/rubro/routes'
 import routesEmprendedor from './models/emprendedor/routes'
 import routesCategoria from './models/categoria/routes'
 import routesPersona from './models/persona/routes'
+import routesFaq from './models/faq/routes'
 
 /*
 * Todas las rutas públicas para desarrollo
@@ -22,7 +23,8 @@ const routes = [
   routesRubro,
   routesEmprendedor,
   routesCategoria,
-  routesPersona
+  routesPersona,
+  routesFaq
 ]
 
 export default routes
