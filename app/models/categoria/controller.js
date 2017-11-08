@@ -3,15 +3,11 @@ var model = require('./model')
 
 /*
 **** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
+* GET:      Obtener recursos
+* POST:     Crear un nuevo recurso
+* PUT:      Editar un recurso
 * DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH
-* Implementar Relaciones
+* PATCH:    Editar partes concretas de un recurso
 */
 
 var getCategoria = function (req, res) {
@@ -45,7 +41,6 @@ var getCategoria = function (req, res) {
 var postCategoria = function (req, res) {
   new model.Categoria({
     NOMB_CATEGORIA:       req.body.NOMB_CATEGORIA,
-    DESC_CATEGORIA:       req.body.DESC_CATEGORIA,
     IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE,
     FLAG_VIGENTE:         req.body.FLAG_VIGENTE
   }).save()
@@ -63,7 +58,6 @@ var putCategoria = function (req, res) {
     .then(categoria => {
       categoria.save({
         NOMB_CATEGORIA:	      req.body.NOMB_CATEGORIA || categoria.get('NOMB_CATEGORIA'),
-        DESC_CATEGORIA:	      req.body.DESC_CATEGORIA || categoria.get('DESC_CATEGORIA'),
         IDEN_CATEGORIA_PADRE:	req.body.IDEN_CATEGORIA_PADRE || categoria.get('IDEN_CATEGORIA_PADRE'),
         FLAG_VIGENTE:	req.body.FLAG_VIGENTE || categoria.get('FLAG_VIGENTE'),
       })
@@ -122,6 +116,7 @@ var patchCategoria = function (req, res) {
       throw err
     })
 }
+
 /* Exports all methods */
 module.exports = {
   getCategoria,

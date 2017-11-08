@@ -3,14 +3,10 @@ var model = require('./model')
 
 /*
 **** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
+* GET:      Obtener recursos
+* POST:     Crear un nuevo recurso
+* PUT:      Editar un recurso
 * DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH?
 */
 
 var getRol = function (req, res) {
@@ -41,8 +37,7 @@ var getRol = function (req, res) {
 var postRol = function (req, res) {
   new model.Rol({
     CODI_ROL: req.body.CODI_ROL,
-    NOMB_ROL: req.body.NOMB_ROL,
-    DESC_ROL: req.body.DESC_ROL
+    NOMB_ROL: req.body.NOMB_ROL
   }).save()
     .then(rol => {
       res.json({error: false, data: rol.toJSON()})
@@ -58,8 +53,7 @@ var putRol = function (req, res) {
     .then(rol => {
       rol.save({
         CODI_ROL:	req.body.CODI_ROL || rol.get('CODI_ROL'),
-        NOMB_ROL:	req.body.NOMB_ROL || rol.get('NOMB_ROL'),
-        DESC_ROL:	req.body.DESC_ROL || rol.get('DESC_ROL'),
+        NOMB_ROL:	req.body.NOMB_ROL || rol.get('NOMB_ROL')
       })
         .then(() => {
           res.json({error: false, data: {message: 'Rol successfully updated'}})

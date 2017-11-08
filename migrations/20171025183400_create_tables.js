@@ -28,7 +28,6 @@ exports.up = function (knex) {
       table.increments('IDEN_ROL').unsigned().primary()
       table.integer('CODI_ROL').notNull().unique()
       table.string('NOMB_ROL').notNull()
-      table.string('DESC_ROL').notNull()
     })
   }
 
@@ -36,7 +35,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('SIS_PERMISOS', table => {
       table.increments('IDEN_PERMISO').unsigned().primary()
       table.integer('CODI_PERMISO').notNull().unique()
-      table.string('DESC_PERMISO').notNull()
+      table.string('NOMB_PERMISO').notNull()
     })
   }
 
@@ -54,7 +53,7 @@ exports.up = function (knex) {
   function createUsrUsuarios () {
     return knex.schema.createTableIfNotExists('USR_USUARIOS', table => {
       table.bigIncrements('IDEN_USUARIO').unsigned().primary()
-      table.integer('IDEN_ROL').unsigned()
+      table.integer('IDEN_ROL').unsigned().notNull()
       table.integer('RUT_USUARIO').notNull()
       table.string('DV_USUARIO', 1).notNull()
       table.string('EMAIL_USUARIO').notNull()
@@ -80,7 +79,6 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('PER_RUBROS', table => {
       table.increments('IDEN_RUBRO').unsigned().primary()
       table.string('NOMB_RUBRO').notNull()
-      table.string('DESC_RUBRO').notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
@@ -127,7 +125,6 @@ exports.up = function (knex) {
       table.increments('IDEN_CATEGORIA').unsigned().primary()
       table.integer('IDEN_CATEGORIA_PADRE').unsigned()
       table.string('NOMB_CATEGORIA').notNull()
-      table.string('DESC_CATEGORIA').notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
 
       table.foreign('IDEN_CATEGORIA_PADRE').references('REQ_CATEGORIAS.IDEN_CATEGORIA').onDelete('CASCADE').onUpdate('CASCADE')
