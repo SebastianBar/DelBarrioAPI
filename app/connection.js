@@ -10,4 +10,7 @@ var bookshelf = require('bookshelf')(knex)
 bookshelf.plugin('visibility')
 
 // Se exporta el ORM
-export default bookshelf
+module.exports = {
+  bookshelf,
+  knex,
+}
