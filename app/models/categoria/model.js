@@ -1,4 +1,5 @@
-import { bookshelf } from '../../connection'
+import bookshelf from '../../connection'
+import validation from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
@@ -6,6 +7,12 @@ const Model = bookshelf.Model.extend({
   idAttribute: 'IDEN_CATEGORIA',
   subcategorias: function () {
     return this.hasMany(require('../categoria/model').Model, 'IDEN_CATEGORIA_PADRE')
+  },
+  initialize: function () {
+    this.on('saving', this.validate, this)
+  },
+  validate: function () {
+    return validation().run(this.toJSON())
   }
 })
 
