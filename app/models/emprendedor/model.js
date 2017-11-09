@@ -4,6 +4,9 @@ import { bookshelf } from '../../connection'
 const Model = bookshelf.Model.extend({
   tableName: 'PER_EMPRENDEDORES',
   idAttribute: 'IDEN_EMPRENDEDOR',
+  usuario: function () {
+    return this.belongsTo(require('../usuario/model').Model, 'IDEN_USUARIO')
+  },
   rubros: function () {
     return this.belongsToMany(require('../rubro/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
   }

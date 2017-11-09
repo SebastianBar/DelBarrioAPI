@@ -8,7 +8,7 @@ import { Model, Collection } from './model'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_PERSONA: id}).fetch({withRelated: ['USUARIO']})
+    new Model({IDEN_PERSONA: id}).fetch({withRelated: ['usuario']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -20,7 +20,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch({withRelated: ['USUARIO']})
+    new Collection().fetch({withRelated: ['usuario']})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
