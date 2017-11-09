@@ -1,5 +1,5 @@
 import { Model, Collection } from './model'
-import { ValidationError } from 'bookshelf-validate/lib/errors'
+import Checkit from 'checkit'
 
 /**
  * Obtener categorías.
@@ -50,8 +50,8 @@ function POST (req, res) {
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
-    }).catch(ValidationError, err => {
-      res.status(400).json({error: true, data: err.data})
+    }).catch(Checkit.Error, err => {
+      res.status(400).json({error: true, data: err})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
