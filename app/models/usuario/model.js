@@ -1,9 +1,10 @@
-import { bookshelf } from '../../connection'
+import bookshelf from '../../connection'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
   tableName: 'USR_USUARIOS',
   idAttribute: 'IDEN_USUARIO',
+  hidden: ['DESC_PASSWORD'],
   rol: function () {
     return this.belongsTo(require('../rol/model').Model, 'IDEN_ROL')
   },

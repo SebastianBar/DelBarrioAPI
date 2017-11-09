@@ -1,4 +1,4 @@
-import { bookshelf } from '../../connection'
+import bookshelf from '../../connection'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
