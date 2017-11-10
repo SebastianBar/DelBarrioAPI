@@ -8,25 +8,22 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 * Node 8x
 * Cors
 * Logger
-* Pg [Repositorio](https://github.com/brianc/node-postgres) [Mas documentación](https://node-postgres.com/features/queries)
-* pg-monitor [Repositorio](https://github.com/vitaly-t/pg-monitor)
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
+* Pg [Repositorio](https://github.com/brianc/node-postgres)
 * [Knex](http://knexjs.org) (SQL query builder)
 * [Bookshelf.js](http://bookshelfjs.org) (Mapeo objeto-relacional)
-* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)
+* jsonwebtoken [Repositorio](https://github.com/auth0/node-jsonwebtoken)
 * [Passport](http://www.passportjs.org/) (Sistema de autenticación basado en estrategias)
-* [Passport-jwt](https://github.com/themikenicholson/passport-jwt) (Estrategia de Passport para jsonwebtoken)
-* [bcrypt.js](https://github.com/dcodeIO/bcrypt.js)
+* Passport-jwt [Repositorio](https://github.com/themikenicholson/passport-jwt) (Estrategia de Passport para jsonwebtoken)
+* bcrypt.js [Repositorio](https://github.com/dcodeIO/bcrypt.js)
+* Checkit.js [Repositorio](https://github.com/tgriesser/checkit) (Librería de validación de modelos)
 
 * Test [mochajs](https://mochajs.org/#timeouts)
 
 ### Caracteristicas consideradas:
 * Estructura de carpeta independiente por Ruta
 * Metodos Autodocumentados
-* Validaciones en cada métodos    *PENDIENTE*
-* Uso de JWT para rutas privadas  *PENDIENTE*
-
 
 ___________________________________________________________________________
 ## INSTALACION  ##
@@ -111,7 +108,7 @@ ___________________________________________________________________________
 ## TEST  ##
 Se considera test a las rutas expuestas, para esto se utilizan los módulos 'mocha', 'chai' y 'axios'. Los test deben ser generados en la carpeta test como se muestra a continuación
 ```
-│   └── APIv1
+│   └── API
 │       ├── test
 │       	├── persona.js
 ```

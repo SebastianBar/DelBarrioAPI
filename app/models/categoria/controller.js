@@ -82,8 +82,8 @@ function PUT (req, res) {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
-    }).catch(ValidationError, err => {
-      res.status(400).json({error: true, data: err.data})
+    }).catch(Checkit.Error, err => {
+      res.status(400).json({error: true, data: err})
     })
     .catch(Model.NotFoundError, () => {
       res.status(404).json({error: true, data: {message: 'Entity not found'}})
