@@ -1,4 +1,5 @@
 import bookshelf from '../../connection'
+import validate from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
@@ -6,6 +7,9 @@ const Model = bookshelf.Model.extend({
   idAttribute: 'IDEN_PERMISO',
   roles: function () {
     return this.belongsToMany(require('../rol/model').Model, 'SIS_PERMISOS_ROLES', 'IDEN_PERMISO', 'IDEN_ROL')
+  },
+  initialize: function () {
+    this.on('saving', validate, this)
   }
 })
 
