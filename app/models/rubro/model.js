@@ -1,4 +1,5 @@
 import { bookshelf } from '../../connection'
+import validate from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
@@ -6,6 +7,9 @@ const Model = bookshelf.Model.extend({
   idAttribute: 'IDEN_RUBRO',
   emprendedores: function () {
     return this.belongsToMany(require('../emprendedor/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_RUBRO', 'IDEN_EMPRENDEDOR')
+  },
+  initialize: function () {
+    this.on('saving', validate, this)
   }
 })
 
