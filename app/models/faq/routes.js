@@ -2,7 +2,7 @@ import controller from './controller'
 import express from 'express'
 const app = express.Router()
 
-app.route('/telefono/:id?')
+app.route('/faq/:id?')
   .get    ((req,res) => controller.GET(req, res))
   .post   ((req,res) => controller.POST(req, res))
   .put    ((req,res) => controller.PUT(req, res))

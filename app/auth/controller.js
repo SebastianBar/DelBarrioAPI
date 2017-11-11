@@ -1,8 +1,7 @@
-'use strict'
 import jwt from 'jsonwebtoken'
 import strategie from './jwt-strategie'
-var modelUsuario = require('../models/usuario/model')
-const authHelpers = require('./_helpers')
+import authHelpers from './_helpers'
+import { Model } from '../models/usuario/model'
 
 /**
  * Autenticar a un usuario.
@@ -10,16 +9,16 @@ const authHelpers = require('./_helpers')
  * @param {string} req.body.password - Contraseña del usuario a autenticar.
  * @return {json} Token JWT. En caso fallido, mensaje de error.
  */
-var authenticate = function (req, res) {
+function authenticate (req, res) {
   if(req.body.email && req.body.password){
     var email = req.body.email
     var password = req.body.password
-    new modelUsuario.Usuario({EMAIL_USUARIO: email}).fetch()
-      .then(usuario => {
-        if (usuario) {
-          if(usuario.attributes.FLAG_VIGENTE) {
-            if(authHelpers.comparePass(password, usuario.attributes.DESC_PASSWORD)) {
-              var payload = {id: usuario.attributes.IDEN_USUARIO}
+    new Model({EMAIL_USUARIO: email}).fetch()
+      .then(user => {
+        if (user) {
+          if(user.attributes.FLAG_VIGENTE) {
+            if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
+              var payload = {id: user.attributes.IDEN_USUARIO}
               var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
               res.json({error: false, data: {token: token}})
             } else {
@@ -40,7 +39,12 @@ var authenticate = function (req, res) {
   }
 }
 
-/* Exports all methods */
+function getUsuario (req, res) {
+  res.json({error: false, data: req.user.toJSON()})
+}
+
+/* Se exporta el método */
 module.exports = {
   authenticate,
+  getUsuario
 }

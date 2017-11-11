@@ -1,37 +1,29 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
+import Checkit from 'checkit'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-* POST:     Permite crear un nuevo recurso
-* PUT:      Permite editar un recurso
-* DELETE:   Elimina un recurso
-* PATCH:    Permite editar partes concretas de un recurso, recibe los datos mediante x-www-form-urlencode
-*
-**** PENDIENTE ****
-* Implementar PATCH
-* Implementar Relaciones / Herencia
-*/
-
-var getEmprendedor = function (req, res) {
-  const emprendedorId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(emprendedorId != 0) {
-    new model.Emprendedor({IDEN_EMPRENDEDOR: emprendedorId}).fetch({withRelated: ['rubros']})
-      .then(emprendedor => {
-        if(!emprendedor) {
-          res.status(404).json({error: true, data: {message: 'Emprendedor not found'}})
+/**
+ * Obtener emprendedores.
+ * @param {integer} req.params.id - ID del emprendedor (opcional).
+ * @return {json} Emprendedor(es). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_EMPRENDEDOR: id}).fetch({withRelated: ['usuario', 'rubros']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: emprendedor.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Emprendedores().fetch({withRelated: ['rubros']})
-      .then(emprendedores => {
-        res.json({error: false, data: emprendedores.toJSON()})
+    new Collection().fetch({withRelated: ['usuario', 'rubros']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -39,43 +31,67 @@ var getEmprendedor = function (req, res) {
   }
 }
 
-var postEmprendedor = function (req, res) {
-  new model.Emprendedor({
+/**
+ * Agregar nuevo emprendedor.
+ * @param {integer} req.body.IDEN_USUARIO - ID de usuario (opcional).
+ * @param {string} req.body.DESC_EMPRENDEDOR - Descripción breve de la empresa.
+ * @param {string} req.body.DESC_CLAVE_MUNICIPALIDAD - Clave otorgada por la Municipalidad para permitir el registro en el sistema.
+ * @param {string} req.body.DESC_NOMBRE_FANTASIA - Nombre de fantasía de la Empresa.
+ * @param {string} req.body.DESC_NOMBRE_EMPRESA - Nombre de la empresa ante el SII.
+ * @return {json} Emprendedor. En caso fallido, mensaje de error.
+ */
+function POST (req, res) {
+  new Model({
     IDEN_USUARIO:             req.body.IDEN_USUARIO,
     DESC_EMPRENDEDOR:         req.body.DESC_EMPRENDEDOR,
     DESC_CLAVE_MUNICIPALIDAD: req.body.DESC_CLAVE_MUNICIPALIDAD,
     DESC_NOMBRE_FANTASIA:     req.body.DESC_NOMBRE_FANTASIA,
     DESC_NOMBRE_EMPRESA:      req.body.DESC_NOMBRE_EMPRESA
   }).save()
-    .then(emprendedor => {
-      res.json({error: false, data: emprendedor.toJSON()})
+    .then(entity => {
+      res.json({error: false, data: entity.toJSON()})
+    }).catch(Checkit.Error, err => {
+      res.status(400).json({error: true, data: err})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
     })
 }
 
-var putEmprendedor = function (req, res) {
-  new model.Emprendedor({IDEN_EMPRENDEDOR: req.params.id})
+/**
+ * Actualiza un emprendedor.
+ * @param {integer} req.params.id - ID del emprendedor.
+ * @param {integer} req.body.IDEN_USUARIO - ID de usuario (opcional).
+ * @param {string} req.body.DESC_EMPRENDEDOR - Descripción breve de la empresa (opcional).
+ * @param {string} req.body.DESC_CLAVE_MUNICIPALIDAD - Clave otorgada por la Municipalidad para permitir el registro en el sistema (opcional).
+ * @param {string} req.body.DESC_NOMBRE_FANTASIA - Nombre de fantasía de la Empresa (opcional).
+ * @param {string} req.body.DESC_NOMBRE_EMPRESA - Nombre de la empresa ante el SII (opcional).
+ * @return {json} Mensaje de éxito o error.
+ */
+function PUT (req, res) {
+  new Model({IDEN_EMPRENDEDOR: req.params.id})
     .fetch({require: true})
-    .then(emprendedor => {
-      emprendedor.save({
-        IDEN_USUARIO:             req.body.IDEN_USUARIO || emprendedor.get('IDEN_USUARIO'),
-        DESC_EMPRENDEDOR:         req.body.DESC_EMPRENDEDOR || emprendedor.get('DESC_EMPRENDEDOR'),
-        DESC_CLAVE_MUNICIPALIDAD: req.body.DESC_CLAVE_MUNICIPALIDAD || emprendedor.get('DESC_CLAVE_MUNICIPALIDAD'),
-        DESC_NOMBRE_FANTASIA:     req.body.DESC_NOMBRE_FANTASIA || emprendedor.get('DESC_NOMBRE_FANTASIA'),
-        DESC_NOMBRE_EMPRESA:      req.body.DESC_NOMBRE_EMPRESA || emprendedor.get('DESC_NOMBRE_EMPRESA')
+    .then(entity => {
+      entity.save({
+        IDEN_USUARIO:             (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
+        DESC_EMPRENDEDOR:         (typeof req.body.DESC_EMPRENDEDOR === 'undefined') ? entity.get('DESC_EMPRENDEDOR') : req.body.DESC_EMPRENDEDOR,
+        DESC_CLAVE_MUNICIPALIDAD: (typeof req.body.DESC_CLAVE_MUNICIPALIDAD === 'undefined') ? entity.get('DESC_CLAVE_MUNICIPALIDAD') : req.body.DESC_CLAVE_MUNICIPALIDAD,
+        DESC_NOMBRE_FANTASIA:     (typeof req.body.DESC_NOMBRE_FANTASIA === 'undefined') ? entity.get('DESC_NOMBRE_FANTASIA') : req.body.DESC_NOMBRE_FANTASIA,
+        DESC_NOMBRE_EMPRESA:      (typeof req.body.DESC_NOMBRE_EMPRESA === 'undefined') ? entity.get('DESC_NOMBRE_EMPRESA') : req.body.DESC_NOMBRE_EMPRESA
       })
         .then(() => {
-          res.json({error: false, data: {message: 'Emprendedor successfully updated'}})
+          res.json({error: false, data: {message: 'Entity successfully updated'}})
+        })
+        .catch(Checkit.Error, err => {
+          res.status(400).json({error: true, data: err})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
     })
-    .catch(model.Emprendedor.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Emprendedor not found'}})
+    .catch(Model.NotFoundError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -83,14 +99,19 @@ var putEmprendedor = function (req, res) {
     })
 }
 
-var deleteEmprendedor = function (req, res) {
-  new model.Emprendedor({IDEN_EMPRENDEDOR: req.params.id})
+/**
+ * Elimina un emprendedor.
+ * @param {integer} req.params.id - ID del emprendedor.
+ * @return {json} Mensaje de éxito o error.
+ */
+function DELETE (req, res) {
+  new Model({IDEN_EMPRENDEDOR: req.params.id})
     .destroy({require: true})
     .then(() => {
-      res.json({error: false, data: {message: 'Emprendedor successfully deleted'}})
+      res.json({error: false, data: {message: 'Entity successfully deleted'}})
     })
-    .catch(model.Emprendedor.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Emprendedor not found'}})
+    .catch(Model.NoRowsDeletedError, () => {
+      res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -98,10 +119,10 @@ var deleteEmprendedor = function (req, res) {
     })
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getEmprendedor,
-  postEmprendedor,
-  putEmprendedor,
-  deleteEmprendedor
+  GET,
+  POST,
+  PUT,
+  DELETE
 }

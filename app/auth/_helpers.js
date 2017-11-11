@@ -20,6 +20,7 @@ function genHash (password) {
   return bcrypt.hashSync(password, salt)
 }
 
+/* Se exportan los métodos */
 module.exports = {
   comparePass,
   genHash

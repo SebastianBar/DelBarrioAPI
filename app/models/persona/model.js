@@ -1,12 +1,12 @@
-import { bookshelf } from '../../connection'
+import bookshelf from '../../connection'
 import validate from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
-  tableName: 'SIS_ROLES',
-  idAttribute: 'IDEN_ROL',
-  permisos: function () {
-    return this.belongsToMany(require('../permiso/model').Model, 'SIS_PERMISOS_ROLES', 'IDEN_ROL', 'IDEN_PERMISO')
+  tableName: 'PER_PERSONAS',
+  idAttribute: 'IDEN_PERSONA',
+  usuario: function () {
+    return this.belongsTo(require('../usuario/model').Model, 'IDEN_USUARIO')
   },
   initialize: function () {
     this.on('saving', validate, this)
@@ -18,7 +18,7 @@ const Collection = bookshelf.Collection.extend({
   model: Model
 })
 
-/* Exports all methods */
+/* Se exportan las constantes */
 module.exports = {
   Model,
   Collection,

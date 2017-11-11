@@ -2,14 +2,14 @@ import { Model, Collection } from './model'
 import Checkit from 'checkit'
 
 /**
- * Obtener teléfonos.
- * @param {integer} req.params.id - ID de teléfono (opcional).
- * @return {json} Teléfono(s). En caso fallido, mensaje de error.
+ * Obtener personas.
+ * @param {integer} req.params.id - ID de persona (opcional).
+ * @return {json} Persona(s). En caso fallido, mensaje de error.
  */
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_FONO: id}).fetch({withRelated: ['usuario']})
+    new Model({IDEN_PERSONA: id}).fetch({withRelated: ['usuario']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -32,17 +32,21 @@ function GET (req, res) {
 }
 
 /**
- * Agregar nuevo teléfono.
- * @param {integer} req.body.CODI_FONO - Código estandarizado de fono, el cual define si es fijo o móvil.
- * @param {string} req.body.NUMR_FONO - Número de teléfono.
- * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono.
- * @return {json} Teléfono. En caso fallido, mensaje de error.
+ * Agregar nueva persona.
+ * @param {string} req.body.NOMBRES - Nombres de la persona.
+ * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona.
+ * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona.
+ * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona.
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona.
+ * @return {json} Persona. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
-    CODI_FONO:    req.body.CODI_FONO,
-    NUMR_FONO:    req.body.NUMR_FONO,
-    IDEN_USUARIO: req.body.IDEN_USUARIO
+    NOMBRES:                req.body.NOMBRES,
+    APELLIDO_PATERNO:       req.body.APELLIDO_PATERNO,
+    APELLIDO_MATERNO:       req.body.APELLIDO_MATERNO,
+    FECH_FECHA_NACIMIENTO:  req.body.FECH_FECHA_NACIMIENTO,
+    IDEN_USUARIO:           req.body.IDEN_USUARIO
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
@@ -55,27 +59,33 @@ function POST (req, res) {
 }
 
 /**
- * Actualiza un teléfono.
- * @param {integer} req.params.id - ID de teléfono.
- * @param {integer} req.body.CODI_FONO - Código estandarizado de fono, el cual define si es fijo o móvil (opcional).
- * @param {string} req.body.NUMR_FONO - Número de teléfono (opcional).
- * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono (opcional).
+ * Actualiza una persona.
+ * @param {integer} req.params.id - ID de la persona.
+ * @param {string} req.body.NOMBRES - Nombres de la persona (opcional).
+ * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona (opcional).
+ * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona (opcional).
+ * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona (opcional).
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona (opcional).
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
-  new Model({IDEN_FONO: req.params.id})
+  new Model({IDEN_PERSONA: req.params.id})
     .fetch({require: true})
     .then(entity => {
       entity.save({
-        CODI_FONO:    (typeof req.body.CODI_FONO === 'undefined') ? entity.get('CODI_FONO') : req.body.CODI_FONO,
-        NUMR_FONO:    (typeof req.body.NUMR_FONO === 'undefined') ? entity.get('NUMR_FONO') : req.body.NUMR_FONO,
-        IDEN_USUARIO: (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO
+        NOMBRES:                (typeof req.body.NOMBRES === 'undefined') ? entity.get('NOMBRES') : req.body.NOMBRES,
+        APELLIDO_PATERNO:       (typeof req.body.APELLIDO_PATERNO === 'undefined') ? entity.get('APELLIDO_PATERNO') : req.body.APELLIDO_PATERNO,
+        APELLIDO_MATERNO:       (typeof req.body.APELLIDO_MATERNO === 'undefined') ? entity.get('APELLIDO_MATERNO') : req.body.APELLIDO_MATERNO,
+        FECH_FECHA_NACIMIENTO:  (typeof req.body.FECH_FECHA_NACIMIENTO === 'undefined') ? entity.get('FECH_FECHA_NACIMIENTO') : req.body.FECH_FECHA_NACIMIENTO,
+        IDEN_USUARIO:           (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO
       })
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})
-        }).catch(Checkit.Error, err => {
+        })
+        .catch(Checkit.Error, err => {
           res.status(400).json({error: true, data: err})
-        }).catch(err => {
+        })
+        .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
@@ -90,12 +100,12 @@ function PUT (req, res) {
 }
 
 /**
- * Elimina un teléfono.
- * @param {integer} req.params.id - ID de teléfono.
+ * Elimina una persona.
+ * @param {integer} req.params.id - ID de la persona.
  * @return {json} Mensaje de éxito o error.
  */
 function DELETE (req, res) {
-  new Model({IDEN_FONO: req.params.id})
+  new Model({IDEN_PERSONA: req.params.id})
     .destroy({require: true})
     .then(() => {
       res.json({error: false, data: {message: 'Entity successfully deleted'}})

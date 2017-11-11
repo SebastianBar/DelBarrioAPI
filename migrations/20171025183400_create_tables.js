@@ -22,13 +22,14 @@ exports.up = function (knex) {
     .then(createReqDenuncias)
     .then(createReqResolucionDenuncias)
     .then(createReqFaq)
+    .then(createReqMotivosDeshabilitacion)
+    .then(createReqDeshabilitacionesCuentas)
 
   function createSisRoles () {
     return knex.schema.createTableIfNotExists('SIS_ROLES', table => {
       table.increments('IDEN_ROL').unsigned().primary()
       table.integer('CODI_ROL').notNull().unique()
       table.string('NOMB_ROL').notNull()
-      table.string('DESC_ROL').notNull()
     })
   }
 
@@ -36,7 +37,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('SIS_PERMISOS', table => {
       table.increments('IDEN_PERMISO').unsigned().primary()
       table.integer('CODI_PERMISO').notNull().unique()
-      table.string('DESC_PERMISO').notNull()
+      table.string('NOMB_PERMISO').notNull()
     })
   }
 
@@ -54,7 +55,7 @@ exports.up = function (knex) {
   function createUsrUsuarios () {
     return knex.schema.createTableIfNotExists('USR_USUARIOS', table => {
       table.bigIncrements('IDEN_USUARIO').unsigned().primary()
-      table.integer('IDEN_ROL').unsigned()
+      table.integer('IDEN_ROL').unsigned().notNull()
       table.integer('RUT_USUARIO').notNull()
       table.string('DV_USUARIO', 1).notNull()
       table.string('EMAIL_USUARIO').notNull()
@@ -80,7 +81,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('PER_RUBROS', table => {
       table.increments('IDEN_RUBRO').unsigned().primary()
       table.string('NOMB_RUBRO').notNull()
-      table.string('DESC_RUBRO').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
 
@@ -126,7 +127,7 @@ exports.up = function (knex) {
       table.increments('IDEN_CATEGORIA').unsigned().primary()
       table.integer('IDEN_CATEGORIA_PADRE').unsigned()
       table.string('NOMB_CATEGORIA').notNull()
-      table.string('DESC_CATEGORIA').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
 
       table.foreign('IDEN_CATEGORIA_PADRE').references('REQ_CATEGORIAS.IDEN_CATEGORIA').onDelete('CASCADE').onUpdate('CASCADE')
     })
@@ -151,7 +152,7 @@ exports.up = function (knex) {
       table.integer('NUMR_PRECIO').unsigned().notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       table.boolean('FLAG_CONTENIDO_ADULTO').notNull().defaultTo(false)
-      table.boolean('FLAG_ACTIVA').notNull().defaultTo(true)
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
 
       table.foreign('IDEN_EMPRENDEDOR').references('PER_EMPRENDEDORES.IDEN_EMPRENDEDOR').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_TIPO_PUBLICACION').references('REQ_TIPOS_PUBLICACION.IDEN_TIPO_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
@@ -287,10 +288,33 @@ exports.up = function (knex) {
       table.string('DESC_FAQ').notNull()
     })
   }
+
+  function createReqMotivosDeshabilitacion () {
+    return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DESHABILITACION', table => {
+      table.increments('IDEN_MOTIVO_DESHABILITACION').unsigned().primary()
+      table.string('DESC_MOTIVO_DESHABILITACION').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
+    })
+  }
+
+  function createReqDeshabilitacionesCuentas () {
+    return knex.schema.createTableIfNotExists('REQ_DESHABILITACIONES_CUENTAS', table => {
+      table.increments('IDEN_DESHABILITACION_CUENTAS').unsigned().primary()
+      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.integer('IDEN_MOTIVO_DESHABILITACION').unsigned().notNull()
+      table.string('DESC_COMENTARIO').notNull()
+      table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
+
+      table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
+      table.foreign('IDEN_MOTIVO_DESHABILITACION').references('REQ_MOTIVOS_DESHABILITACION.IDEN_MOTIVO_DESHABILITACION').onDelete('CASCADE').onUpdate('CASCADE')
+    })
+  }
 }
 
 exports.down = function (knex) {
   return knex.schema
+    .dropTableIfExists('REQ_DESHABILITACIONES_CUENTAS')
+    .dropTableIfExists('REQ_MOTIVOS_DESHABILITACION')
     .dropTableIfExists('REQ_FAQ')
     .dropTableIfExists('REQ_RESOLUCION_DENUNCIAS')
     .dropTableIfExists('REQ_DENUNCIAS')

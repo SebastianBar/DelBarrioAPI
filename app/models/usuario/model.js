@@ -1,23 +1,29 @@
-'use strict'
-var bookshelf = require('../../connection').bookshelf
+import { bookshelf } from '../../connection'
+import validate from './validations'
+// import { genHash } from '../../auth/_helpers' -- ToDo
 
-var Usuario = bookshelf.Model.extend({
+/* Se define el modelo */
+const Model = bookshelf.Model.extend({
   tableName: 'USR_USUARIOS',
   idAttribute: 'IDEN_USUARIO',
   rol: function () {
-    return this.belongsTo(require('../rol/model').Rol, 'IDEN_ROL')
+    return this.belongsTo(require('../rol/model').Model, 'IDEN_ROL')
   },
   telefonos: function () {
-    return this.hasMany(require('../telefono/model').Telefono, 'IDEN_USUARIO')
+    return this.hasMany(require('../telefono/model').Model, 'IDEN_USUARIO')
+  },
+  initialize: function () {
+    this.on('saving', validate, this)
   }
 })
 
-var Usuarios = bookshelf.Collection.extend({
-  model: Usuario
+/* Se define colección a partir del modelo */
+const Collection = bookshelf.Collection.extend({
+  model: Model
 })
 
-/* Exports all methods */
+/* Se exportan las constantes */
 module.exports = {
-  Usuario,
-  Usuarios,
+  Model,
+  Collection,
 }

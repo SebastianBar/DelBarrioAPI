@@ -6,7 +6,7 @@ exports.seed = function (knex) {
       return knex.select('IDEN_ROL', 'CODI_ROL').from('SIS_ROLES')
         .then(roles => {
           return knex('USR_USUARIOS').insert([
-            {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, RUT_USUARIO: 10052465, DV_USUARIO: '1', EMAIL_USUARIO: 'cliente@test.com', DESC_PASSWORD: hash.genHash('cliente'), FLAG_VIGENTE: false},
+            {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, RUT_USUARIO: 10052465, DV_USUARIO: '1', EMAIL_USUARIO: 'cliente@test.com', DESC_PASSWORD: hash.genHash('cliente'), FLAG_VIGENTE: true},
             {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, RUT_USUARIO: 14560778, DV_USUARIO: '7', EMAIL_USUARIO: 'emprendedor@test.com', DESC_PASSWORD: hash.genHash('emprendedor'), FLAG_VIGENTE: true},
             {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, RUT_USUARIO: 11478240, DV_USUARIO: '8', EMAIL_USUARIO: 'administrador@test.com', DESC_PASSWORD: hash.genHash('administrador'), FLAG_VIGENTE: true},
           ])

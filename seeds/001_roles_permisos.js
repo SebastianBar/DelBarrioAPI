@@ -4,18 +4,18 @@ exports.seed = function (knex) {
     .then(() => { return knex('SIS_PERMISOS').del() })
     .then(() => {
       return knex('SIS_ROLES').insert([
-        {CODI_ROL: 101, NOMB_ROL: 'Cliente', DESC_ROL: 'Usuario normal del sistema'},
-        {CODI_ROL: 102, NOMB_ROL: 'Emprendedor', DESC_ROL: 'Emprendedores del sistema'},
-        {CODI_ROL: 103, NOMB_ROL: 'Administrador', DESC_ROL: 'Administradores del sistema'},
+        {CODI_ROL: 101, NOMB_ROL: 'Cliente'},
+        {CODI_ROL: 102, NOMB_ROL: 'Emprendedor'},
+        {CODI_ROL: 103, NOMB_ROL: 'Administrador'},
       ])
     })
     .then(() => {
       return knex('SIS_PERMISOS').insert([
-        {CODI_PERMISO: 101, DESC_PERMISO: 'Denunciar'},
-        {CODI_PERMISO: 102, DESC_PERMISO: 'Moderar denuncias'},
-        {CODI_PERMISO: 103, DESC_PERMISO: 'Ver reportería'},
-        {CODI_PERMISO: 104, DESC_PERMISO: 'Agregar nuevos emprendedores'},
-        {CODI_PERMISO: 105, DESC_PERMISO: 'Publicar contenido'},
+        {CODI_PERMISO: 101, NOMB_PERMISO: 'Denunciar'},
+        {CODI_PERMISO: 102, NOMB_PERMISO: 'Moderar denuncias'},
+        {CODI_PERMISO: 103, NOMB_PERMISO: 'Ver reportería'},
+        {CODI_PERMISO: 104, NOMB_PERMISO: 'Agregar nuevos emprendedores'},
+        {CODI_PERMISO: 105, NOMB_PERMISO: 'Publicar contenido'},
       ])
     })
     .then(() => {

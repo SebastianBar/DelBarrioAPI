@@ -1,29 +1,28 @@
-'use strict'
-var model = require('./model')
+import { Model, Collection } from './model'
 
-/*
-**** METODOS HTTP UTILIZADOS ****
-* GET:      Consultar y leer recursos
-*/
-
-var getPermiso = function (req, res) {
-  const permisoId = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(permisoId != 0) {
-    new model.Permiso({IDEN_PERMISO: permisoId}).fetch({withRelated: ['roles']})
-      .then(permiso => {
-        if(!permiso) {
-          res.status(404).json({error: true, data: {message: 'Permiso not found'}})
+/**
+ * Obtener permisos.
+ * @param {integer} req.params.id - ID del permiso (opcional).
+ * @return {json} Permiso(s). En caso fallido, mensaje de error.
+ */
+function GET (req, res) {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
+  if(id != 0) {
+    new Model({IDEN_PERMISO: id}).fetch({withRelated: ['roles']})
+      .then(entity => {
+        if(!entity) {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: permiso.toJSON()})
+          res.json({error: false, data: entity.toJSON()})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
       })
   } else {
-    new model.Permisos().fetch({withRelated: ['roles']})
-      .then(permisos => {
-        res.json({error: false, data: permisos.toJSON()})
+    new Collection().fetch({withRelated: ['roles']})
+      .then(entities => {
+        res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -31,7 +30,7 @@ var getPermiso = function (req, res) {
   }
 }
 
-/* Exports all methods */
+/* Se exportan los métodos */
 module.exports = {
-  getPermiso
+  GET
 }
