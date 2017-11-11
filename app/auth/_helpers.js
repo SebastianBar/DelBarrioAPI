@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs'
+const bcrypt = require('bcryptjs')
 
 /**
  * Comparación de una contraseña respecto a su hash.

@@ -1,5 +1,5 @@
 import { Model, Collection } from './model'
-import { genHash } from '../../auth/_helpers'
+import Checkit from 'checkit'
 
 /**
  * Obtener usuarios.
@@ -9,7 +9,7 @@ import { genHash } from '../../auth/_helpers'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos']})
+    new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos'], columns: ['IDEN_USUARIO', 'IDEN_ROL', 'RUT_USUARIO', 'DV_USUARIO', 'EMAIL_USUARIO', 'FLAG_VIGENTE']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -21,7 +21,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch({withRelated: ['telefonos']})
+    new Collection().fetch({withRelated: ['telefonos'], columns: ['IDEN_USUARIO', 'IDEN_ROL', 'RUT_USUARIO', 'DV_USUARIO', 'EMAIL_USUARIO', 'FLAG_VIGENTE']})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
@@ -47,11 +47,13 @@ function POST (req, res) {
     RUT_USUARIO:    req.body.RUT_USUARIO,
     DV_USUARIO:     req.body.DV_USUARIO,
     EMAIL_USUARIO:  req.body.EMAIL_USUARIO,
-    DESC_PASSWORD:  genHash(req.body.DESC_PASSWORD),
+    DESC_PASSWORD:  req.body.DESC_PASSWORD,
     FLAG_VIGENTE:   req.body.FLAG_VIGENTE
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
+    }).catch(Checkit.Error, err => {
+      res.status(400).json({error: true, data: err})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
@@ -76,13 +78,14 @@ function PUT (req, res) {
         RUT_USUARIO:    (typeof req.body.RUT_USUARIO === 'undefined') ? entity.get('RUT_USUARIO') : req.body.RUT_USUARIO,
         DV_USUARIO:     (typeof req.body.DV_USUARIO === 'undefined') ? entity.get('DV_USUARIO') : req.body.DV_USUARIO,
         EMAIL_USUARIO:  (typeof req.body.EMAIL_USUARIO === 'undefined') ? entity.get('EMAIL_USUARIO') : req.body.EMAIL_USUARIO,
-        DESC_PASSWORD:  (typeof req.body.DESC_PASSWORD === 'undefined') ? entity.get('DESC_PASSWORD') : genHash(req.body.DESC_PASSWORD),
+        DESC_PASSWORD:  (typeof req.body.DESC_PASSWORD === 'undefined') ? entity.get('DESC_PASSWORD') : req.body.DESC_PASSWORD,
         FLAG_VIGENTE:   (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
       })
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})
-        })
-        .catch(err => {
+        }).catch(Checkit.Error, err => {
+          res.status(400).json({error: true, data: err})
+        }).catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })

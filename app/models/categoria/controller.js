@@ -78,12 +78,13 @@ function PUT (req, res) {
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})
         })
+        .catch(Checkit.Error, err => {
+          res.status(400).json({error: true, data: err})
+        })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
-    }).catch(ValidationError, err => {
-      res.status(400).json({error: true, data: err.data})
     })
     .catch(Model.NotFoundError, () => {
       res.status(404).json({error: true, data: {message: 'Entity not found'}})

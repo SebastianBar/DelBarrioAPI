@@ -1,4 +1,5 @@
-import bookshelf from '../../connection'
+import { bookshelf } from '../../connection'
+import validate from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
@@ -6,6 +7,9 @@ const Model = bookshelf.Model.extend({
   idAttribute: 'IDEN_FONO',
   usuario: function () {
     return this.belongsTo(require('../usuario/model').Model, 'IDEN_USUARIO')
+  },
+  initialize: function () {
+    this.on('saving', validate, this)
   }
 })
 

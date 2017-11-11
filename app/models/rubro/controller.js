@@ -1,4 +1,5 @@
 import { Model, Collection } from './model'
+import Checkit from 'checkit'
 
 /**
  * Obtener rubros.
@@ -43,6 +44,8 @@ function POST (req, res) {
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
+    }).catch(Checkit.Error, err => {
+      res.status(400).json({error: true, data: err})
     }).catch(err => {
       res.status(500).json({error: true, data: {message: 'Internal error'}})
       throw err
@@ -66,8 +69,9 @@ function PUT (req, res) {
       })
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})
-        })
-        .catch(err => {
+        }).catch(Checkit.Error, err => {
+          res.status(400).json({error: true, data: err})
+        }).catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
