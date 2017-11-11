@@ -1,4 +1,4 @@
-import bookshelf from '../../connection'
+import { bookshelf } from '../../connection'
 import validate from './validations'
 
 /* Se define el modelo */
