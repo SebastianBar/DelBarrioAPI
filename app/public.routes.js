@@ -1,5 +1,5 @@
 import routesInicio from './_inicio/routes'
-import routesAuth from './auth/routes'
+import routesAuth from './auth/public.routes'
 import routesRol from './models/rol/routes'
 import routesPermiso from './models/permiso/routes'
 import routesUsuario from './models/usuario/routes'

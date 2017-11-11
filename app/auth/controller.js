@@ -39,7 +39,12 @@ function authenticate (req, res) {
   }
 }
 
+function getUsuario (req, res) {
+  res.json({error: false, data: req.user.toJSON()})
+}
+
 /* Se exporta el método */
 module.exports = {
-  authenticate
+  authenticate,
+  getUsuario
 }

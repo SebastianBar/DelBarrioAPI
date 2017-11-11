@@ -15,7 +15,7 @@ const jwtOptions = {
  * Validará si el token sigue siendo válido, además validará que el usuario siga existiendo en el sistema.
  */
 const strategy = new passportJWT.Strategy(jwtOptions, ((jwt_payload, next) => {
-  new Model({IDEN_USUARIO: jwt_payload.id}).fetch()
+  new Model({IDEN_USUARIO: jwt_payload.id}).fetch({columns: ['IDEN_USUARIO', 'IDEN_ROL', 'RUT_USUARIO', 'DV_USUARIO', 'EMAIL_USUARIO', 'FLAG_VIGENTE']})
     .then(user => {
       if (user && user.attributes.FLAG_VIGENTE) {
         next(null, user)
