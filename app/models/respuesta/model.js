@@ -3,10 +3,10 @@ import validate from './validations'
 
 /* Se define el modelo */
 const Model = bookshelf.Model.extend({
-  tableName: 'SIS_PERMISOS',
-  idAttribute: 'IDEN_PERMISO',
-  roles: function () {
-    return this.belongsToMany(require('../rol/model').Model, 'SIS_PERMISOS_ROLES', 'IDEN_PERMISO', 'IDEN_ROL')
+  tableName: 'REQ_RESPUESTAS',
+  idAttribute: 'IDEN_RESPUESTA',
+  comentario: function () {
+    return this.belongsTo(require('../comentario/model').Model, 'IDEN_COMENTARIO')
   },
   initialize: function () {
     this.on('saving', validate, this)

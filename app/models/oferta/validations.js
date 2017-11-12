@@ -3,42 +3,44 @@ import { knex } from '../../connection'
 
 // Nombres de atributos en formato legible
 const labels = {
-  IDEN_USUARIO: 'ID de usuario',
-  NUMR_FONO: 'Número de teléfono',
-  CODI_FONO: 'Código de identificación de tipo de teléfono'
+  IDEN_PUBLICACION: 'ID de publicación',
+  FECH_INICIO: 'Fecha de inicio',
+  FECH_TERMINO: 'Fecha de término',
+  NUMR_PRECIO: 'Precio de oferta'
 }
 
 // Valores nativos de validaciones Checkit en https://github.com/tgriesser/checkit
 const validations = {
-  IDEN_USUARIO: [{
+  IDEN_PUBLICACION: [{
     rule: 'required',
-    label: labels.IDEN_USUARIO
+    label: labels.IDEN_PUBLICACION
   }, {
     rule: 'number',
-    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
+    message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
   }, {
     rule: function (val){
-      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
+      return knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
         .then(resp => {
           if (resp.length == 0){
-            throw new Error(labels.IDEN_USUARIO + ' no existe')
+            throw new Error(labels.IDEN_PUBLICACION + ' no existe')
           }
         })
     }
   }],
-  NUMR_FONO: [{
+  FECH_INICIO: [{
     rule: 'required',
-    label: labels.NUMR_FONO
-  }, {
-    rule: 'maxLength:255',
-    label: labels.NUMR_FONO
+    label: labels.FECH_INICIO
   }],
-  CODI_FONO: [{
+  FECH_TERMINO: [{
     rule: 'required',
-    label: labels.CODI_FONO
+    label: labels.FECH_TERMINO
+  }],
+  NUMR_PRECIO: [{
+    rule: 'required',
+    label: labels.NUMR_PRECIO
   }, {
     rule: 'number',
-    message: labels.CODI_FONO + ' debe ser integer'
+    message: labels.NUMR_PRECIO + ' debe ser integer'
   }]
 }
 

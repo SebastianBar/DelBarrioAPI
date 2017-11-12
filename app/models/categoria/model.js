@@ -8,6 +8,9 @@ const Model = bookshelf.Model.extend({
   subcategorias: function () {
     return this.hasMany(require('../categoria/model').Model, 'IDEN_CATEGORIA_PADRE')
   },
+  publicaciones: function () {
+    return this.hasMany(require('../publicacion/model').Model, 'IDEN_PUBLICACION')
+  },
   initialize: function () {
     this.on('saving', validate, this)
   }

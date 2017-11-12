@@ -1,4 +1,4 @@
-import bookshelf from '../../connection'
+import { bookshelf } from '../../connection'
 import validate from './validations'
 
 /* Se define el modelo */
@@ -10,6 +10,9 @@ const Model = bookshelf.Model.extend({
   },
   rubros: function () {
     return this.belongsToMany(require('../rubro/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
+  },
+  publicaciones: function () {
+    return this.hasMany(require('../publicacion/model').Model, 'IDEN_PUBLICACION')
   },
   initialize: function () {
     this.on('saving', validate, this)

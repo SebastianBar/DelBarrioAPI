@@ -54,7 +54,7 @@ exports.up = function (knex) {
 
   function createUsrUsuarios () {
     return knex.schema.createTableIfNotExists('USR_USUARIOS', table => {
-      table.bigIncrements('IDEN_USUARIO').unsigned().primary()
+      table.increments('IDEN_USUARIO').unsigned().primary()
       table.integer('IDEN_ROL').unsigned().notNull()
       table.integer('RUT_USUARIO').notNull()
       table.string('DV_USUARIO', 1).notNull()
@@ -68,8 +68,8 @@ exports.up = function (knex) {
 
   function createPerTelefonos () {
     return knex.schema.createTableIfNotExists('PER_TELEFONOS', table => {
-      table.bigIncrements('IDEN_FONO').unsigned().primary()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_FONO').unsigned().primary()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.string('NUMR_FONO').notNull()
       table.integer('CODI_FONO').notNull()
     
@@ -87,8 +87,8 @@ exports.up = function (knex) {
 
   function createPerEmprendedores () {
     return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', table => {
-      table.bigIncrements('IDEN_EMPRENDEDOR').unsigned().primary()
-      table.bigInteger('IDEN_USUARIO').unsigned()
+      table.increments('IDEN_EMPRENDEDOR').unsigned().primary()
+      table.integer('IDEN_USUARIO').unsigned()
       table.string('DESC_EMPRENDEDOR').notNull()
       table.string('DESC_CLAVE_MUNICIPALIDAD').notNull()
       table.string('DESC_NOMBRE_FANTASIA').notNull()
@@ -102,7 +102,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('PER_RUBROS_EMPRENDEDORES', table => {
       table.increments('IDEN_RUBROS_EMPRENDEDORES').unsigned().primary()
       table.integer('IDEN_RUBRO').unsigned().notNull()
-      table.bigInteger('IDEN_EMPRENDEDOR').unsigned().notNull()
+      table.integer('IDEN_EMPRENDEDOR').unsigned().notNull()
         
       table.foreign('IDEN_RUBRO').references('PER_RUBROS.IDEN_RUBRO').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_EMPRENDEDOR').references('PER_EMPRENDEDORES.IDEN_EMPRENDEDOR').onDelete('CASCADE').onUpdate('CASCADE')
@@ -111,8 +111,8 @@ exports.up = function (knex) {
 
   function createPerPersonas () {
     return knex.schema.createTableIfNotExists('PER_PERSONAS', table => {
-      table.bigIncrements('IDEN_PERSONA').unsigned().primary()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_PERSONA').unsigned().primary()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.string('NOMBRES').notNull()
       table.string('APELLIDO_PATERNO').notNull()
       table.string('APELLIDO_MATERNO').notNull()
@@ -136,15 +136,14 @@ exports.up = function (knex) {
   function createReqTiposPublicacion () {
     return knex.schema.createTableIfNotExists('REQ_TIPOS_PUBLICACION', table => {
       table.increments('IDEN_TIPO_PUBLICACION').unsigned().primary()
-      table.string('NOMB_TIPO_PUBLICACION').notNull()
-      table.string('DESC_TIPO_PUBLICACION').notNull()
+      table.string('NOMB_TIPO_PUBLICACION', 20).notNull()
     })
   }
 
   function createReqPublicaciones () {
     return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES', table => {
-      table.bigIncrements('IDEN_PUBLICACION').unsigned().primary()
-      table.bigInteger('IDEN_EMPRENDEDOR').unsigned().notNull()
+      table.increments('IDEN_PUBLICACION').unsigned().primary()
+      table.integer('IDEN_EMPRENDEDOR').unsigned().notNull()
       table.integer('IDEN_TIPO_PUBLICACION').unsigned().notNull()
       table.integer('IDEN_CATEGORIA').unsigned().notNull()
       table.string('NOMB_PUBLICACION').notNull()
@@ -162,9 +161,9 @@ exports.up = function (knex) {
 
   function createReqImagenes () {
     return knex.schema.createTableIfNotExists('REQ_IMAGENES', table => {
-      table.bigIncrements('IDEN_IMAGEN').unsigned().primary()
-      table.bigInteger('IDEN_PUBLICACION').unsigned()
-      table.bigInteger('IDEN_EMPRENDEDOR').unsigned()
+      table.increments('IDEN_IMAGEN').unsigned().primary()
+      table.integer('IDEN_PUBLICACION').unsigned()
+      table.integer('IDEN_EMPRENDEDOR').unsigned()
       table.string('URL_IMAGEN').notNull()
 
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
@@ -175,7 +174,7 @@ exports.up = function (knex) {
   function createReqOfertas () {
     return knex.schema.createTableIfNotExists('REQ_OFERTAS', table => {
       table.increments('IDEN_OFERTA').unsigned().primary()
-      table.bigInteger('IDEN_PUBLICACION').unsigned()
+      table.integer('IDEN_PUBLICACION').unsigned()
       table.dateTime('FECH_INICIO').notNull()
       table.dateTime('FECH_TERMINO').notNull()
       table.integer('NUMR_PRECIO').unsigned().notNull()
@@ -186,16 +185,16 @@ exports.up = function (knex) {
 
   function createReqEtiquetas () {
     return knex.schema.createTableIfNotExists('REQ_ETIQUETAS', table => {
-      table.bigIncrements('IDEN_ETIQUETA').unsigned().primary()
+      table.increments('IDEN_ETIQUETA').unsigned().primary()
       table.string('NOMB_ETIQUETA').notNull()
     })
   }
 
   function createReqPublicacionesEtiquetas () {
     return knex.schema.createTableIfNotExists('REQ_PUBLICACIONES_ETIQUETAS', table => {
-      table.bigIncrements('IDEN_PUBLICACION_ETIQUETA').unsigned().primary()
-      table.bigInteger('IDEN_ETIQUETA').unsigned().notNull()
-      table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
+      table.increments('IDEN_PUBLICACION_ETIQUETA').unsigned().primary()
+      table.integer('IDEN_ETIQUETA').unsigned().notNull()
+      table.integer('IDEN_PUBLICACION').unsigned().notNull()
 
       table.foreign('IDEN_ETIQUETA').references('REQ_ETIQUETAS.IDEN_ETIQUETA').onDelete('CASCADE').onUpdate('CASCADE')
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
@@ -204,9 +203,9 @@ exports.up = function (knex) {
 
   function createReqComentarios () {
     return knex.schema.createTableIfNotExists('REQ_COMENTARIOS', table => {
-      table.bigIncrements('IDEN_COMENTARIO').unsigned().primary()
-      table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_COMENTARIO').unsigned().primary()
+      table.integer('IDEN_PUBLICACION').unsigned().notNull()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.string('DESC_COMENTARIO').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
@@ -217,8 +216,8 @@ exports.up = function (knex) {
 
   function createReqRespuestas () {
     return knex.schema.createTableIfNotExists('REQ_RESPUESTAS', table => {
-      table.bigIncrements('IDEN_RESPUESTA').unsigned().primary()
-      table.bigInteger('IDEN_COMENTARIO').unsigned().notNull()
+      table.increments('IDEN_RESPUESTA').unsigned().primary()
+      table.integer('IDEN_COMENTARIO').unsigned().notNull().unique()
       table.string('DESC_RESPUESTA').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
@@ -228,9 +227,9 @@ exports.up = function (knex) {
 
   function createReqCalificaciones () {
     return knex.schema.createTableIfNotExists('REQ_CALIFICACIONES', table => {
-      table.bigIncrements('IDEN_CALIFICACION').unsigned().primary()
-      table.bigInteger('IDEN_PUBLICACION').unsigned().notNull()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_CALIFICACION').unsigned().primary()
+      table.integer('IDEN_PUBLICACION').unsigned().notNull()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.integer('NUMR_VALOR').notNull()
       table.string('DESC_CALIFICACION')
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
@@ -244,17 +243,17 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DENUNCIA', table => {
       table.increments('IDEN_MOTIVO_DENUNCIA').unsigned().primary()
       table.string('NOMB_MOTIVO_DENUNCIA').notNull()
-      table.string('DESC_MOTIVO_DENUNCIA').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
 
   function createReqDenuncias () {
     return knex.schema.createTableIfNotExists('REQ_DENUNCIAS', table => {
-      table.bigIncrements('IDEN_DENUNCIA').unsigned().primary()
-      table.bigInteger('IDEN_PUBLICACION').unsigned()
-      table.bigInteger('IDEN_CALIFICACION').unsigned()
-      table.bigInteger('IDEN_COMENTARIO').unsigned()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_DENUNCIA').unsigned().primary()
+      table.integer('IDEN_PUBLICACION').unsigned()
+      table.integer('IDEN_CALIFICACION').unsigned()
+      table.integer('IDEN_COMENTARIO').unsigned()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.integer('IDEN_MOTIVO_DENUNCIA').unsigned().notNull()
       table.text('DESC_DENUNCIA').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
@@ -269,9 +268,9 @@ exports.up = function (knex) {
 
   function createReqResolucionDenuncias () {
     return knex.schema.createTableIfNotExists('REQ_RESOLUCION_DENUNCIAS', table => {
-      table.bigIncrements('IDEN_RESOLUCION_DENUNCIA').unsigned().primary()
-      table.bigInteger('IDEN_DENUNCIA').unsigned().notNull()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+      table.increments('IDEN_RESOLUCION_DENUNCIA').unsigned().primary()
+      table.integer('IDEN_DENUNCIA').unsigned().notNull()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.string('ESTD_RESOLUCION', 1).notNull().defaultTo('A')
       table.string('DESC_RESOLUCION').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
@@ -292,15 +291,15 @@ exports.up = function (knex) {
   function createReqMotivosDeshabilitacion () {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DESHABILITACION', table => {
       table.increments('IDEN_MOTIVO_DESHABILITACION').unsigned().primary()
-      table.string('DESC_MOTIVO_DESHABILITACION').notNull()
+      table.string('NOMB_MOTIVO_DESHABILITACION').notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
 
   function createReqDeshabilitacionesCuentas () {
-    return knex.schema.createTableIfNotExists('REQ_DESHABILITACIONES_CUENTAS', table => {
-      table.increments('IDEN_DESHABILITACION_CUENTAS').unsigned().primary()
-      table.bigInteger('IDEN_USUARIO').unsigned().notNull()
+    return knex.schema.createTableIfNotExists('REQ_DESHABILITACION_CUENTAS', table => {
+      table.increments('IDEN_DESHABILITACION_CUENTA').unsigned().primary()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
       table.integer('IDEN_MOTIVO_DESHABILITACION').unsigned().notNull()
       table.string('DESC_COMENTARIO').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
@@ -313,7 +312,7 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return knex.schema
-    .dropTableIfExists('REQ_DESHABILITACIONES_CUENTAS')
+    .dropTableIfExists('REQ_DESHABILITACION_CUENTAS')
     .dropTableIfExists('REQ_MOTIVOS_DESHABILITACION')
     .dropTableIfExists('REQ_FAQ')
     .dropTableIfExists('REQ_RESOLUCION_DENUNCIAS')

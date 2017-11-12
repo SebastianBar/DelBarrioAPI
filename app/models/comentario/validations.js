@@ -3,13 +3,29 @@ import { knex } from '../../connection'
 
 // Nombres de atributos en formato legible
 const labels = {
+  IDEN_PUBLICACION: 'ID de publicación',
   IDEN_USUARIO: 'ID de usuario',
-  NUMR_FONO: 'Número de teléfono',
-  CODI_FONO: 'Código de identificación de tipo de teléfono'
+  DESC_COMENTARIO: 'Texto del comentario'
 }
 
-// Valores nativos de validaciones Checkit en https://github.com/tgriesser/checkit
+// Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
+  IDEN_PUBLICACION: [{
+    rule: 'required',
+    label: labels.IDEN_PUBLICACION
+  }, {
+    rule: 'number',
+    message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
+  }, {
+    rule: function (val){
+      return knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
+        .then(resp => {
+          if (resp.length == 0){
+            throw new Error(labels.IDEN_PUBLICACION + ' no existe')
+          }
+        })
+    }
+  }],
   IDEN_USUARIO: [{
     rule: 'required',
     label: labels.IDEN_USUARIO
@@ -26,19 +42,12 @@ const validations = {
         })
     }
   }],
-  NUMR_FONO: [{
+  DESC_COMENTARIO: [{
     rule: 'required',
-    label: labels.NUMR_FONO
+    label: labels.DESC_COMENTARIO
   }, {
     rule: 'maxLength:255',
-    label: labels.NUMR_FONO
-  }],
-  CODI_FONO: [{
-    rule: 'required',
-    label: labels.CODI_FONO
-  }, {
-    rule: 'number',
-    message: labels.CODI_FONO + ' debe ser integer'
+    label: labels.DESC_COMENTARIO
   }]
 }
 
@@ -50,5 +59,5 @@ function validate (model) {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 
-// Se exporta la función
+// Se exporta función
 export default validate
