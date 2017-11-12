@@ -50,12 +50,21 @@ const validations = {
     label: labels.FECH_FECHA_NACIMIENTO
   }],
   IDEN_USUARIO: [{
-    rule: ['number', function (id) {
-      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', id).then(resp => {
-        if(resp.length == 0) throw new Error(labels.IDEN_USUARIO + ' no existe.')
-      })
-    }]
-  }]
+    rule: 'required',
+    label: labels.IDEN_USUARIO
+  }, {
+    rule: 'number',
+    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
+  }, {
+    rule: function (val){
+      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
+        .then(resp => {
+          if (resp.length == 0){
+            throw new Error(labels.IDEN_USUARIO + ' no existe')
+          }
+        })
+    }
+  }],
 }
 
 /**

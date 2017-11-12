@@ -244,7 +244,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DENUNCIA', table => {
       table.increments('IDEN_MOTIVO_DENUNCIA').unsigned().primary()
       table.string('NOMB_MOTIVO_DENUNCIA').notNull()
-      table.string('DESC_MOTIVO_DENUNCIA').notNull()
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
 
@@ -298,8 +298,8 @@ exports.up = function (knex) {
   }
 
   function createReqDeshabilitacionesCuentas () {
-    return knex.schema.createTableIfNotExists('REQ_DESHABILITACIONES_CUENTAS', table => {
-      table.increments('IDEN_DESHABILITACION_CUENTAS').unsigned().primary()
+    return knex.schema.createTableIfNotExists('REQ_DESHABILITACION_CUENTAS', table => {
+      table.increments('IDEN_DESHABILITACION_CUENTA').unsigned().primary()
       table.bigInteger('IDEN_USUARIO').unsigned().notNull()
       table.integer('IDEN_MOTIVO_DESHABILITACION').unsigned().notNull()
       table.string('DESC_COMENTARIO').notNull()
@@ -313,7 +313,7 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return knex.schema
-    .dropTableIfExists('REQ_DESHABILITACIONES_CUENTAS')
+    .dropTableIfExists('REQ_DESHABILITACION_CUENTAS')
     .dropTableIfExists('REQ_MOTIVOS_DESHABILITACION')
     .dropTableIfExists('REQ_FAQ')
     .dropTableIfExists('REQ_RESOLUCION_DENUNCIAS')

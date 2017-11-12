@@ -15,7 +15,7 @@ const validations = {
     label: labels.IDEN_USUARIO
   }, {
     rule: 'number',
-    message: labels.IDEN_USUARIO + ' debe ser integer'
+    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
   }, {
     rule: function (val){
       return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
