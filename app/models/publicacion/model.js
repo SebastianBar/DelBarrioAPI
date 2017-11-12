@@ -1,0 +1,34 @@
+import { bookshelf } from '../../connection'
+import validate from './validations'
+
+/* Se define el modelo */
+const Model = bookshelf.Model.extend({
+  tableName: 'REQ_PUBLICACIONES',
+  idAttribute: 'IDEN_PUBLICACION',
+  emprendedor: function () {
+    return this.belongsTo(require('../emprendedor/model').Model, 'IDEN_EMPRENDEDOR')
+  },
+  tipo_publicacion: function () {
+    return this.belongsTo(require('../tipo_publicacion/model').Model, 'IDEN_TIPO_PUBLICACION')
+  },
+  categoria: function () {
+    return this.belongsTo(require('../categoria/model').Model, 'IDEN_CATEGORIA')
+  },
+  ofertas: function () {
+    return this.hasMany(require('../oferta/model').Model, 'IDEN_PUBLICACION')
+  },
+  initialize: function () {
+    this.on('saving', validate, this)
+  }
+})
+
+/* Se define colección a partir del modelo */
+const Collection = bookshelf.Collection.extend({
+  model: Model
+})
+
+/* Se exportan las constantes */
+module.exports = {
+  Model,
+  Collection,
+}
