@@ -45,9 +45,6 @@ const validations = {
   FECH_FECHA_NACIMIENTO: [{
     rule: 'required',
     label: labels.FECH_FECHA_NACIMIENTO
-  }, {
-    rule: 'date',
-    label: labels.FECH_FECHA_NACIMIENTO
   }],
   IDEN_USUARIO: [{
     rule: 'required',

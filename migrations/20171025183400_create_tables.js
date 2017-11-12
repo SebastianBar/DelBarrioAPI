@@ -292,7 +292,7 @@ exports.up = function (knex) {
   function createReqMotivosDeshabilitacion () {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DESHABILITACION', table => {
       table.increments('IDEN_MOTIVO_DESHABILITACION').unsigned().primary()
-      table.string('DESC_MOTIVO_DESHABILITACION').notNull()
+      table.string('NOMB_MOTIVO_DESHABILITACION').notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
