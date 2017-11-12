@@ -217,7 +217,7 @@ exports.up = function (knex) {
   function createReqRespuestas () {
     return knex.schema.createTableIfNotExists('REQ_RESPUESTAS', table => {
       table.increments('IDEN_RESPUESTA').unsigned().primary()
-      table.integer('IDEN_COMENTARIO').unsigned().notNull()
+      table.integer('IDEN_COMENTARIO').unsigned().notNull().unique()
       table.string('DESC_RESPUESTA').notNull()
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       

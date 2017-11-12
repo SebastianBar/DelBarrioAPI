@@ -14,6 +14,9 @@ import routesMotivoDenuncia from './models/motivo_denuncia/routes'
 import routesTipoPublicacion from './models/tipo_publicacion/routes'
 import routesPublicacion from './models/publicacion/routes'
 import routesOferta from './models/oferta/routes'
+import routesComentario from './models/comentario/routes'
+import routesCalificacion from './models/calificacion/routes'
+import routesRespuesta from './models/respuesta/routes'
 
 /*
 * Todas las rutas públicas para desarrollo
@@ -34,7 +37,10 @@ const routes = [
   routesMotivoDenuncia,
   routesTipoPublicacion,
   routesPublicacion,
-  routesOferta
+  routesOferta,
+  routesComentario,
+  routesCalificacion,
+  routesRespuesta
 ]
 
 export default routes
