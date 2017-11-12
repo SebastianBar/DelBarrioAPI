@@ -1,5 +1,6 @@
 import Checkit from 'checkit'
 import { knex } from '../../connection'
+import { genHash } from '../../auth/_helpers'
 
 // Nombres de atributos en formato legible
 const labels = {
@@ -140,7 +141,12 @@ function validate (model) {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
     .then(() => {
       return Checkit(rutValidation).run({RUT_USUARIO: model.attributes.RUT_USUARIO + '-' + model.attributes.DV_USUARIO})
-    }) 
+    })
+    .then(() => {
+      // If password isn't a hash, update it before saving
+      if (! /^\$2[ayb]\$.{56}$/.test(model.attributes.DESC_PASSWORD))
+        model.attributes.DESC_PASSWORD = genHash(model.attributes.DESC_PASSWORD)
+    })
 }
 
 // Se exporta la función
