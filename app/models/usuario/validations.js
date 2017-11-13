@@ -9,7 +9,8 @@ const labels = {
   DV_USUARIO: 'Dígito verificador',
   EMAIL_USUARIO: 'Correo electrónico',
   DESC_PASSWORD: 'Contraseña',
-  FLAG_VIGENTE: 'Vigencia'
+  FLAG_VIGENTE: 'Vigencia',
+  FLAG_BAN: 'Baneo'
 }
 
 // Valores nativos de validaciones Checkit en https://github.com/tgriesser/checkit
@@ -76,6 +77,10 @@ const validations = {
   FLAG_VIGENTE: [{
     rule: 'boolean',
     label: labels.FLAG_VIGENTE
+  }],
+  FLAG_BAN: [{
+    rule: 'boolean',
+    label: labels.FLAG_BAN
   }]
 }
 

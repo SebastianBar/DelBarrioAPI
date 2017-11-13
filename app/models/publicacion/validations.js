@@ -4,13 +4,14 @@ import { knex } from '../../connection'
 // Nombres de atributos en formato legible
 const labels = {
   IDEN_EMPRENDEDOR: 'ID de emprendedor',
-  IDEN_TIPO_PUBLICACION: 'ID de tipo de publicación',
   IDEN_CATEGORIA: 'ID de categoría',
+  CODI_TIPO_PUBLICACION: 'Tipo de publicación',
   NOMB_PUBLICACION: 'Nombre de publicación',
   DESC_PUBLICACION: 'Descripción de publicación',
   NUMR_PRECIO: 'Precio de publicación',
   FLAG_CONTENIDO_ADULTO: 'Contenido adulto',
-  FLAG_VIGENTE: 'Vigencia'
+  FLAG_VIGENTE: 'Vigencia',
+  FLAG_BAN: 'Baneo'
 }
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
@@ -27,22 +28,6 @@ const validations = {
         .then(resp => {
           if (resp.length == 0){
             throw new Error(labels.IDEN_EMPRENDEDOR + ' no existe')
-          }
-        })
-    }
-  }],
-  IDEN_TIPO_PUBLICACION: [{
-    rule: 'required',
-    label: labels.IDEN_TIPO_PUBLICACION
-  }, {
-    rule: 'number',
-    message: labels.IDEN_TIPO_PUBLICACION + ' debe ser de tipo "integer"'
-  }, {
-    rule: function (val){
-      return knex('REQ_TIPOS_PUBLICACION').where('IDEN_TIPO_PUBLICACION', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_TIPO_PUBLICACION + ' no existe')
           }
         })
     }
@@ -97,6 +82,10 @@ const validations = {
   FLAG_VIGENTE: [{
     rule: 'boolean',
     label: labels.FLAG_VIGENTE
+  }],
+  FLAG_BAN: [{
+    rule: 'boolean',
+    label: labels.FLAG_BAN
   }]
 }
 

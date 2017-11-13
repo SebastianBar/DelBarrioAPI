@@ -11,7 +11,6 @@ import routesPersona from './models/persona/routes'
 import routesFaq from './models/faq/routes'
 import routesMotivoDeshabilitacion from './models/motivo_deshabilitacion/routes'
 import routesMotivoDenuncia from './models/motivo_denuncia/routes'
-import routesTipoPublicacion from './models/tipo_publicacion/routes'
 import routesPublicacion from './models/publicacion/routes'
 import routesOferta from './models/oferta/routes'
 import routesComentario from './models/comentario/routes'
@@ -35,7 +34,6 @@ const routes = [
   routesFaq,
   routesMotivoDeshabilitacion,
   routesMotivoDenuncia,
-  routesTipoPublicacion,
   routesPublicacion,
   routesOferta,
   routesComentario,

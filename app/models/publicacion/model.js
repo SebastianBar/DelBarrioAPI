@@ -8,9 +8,6 @@ const Model = bookshelf.Model.extend({
   emprendedor: function () {
     return this.belongsTo(require('../emprendedor/model').Model, 'IDEN_EMPRENDEDOR')
   },
-  tipo_publicacion: function () {
-    return this.belongsTo(require('../tipo_publicacion/model').Model, 'IDEN_TIPO_PUBLICACION')
-  },
   categoria: function () {
     return this.belongsTo(require('../categoria/model').Model, 'IDEN_CATEGORIA')
   },

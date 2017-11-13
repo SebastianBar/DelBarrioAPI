@@ -7,6 +7,7 @@ exports.seed = function (knex) {
         {CODI_ROL: 101, NOMB_ROL: 'Cliente'},
         {CODI_ROL: 102, NOMB_ROL: 'Emprendedor'},
         {CODI_ROL: 103, NOMB_ROL: 'Administrador'},
+        {CODI_ROL: 104, NOMB_ROL: 'Super Administrador'},
       ])
     })
     .then(() => {
