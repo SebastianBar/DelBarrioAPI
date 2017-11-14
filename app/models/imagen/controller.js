@@ -52,9 +52,17 @@ function POST (req, res) {
       })
       return validate(model)
         .then(() => {
-          // Atributos son válidos, validar cruce de archivos con atributos
-          if(req.files.avatar && !req.body.IDEN_EMPRENDEDOR) {
+          if(req.body.IDEN_PUBLICACION === undefined && req.body.IDEN_EMPRENDEDOR === undefined) {
+            res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required'}})
+          }
+          else if(!req.files.avatar && req.body.IDEN_EMPRENDEDOR) {
+            res.status(400).json({error: true, data: {message: 'avatar is required for IDEN_EMPRENDEDOR'}})
+          }
+          else if(req.files.avatar && !req.body.IDEN_EMPRENDEDOR) {
             res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR is required for avatar uploading'}})
+          }
+          else if(!req.files.gallery && req.body.IDEN_PUBLICACION) {
+            res.status(400).json({error: true, data: {message: 'gallery is required for IDEN_PUBLICACION'}})
           }
           else if(req.files.gallery && !req.body.IDEN_PUBLICACION) {
             res.status(400).json({error: true, data: {message: 'IDEN_PUBLICACION is required for gallery uploading'}})
@@ -92,7 +100,6 @@ function POST (req, res) {
             })
           }
         }).catch(err => {
-          // Atributos inválidos, eliminar archivos temporales
           res.status(400).json({error: true, data: err})
         })
     }
