@@ -4,14 +4,16 @@ import { knex } from '../../connection'
 // Nombres de atributos en formato legible
 const labels = {
   IDEN_PUBLICACION: 'ID de publicación',
-  IDEN_EMPRENDEDOR: 'ID de emprendedor',
-  URL_IMAGEN: 'URL de imagen'
+  IDEN_EMPRENDEDOR: 'ID de emprendedor'
 }
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
   IDEN_PUBLICACION: [{
     rule: 'number',
+    message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
+  }, {
+    rule: 'natural',
     message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
   }, {
     rule: function (val){
@@ -27,6 +29,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_EMPRENDEDOR + ' debe ser de tipo "integer"'
   }, {
+    rule: 'natural',
+    message: labels.IDEN_EMPRENDEDOR + ' debe ser de tipo "integer"'
+  }, {
     rule: function (val){
       return knex('PER_EMPRENDEDORES').where('IDEN_EMPRENDEDOR', '=', val)
         .then(resp => {
@@ -35,10 +40,6 @@ const validations = {
           }
         })
     }
-  }],
-  URL_IMAGEN: [{
-    rule: 'required',
-    label: labels.URL_IMAGEN
   }]
 }
 

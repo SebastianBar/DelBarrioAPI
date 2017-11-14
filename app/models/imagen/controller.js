@@ -1,5 +1,7 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
+import validate from './validations'
+import upload from './_helpers'
 
 /**
  * Obtener imágenes.
@@ -39,19 +41,62 @@ function GET (req, res) {
  * @return {json} Comentario. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
-  new Model({
-    IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
-    IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR,
-    URL_IMAGEN:       req.body.URL_IMAGEN
-  }).save()
-    .then(entity => {
-      res.json({error: false, data: entity.toJSON()})
-    }).catch(Checkit.Error, err => {
+  upload(req, res, err => {
+    if(err) {
       res.status(400).json({error: true, data: err})
-    }).catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+    } else {
+      // Validar atributos IDEN_PUBLICACION o IDEN_EMPRENDEDOR
+      var model = new Model({
+        IDEN_PUBLICACION: req.body.IDEN_PUBLICACION ? parseInt(req.body.IDEN_PUBLICACION) : undefined,
+        IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? parseInt(req.body.IDEN_EMPRENDEDOR) : undefined
+      })
+      return validate(model)
+        .then(() => {
+          // Atributos son válidos, validar cruce de archivos con atributos
+          if(req.files.avatar && !req.body.IDEN_EMPRENDEDOR) {
+            res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR is required for avatar uploading'}})
+          }
+          else if(req.files.gallery && !req.body.IDEN_PUBLICACION) {
+            res.status(400).json({error: true, data: {message: 'IDEN_PUBLICACION is required for gallery uploading'}})
+          }
+          else {
+            var tempModelAttributes = []
+            // Todo válido, fijar persistencia de archivos
+            if(req.files.avatar){
+              req.files.avatar.forEach(file => {
+                tempModelAttributes.push(
+                  {
+                    IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? parseInt(req.body.IDEN_EMPRENDEDOR) : undefined,
+                    URL_IMAGEN: file.destination + file.filename
+                  }
+                )
+              })
+            }
+            else if(req.files.gallery){
+              req.files.gallery.forEach(file => {
+                tempModelAttributes.push(
+                  {
+                    IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? parseInt(req.body.IDEN_EMPRENDEDOR) : undefined,
+                    URL_IMAGEN: file.destination + file.filename
+                  }
+                )
+              })
+            }
+            var collection = Collection.forge(tempModelAttributes)
+
+            collection.invokeThen('save').then(entities => {
+              res.status(200).json({error:false, data: entities})
+            }).catch(err => {
+              res.status(500).json({error: true, data: {message: 'Internal error'}})
+              throw err
+            })
+          }
+        }).catch(err => {
+          // Atributos inválidos, eliminar archivos temporales
+          res.status(400).json({error: true, data: err})
+        })
+    }
+  })
 }
 
 /**
