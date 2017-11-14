@@ -15,6 +15,9 @@ const validations = {
     rule: 'string',
     label: labels.NOMB_FAQ
   }, {
+    rule: 'minLength:5',
+    label: labels.NOMB_FAQ
+  }, {
     rule: 'maxLength:255',
     label: labels.NOMB_FAQ
   }],
@@ -25,7 +28,10 @@ const validations = {
     rule: 'string',
     label: labels.DESC_FAQ
   }, {
-    rule: 'maxLength: 10000', // ToDo: Confirmar
+    rule: 'minLength:5',
+    label: labels.DESC_FAQ
+  }, {
+    rule: 'maxLength:1000',
     label: labels.DESC_FAQ
   }]
 }

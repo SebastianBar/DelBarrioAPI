@@ -80,7 +80,7 @@ exports.up = function (knex) {
   function createPerRubros () {
     return knex.schema.createTableIfNotExists('PER_RUBROS', table => {
       table.increments('IDEN_RUBRO').unsigned().primary()
-      table.string('NOMB_RUBRO').notNull()
+      table.string('NOMB_RUBRO', 50).notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
@@ -126,7 +126,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('REQ_CATEGORIAS', table => {
       table.increments('IDEN_CATEGORIA').unsigned().primary()
       table.integer('IDEN_CATEGORIA_PADRE').unsigned()
-      table.string('NOMB_CATEGORIA').notNull()
+      table.string('NOMB_CATEGORIA', 50).notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
 
       table.foreign('IDEN_CATEGORIA_PADRE').references('REQ_CATEGORIAS.IDEN_CATEGORIA').onDelete('CASCADE').onUpdate('CASCADE')
@@ -239,7 +239,7 @@ exports.up = function (knex) {
   function createReqMotivosDenuncia () {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DENUNCIA', table => {
       table.increments('IDEN_MOTIVO_DENUNCIA').unsigned().primary()
-      table.string('NOMB_MOTIVO_DENUNCIA').notNull()
+      table.string('NOMB_MOTIVO_DENUNCIA', 100).notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
@@ -280,15 +280,15 @@ exports.up = function (knex) {
   function createReqFaq () {
     return knex.schema.createTableIfNotExists('REQ_FAQ', table => {
       table.increments('IDEN_FAQ').unsigned().primary()
-      table.string('NOMB_FAQ').notNull()
-      table.string('DESC_FAQ').notNull()
+      table.string('NOMB_FAQ', 255).notNull()
+      table.text('DESC_FAQ', 1000).notNull()
     })
   }
 
   function createReqMotivosDeshabilitacion () {
     return knex.schema.createTableIfNotExists('REQ_MOTIVOS_DESHABILITACION', table => {
       table.increments('IDEN_MOTIVO_DESHABILITACION').unsigned().primary()
-      table.string('NOMB_MOTIVO_DESHABILITACION').notNull()
+      table.string('NOMB_MOTIVO_DESHABILITACION', 100).notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
