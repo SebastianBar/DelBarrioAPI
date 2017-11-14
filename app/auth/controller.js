@@ -13,19 +13,23 @@ function authenticate (req, res) {
   if(req.body.email && req.body.password){
     var email = req.body.email
     var password = req.body.password
-    new Model({EMAIL_USUARIO: email}).fetch()
+    new Model({EMAIL_USUARIO: email}).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'FLAG_VIGENTE', 'FLAG_BAN'] })
       .then(user => {
         if (user) {
-          if(user.attributes.FLAG_VIGENTE) {
-            if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
-              var payload = {id: user.attributes.IDEN_USUARIO}
-              var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
-              res.json({error: false, data: {token: token}})
+          if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
+            if(user.attributes.FLAG_VIGENTE) {
+              if(!user.attributes.FLAG_BAN) {
+                var payload = {id: user.attributes.IDEN_USUARIO}
+                var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
+                res.json({error: false, data: {token: token}})
+              } else {
+                res.status(401).json({error: true, data: {message: 'Cuenta baneada'}})
+              }
             } else {
-              res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
+              res.status(401).json({error: true, data: {message: 'Cuenta deshabilitada'}})
             }
           } else {
-            res.status(401).json({error: true, data: {message: 'Cuenta deshabilitada'}})
+            res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
           }
         } else {
           res.status(404).json({error: true, data: {message: 'Usuario no encontrado'}})
@@ -40,7 +44,10 @@ function authenticate (req, res) {
 }
 
 function getUsuario (req, res) {
-  res.json({error: false, data: req.user.toJSON()})
+  new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'FLAG_VIGENTE', 'FLAG_BAN'], withRelated: ['rol', 'telefonos', 'usuario', 'emprendedor'] })
+    .then(user => {
+      res.json({error: false, data: user.toJSON()})
+    })
 }
 
 /* Se exporta el método */
