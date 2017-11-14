@@ -1,6 +1,7 @@
 /* global performance */
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs'
 
 function generateUUID () { // Public Domain/MIT
   var d = new Date().getTime()
@@ -36,4 +37,20 @@ const fileFilter = function (req, file, cb) {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter }).fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 5 }])
 
-export default upload
+function deleteFiles (files) {
+  Object.keys(files).forEach(key => {
+    files[key].forEach(file => {
+      fs.unlink(file.destination + file.filename, err => { 
+        if(err) {
+          throw err
+        }
+      })
+    })
+  })
+}
+
+/* Se exportan los métodos */
+module.exports = {
+  upload,
+  deleteFiles
+}

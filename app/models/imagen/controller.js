@@ -1,7 +1,7 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
 import validate from './validations'
-import upload from './_helpers'
+import { upload, deleteFiles } from './_helpers'
 
 /**
  * Obtener imágenes.
@@ -53,18 +53,23 @@ function POST (req, res) {
       return validate(model)
         .then(() => {
           if(req.body.IDEN_PUBLICACION === undefined && req.body.IDEN_EMPRENDEDOR === undefined) {
+            deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required'}})
           }
           else if(!req.files.avatar && req.body.IDEN_EMPRENDEDOR) {
+            deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'avatar is required for IDEN_EMPRENDEDOR'}})
           }
           else if(req.files.avatar && !req.body.IDEN_EMPRENDEDOR) {
+            deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR is required for avatar uploading'}})
           }
           else if(!req.files.gallery && req.body.IDEN_PUBLICACION) {
+            deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'gallery is required for IDEN_PUBLICACION'}})
           }
           else if(req.files.gallery && !req.body.IDEN_PUBLICACION) {
+            deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'IDEN_PUBLICACION is required for gallery uploading'}})
           }
           else {
@@ -95,11 +100,13 @@ function POST (req, res) {
             collection.invokeThen('save').then(entities => {
               res.status(200).json({error:false, data: entities})
             }).catch(err => {
+              deleteFiles(req.files)
               res.status(500).json({error: true, data: {message: 'Internal error'}})
               throw err
             })
           }
         }).catch(err => {
+          deleteFiles(req.files)
           res.status(400).json({error: true, data: err})
         })
     }
