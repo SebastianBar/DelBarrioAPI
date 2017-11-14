@@ -156,7 +156,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('REQ_IMAGENES', table => {
       table.increments('IDEN_IMAGEN').unsigned().primary()
       table.integer('IDEN_PUBLICACION').unsigned()
-      table.integer('IDEN_EMPRENDEDOR').unsigned()
+      table.integer('IDEN_EMPRENDEDOR').unsigned().unique()
       table.string('URL_IMAGEN').notNull()
 
       table.foreign('IDEN_PUBLICACION').references('REQ_PUBLICACIONES.IDEN_PUBLICACION').onDelete('CASCADE').onUpdate('CASCADE')
