@@ -13,7 +13,7 @@ function authenticate (req, res) {
   if(req.body.email && req.body.password){
     var email = req.body.email
     var password = req.body.password
-    new Model({EMAIL_USUARIO: email}).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'FLAG_VIGENTE', 'FLAG_BAN'] })
+    new Model({EMAIL_USUARIO: email}).fetch()
       .then(user => {
         if (user) {
           if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
