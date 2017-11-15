@@ -52,7 +52,8 @@ function POST (req, res) {
       })
       return validate(model)
         .then(() => {
-          if(req.body.IDEN_PUBLICACION === undefined && req.body.IDEN_EMPRENDEDOR === undefined) {
+          console.log(model.attributes)
+          if(!req.body.IDEN_PUBLICACION && !req.body.IDEN_EMPRENDEDOR) {
             deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required'}})
           }
@@ -89,7 +90,7 @@ function POST (req, res) {
               req.files.gallery.forEach(file => {
                 tempModelAttributes.push(
                   {
-                    IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? parseInt(req.body.IDEN_EMPRENDEDOR) : undefined,
+                    IDEN_PUBLICACION: req.body.IDEN_PUBLICACION ? parseInt(req.body.IDEN_PUBLICACION) : undefined,
                     URL_IMAGEN: file.destination + file.filename
                   }
                 )

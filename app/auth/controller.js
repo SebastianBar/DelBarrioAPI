@@ -47,9 +47,9 @@ function authenticate (req, res) {
 function getUsuario (req, res) {
   new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
     .then(user => {
-      console.log(Object.keys(user.relations.emprendedor.attributes).length)
       var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
       omit.push(Object.keys(user.relations.emprendedor.attributes).length === 0 ? 'emprendedor' : 'persona')
+      
       res.json({error: false, data: omitDeep(user.toJSON(), omit)})
     })
 }
