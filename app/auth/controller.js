@@ -44,7 +44,7 @@ function authenticate (req, res) {
 }
 
 function getUsuario (req, res) {
-  new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'FLAG_VIGENTE', 'FLAG_BAN'], withRelated: ['rol', 'telefonos', 'usuario', 'emprendedor'] })
+  new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'FLAG_VIGENTE', 'FLAG_BAN'], withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
     .then(user => {
       res.json({error: false, data: user.toJSON()})
     })
