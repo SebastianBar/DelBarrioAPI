@@ -49,8 +49,17 @@ function deleteFiles (files) {
   })
 }
 
+const errorHandling = {
+  EmprendedorUniqueConstraintError: function (err){
+    if (!err) return false
+    var re = /^req_imagenes_iden_emprendedor_unique/
+    return re.test(err.constraint)
+  }
+}
+
 /* Se exportan los métodos */
 module.exports = {
   upload,
-  deleteFiles
+  deleteFiles,
+  errorHandling
 }

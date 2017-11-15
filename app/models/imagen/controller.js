@@ -1,7 +1,7 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
 import validate from './validations'
-import { upload, deleteFiles } from './_helpers'
+import { upload, deleteFiles, errorHandling } from './_helpers'
 
 /**
  * Obtener imágenes.
@@ -52,7 +52,6 @@ function POST (req, res) {
       })
       return validate(model)
         .then(() => {
-          console.log(model.attributes)
           if(!req.body.IDEN_PUBLICACION && !req.body.IDEN_EMPRENDEDOR) {
             deleteFiles(req.files)
             res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required'}})
@@ -100,6 +99,9 @@ function POST (req, res) {
 
             collection.invokeThen('save').then(entities => {
               res.status(200).json({error:false, data: entities})
+            }).catch(errorHandling.EmprendedorUniqueConstraintError, () => {
+              deleteFiles(req.files)
+              res.status(400).json({error: true, data: {message: 'IDEN_EMPRENDEDOR already has avatar'}})
             }).catch(err => {
               deleteFiles(req.files)
               res.status(500).json({error: true, data: {message: 'Internal error'}})
