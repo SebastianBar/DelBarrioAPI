@@ -20,6 +20,9 @@ const Model = bookshelf.Model.extend({
   comentarios: function () {
     return this.hasMany(require('../comentario/model').Model, 'IDEN_PUBLICACION')
   },
+  calificaciones: function () {
+    return this.hasMany(require('../calificacion/model').Model, 'IDEN_PUBLICACION')
+  },
   initialize: function () {
     this.on('saving', validate, this)
   }
