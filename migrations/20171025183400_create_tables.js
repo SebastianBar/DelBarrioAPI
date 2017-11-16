@@ -89,7 +89,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', table => {
       table.increments('IDEN_EMPRENDEDOR').unsigned().primary()
       table.integer('IDEN_USUARIO').unsigned()
-      table.string('DESC_EMPRENDEDOR').notNull()
+      table.string('DESC_EMPRENDEDOR')
       table.string('DESC_CLAVE_MUNICIPALIDAD').notNull()
       table.string('DESC_NOMBRE_FANTASIA').notNull()
       table.string('DESC_NOMBRE_EMPRESA').notNull()
