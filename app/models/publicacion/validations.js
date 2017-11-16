@@ -48,6 +48,16 @@ const validations = {
         })
     }
   }],
+  CODI_TIPO_PUBLICACION: [{
+    rule: 'required',
+    label: labels.CODI_TIPO_PUBLICACION
+  }, {
+    rule: 'minLength:1',
+    label: labels.CODI_TIPO_PUBLICACION
+  }, {
+    rule: 'maxLength:1',
+    label: labels.CODI_TIPO_PUBLICACION
+  }],
   NOMB_PUBLICACION: [{
     rule: 'required',
     label: labels.NOMB_PUBLICACION

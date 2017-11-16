@@ -21,7 +21,10 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch()
+    new Collection().fetch({withRelated: ['categoria', 'ofertas', {'imagenes': query => {
+      query.orderBy('IDEN_IMAGEN').limit(1)
+    }}
+    ]})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
