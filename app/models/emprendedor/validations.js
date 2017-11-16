@@ -2,7 +2,7 @@ import Checkit from 'checkit'
 
 // Nombres de atributos en formato legible
 const labels = {
-  DESC_EMPRENDEDOR: 'Descripción del emprendedor',
+  //DESC_EMPRENDEDOR: 'Descripción del emprendedor',
   DESC_CLAVE_MUNICIPALIDAD: 'Clave de municipalidad',
   DESC_NOMBRE_FANTASIA: 'Nombre de fantasía del emprendedor',
   DESC_NOMBRE_EMPRESA: 'Nombre real de la empresa',
@@ -11,16 +11,16 @@ const labels = {
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
-  DESC_EMPRENDEDOR: [{
-    rule: 'required',
-    label: labels.DESC_EMPRENDEDOR
-  }, {
-    rule: 'string',
-    label: labels.DESC_EMPRENDEDOR
-  }, {
-    rule: 'maxLength:255',
-    label: labels.DESC_EMPRENDEDOR
-  }],
+  //DESC_EMPRENDEDOR: [{
+  //  rule: 'required',
+  //  label: labels.DESC_EMPRENDEDOR
+  //}, {
+  //  rule: 'string',
+  //  label: labels.DESC_EMPRENDEDOR
+  //}, {
+  //  rule: 'maxLength:255',
+  //  label: labels.DESC_EMPRENDEDOR
+  //}],
   DESC_CLAVE_MUNICIPALIDAD: [{ // ToDo: Verificar método de validación
     rule: 'required',
     label: labels.DESC_CLAVE_MUNICIPALIDAD

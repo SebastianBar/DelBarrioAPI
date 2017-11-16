@@ -7,7 +7,7 @@ const labels = {
   IDEN_CATEGORIA: 'ID de categoría',
   CODI_TIPO_PUBLICACION: 'Tipo de publicación',
   NOMB_PUBLICACION: 'Nombre de publicación',
-  //DESC_PUBLICACION: 'Descripción de publicación',
+  DESC_PUBLICACION: 'Descripción de publicación',
   NUMR_PRECIO: 'Precio de publicación',
   FLAG_CONTENIDO_ADULTO: 'Contenido adulto',
   FLAG_VIGENTE: 'Vigencia',
@@ -58,13 +58,13 @@ const validations = {
     rule: 'maxLength:100',
     label: labels.NOMB_PUBLICACION
   }],
-  //DESC_PUBLICACION: [{
-  //  rule: 'required',
-  //  label: labels.NOMB_PUBLICACION
-  //}, {
-  //  rule: 'maxLength:5000',
-  //  label: labels.NOMB_PUBLICACION
-  //}],
+  DESC_PUBLICACION: [{
+    rule: 'required',
+    label: labels.NOMB_PUBLICACION
+  }, {
+    rule: 'maxLength:5000',
+    label: labels.NOMB_PUBLICACION
+  }],
   NUMR_PRECIO: [{
     rule: 'required',
     label: labels.NUMR_PRECIO
