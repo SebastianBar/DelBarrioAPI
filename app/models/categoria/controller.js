@@ -1,5 +1,6 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
+import { filter } from './_helpers'
 
 /**
  * Obtener categorías.
@@ -14,7 +15,7 @@ function GET (req, res) {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: entity.toJSON()})
+          res.json({error: false, data: filter.GETsingle(entity)})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -27,7 +28,7 @@ function GET (req, res) {
     })
       .fetch({withRelated: ['subcategorias']})
       .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
+        res.json({error: false, data: filter.GETall(entities)})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err

@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken'
 import strategie from './jwt-strategie'
-import authHelpers from './_helpers'
+import { comparePass, filter } from './_helpers'
 import { Model } from '../models/usuario/model'
-const omitDeep = require('omit-deep')
 
 /**
  * Autenticar a un usuario.
@@ -17,7 +16,7 @@ function authenticate (req, res) {
     new Model({EMAIL_USUARIO: email}).fetch()
       .then(user => {
         if (user) {
-          if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
+          if(comparePass(password, user.attributes.DESC_PASSWORD)) {
             if(user.attributes.FLAG_VIGENTE) {
               if(!user.attributes.FLAG_BAN) {
                 var payload = {id: user.attributes.IDEN_USUARIO}
@@ -46,11 +45,8 @@ function authenticate (req, res) {
 
 function getUsuario (req, res) {
   new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
-    .then(user => {
-      var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
-      omit.push(Object.keys(user.relations.emprendedor.attributes).length === 0 ? 'emprendedor' : 'persona')
-      
-      res.json({error: false, data: omitDeep(user.toJSON(), omit)})
+    .then(user => {      
+      res.json({ error: false, data: filter.getUsuario(user) })
     })
 }
 

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const omitDeep = require('omit-deep')
 
 /**
  * Comparación de una contraseña respecto a su hash.
@@ -20,8 +21,20 @@ function genHash (password) {
   return bcrypt.hashSync(password, salt)
 }
 
+/**
+ * Funciones para filtrar datos de los retornos JSON
+ */
+var filter = {
+  getUsuario: function (entity) {
+    var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
+    omit.push(Object.keys(entity.relations.emprendedor.attributes).length === 0 ? 'emprendedor' : 'persona')
+    return omitDeep(entity.toJSON(), omit)
+  }
+}
+
 /* Se exportan los métodos */
 module.exports = {
   comparePass,
-  genHash
+  genHash,
+  filter
 }
