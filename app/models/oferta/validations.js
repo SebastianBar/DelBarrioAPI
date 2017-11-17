@@ -40,8 +40,14 @@ const validations = {
     label: labels.NUMR_PRECIO
   }, {
     rule: 'number',
-    message: labels.NUMR_PRECIO + ' debe ser integer'
-  }]
+    message: labels.NUMR_PRECIO + ' debe ser de tipo "integer"'
+  }, {
+    rule: 'greaterThanEqualTo:0',
+    label: labels.NUMR_PRECIO
+  }, {
+    rule: 'lessThanEqualTo:2000000000',
+    label: labels.NUMR_PRECIO
+  }],
 }
 
 /**

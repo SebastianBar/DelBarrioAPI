@@ -36,7 +36,6 @@ function GET (req, res) {
  * @param {integer} req.body.IDEN_PUBLICACION - ID de Publicación a la que corresponde este comentario.
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario emisor del comentario.
  * @param {string} req.body.DESC_COMENTARIO - Comentario.
- * @param {boolean} req.body.FLAG_VIGENTE - Define si el comentario está activo (opcional, por defecto true).
  * @param {boolean} req.body.FLAG_BAN - Define si el comentario está baneado (opcional, por defecto false).
  * @param {date} req.body.FECH_CREACION - Fecha de creación del comentario (opcional, por defecto now()).
  * @return {json} Comentario. En caso fallido, mensaje de error.
@@ -46,7 +45,6 @@ function POST (req, res) {
     IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
     IDEN_USUARIO:     req.body.IDEN_USUARIO,
     DESC_COMENTARIO:  req.body.DESC_COMENTARIO,
-    FLAG_VIGENTE:     req.body.FLAG_VIGENTE,
     FLAG_BAN:         req.body.FLAG_BAN,
     FECH_CREACION:    req.body.FECH_CREACION
   }).save()
@@ -66,7 +64,6 @@ function POST (req, res) {
  * @param {integer} req.body.IDEN_PUBLICACION - ID de Publicación a la que corresponde este comentario (opcional).
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario emisor del comentario (opcional).
  * @param {string} req.body.DESC_COMENTARIO - Comentario (opcional).
- * @param {boolean} req.body.FLAG_VIGENTE - Define si el comentario está activo (opcional).
  * @param {boolean} req.body.FLAG_BAN - Define si el comentario está baneado (opcional).
  * @param {date} req.body.FECH_CREACION - Fecha de creación del comentario (opcional).
  * @return {json} Mensaje de éxito o error.
@@ -79,7 +76,6 @@ function PUT (req, res) {
         IDEN_PUBLICACION: (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
         IDEN_USUARIO:     (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
         DESC_COMENTARIO:  (typeof req.body.DESC_COMENTARIO === 'undefined') ? entity.get('DESC_COMENTARIO') : req.body.DESC_COMENTARIO,
-        FLAG_VIGENTE:     (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
         FLAG_BAN:         (typeof req.body.FLAG_BAN === 'undefined') ? entity.get('FLAG_BAN') : req.body.FLAG_BAN,
         FECH_CREACION:    (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION
       })

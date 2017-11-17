@@ -55,8 +55,6 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('USR_USUARIOS', table => {
       table.increments('IDEN_USUARIO').unsigned().primary()
       table.integer('IDEN_ROL').unsigned().notNull()
-      table.integer('RUT_USUARIO').notNull()
-      table.string('DV_USUARIO', 1).notNull()
       table.string('EMAIL_USUARIO').notNull()
       table.string('DESC_PASSWORD').notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
@@ -88,11 +86,14 @@ exports.up = function (knex) {
   function createPerEmprendedores () {
     return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', table => {
       table.increments('IDEN_EMPRENDEDOR').unsigned().primary()
-      table.integer('IDEN_USUARIO').unsigned()
+      table.integer('IDEN_USUARIO').unsigned().notNull()
+      table.integer('RUT_EMPRENDEDOR').notNull()
+      table.string('DV_EMPRENDEDOR', 1).notNull()
       table.string('DESC_EMPRENDEDOR')
       table.string('DESC_CLAVE_MUNICIPALIDAD').notNull()
       table.string('DESC_NOMBRE_FANTASIA').notNull()
       table.string('DESC_NOMBRE_EMPRESA').notNull()
+      table.boolean('FLAG_VALIDADO').notNull().defaultTo(false)
         
       table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
     })
@@ -167,7 +168,7 @@ exports.up = function (knex) {
   function createReqOfertas () {
     return knex.schema.createTableIfNotExists('REQ_OFERTAS', table => {
       table.increments('IDEN_OFERTA').unsigned().primary()
-      table.integer('IDEN_PUBLICACION').unsigned()
+      table.integer('IDEN_PUBLICACION').unsigned().unique()
       table.dateTime('FECH_INICIO').notNull()
       table.dateTime('FECH_TERMINO').notNull()
       table.integer('NUMR_PRECIO').unsigned().notNull()
@@ -200,7 +201,6 @@ exports.up = function (knex) {
       table.integer('IDEN_PUBLICACION').unsigned().notNull()
       table.integer('IDEN_USUARIO').unsigned().notNull()
       table.string('DESC_COMENTARIO').notNull()
-      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
       table.boolean('FLAG_BAN').notNull().defaultTo(false)
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       
@@ -227,7 +227,6 @@ exports.up = function (knex) {
       table.integer('IDEN_USUARIO').unsigned().notNull()
       table.integer('NUMR_VALOR').notNull()
       table.string('DESC_CALIFICACION')
-      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
       table.boolean('FLAG_BAN').notNull().defaultTo(false)
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
       

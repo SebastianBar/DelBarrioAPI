@@ -6,7 +6,6 @@ const labels = {
   IDEN_PUBLICACION: 'ID de publicación',
   IDEN_USUARIO: 'ID de usuario',
   DESC_COMENTARIO: 'Texto del comentario',
-  FLAG_VIGENTE: 'Vigencia',
   FLAG_BAN: 'Baneo'
 }
 
@@ -50,10 +49,6 @@ const validations = {
   }, {
     rule: 'maxLength:255',
     label: labels.DESC_COMENTARIO
-  }],
-  FLAG_VIGENTE: [{
-    rule: 'boolean',
-    label: labels.FLAG_VIGENTE
   }],
   FLAG_BAN: [{
     rule: 'boolean',

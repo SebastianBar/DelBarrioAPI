@@ -6,8 +6,7 @@ const labels = {
   IDEN_PUBLICACION: 'ID de publicación',
   IDEN_USUARIO: 'ID de usuario',
   NUMR_VALOR: 'Valor de calificación',
-  DESC_CALIFICACION: 'Texto de calificación',
-  FLAG_VIGENTE: 'Vigencia',
+  DESC_CALIFICACION: 'Texto de calificación'
   FLAG_BAN: 'Baneo'
 }
 
@@ -64,10 +63,6 @@ const validations = {
   }, {
     rule: 'maxLength:255',
     label: labels.DESC_CALIFICACION
-  }],
-  FLAG_VIGENTE: [{
-    rule: 'boolean',
-    label: labels.FLAG_VIGENTE
   }],
   FLAG_BAN: [{
     rule: 'boolean',

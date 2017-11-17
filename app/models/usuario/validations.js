@@ -5,8 +5,6 @@ import { genHash } from '../../auth/_helpers'
 // Nombres de atributos en formato legible
 const labels = {
   IDEN_ROL: 'ID de rol',
-  RUT_USUARIO: 'RUT',
-  DV_USUARIO: 'Dígito verificador',
   EMAIL_USUARIO: 'Correo electrónico',
   DESC_PASSWORD: 'Contraseña',
   FLAG_VIGENTE: 'Vigencia',
@@ -28,32 +26,6 @@ const validations = {
           if (resp.length == 0){
             throw new Error(labels.IDEN_ROL + ' no existe')
           }
-        })
-    }
-  }],
-  RUT_USUARIO: [{
-    rule: 'required',
-    label: labels.RUT_USUARIO
-  }, {
-    rule: 'number',
-    message: labels.RUT_USUARIO + ' debe ser de tipo "integer"'
-  }],
-  DV_USUARIO: [{
-    rule: 'required',
-    label: labels.DV_USUARIO
-  }, {
-    rule: 'string',
-    label: labels.DV_USUARIO
-  }, {
-    rule: 'maxLength:1',
-    label: labels.DV_USUARIO // TESTEAR
-  }, {
-    rule: function (val) {
-      return new Promise(resolve => {
-        resolve((val != '0' && val != '1' && val != '2' && val != '3' && val != '4' && val != '5' && val != '6' && val != '7' && val != '8' && val != '9' && val != 'k'  && val != 'K'))
-      })
-        .then(val => {
-          if(val) throw new Error(labels.DV_USUARIO + ' inválido')
         })
     }
   }],
@@ -96,40 +68,6 @@ const mailComparison = {
   }
 }
 
-// Validación exclusiva para RUT
-const rutValidation = {
-  RUT_USUARIO: [{
-    rule: function (val) {
-      return new Promise(resolve => {
-        resolve(Fn.rutValidate(val))
-      })
-        .then(val => {
-          if(!val) throw new Error('RUT inválido')
-        })
-    }
-  }]
-}
-
-// Funciones de validación a utilizar en conjunto a rutValidation
-const Fn = {
-  rutValidate: fullRut => {
-    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(fullRut))
-      return false
-    var tmp = fullRut.split('-')
-    var digv = tmp[1]
-    var rut = tmp[0]
-    if (digv == 'K') digv = 'k'
-    return (Fn.dv(rut) == digv)
-  },
-  dv: T => {
-    var M = 0
-    var S = 1
-    for (; T; T = Math.floor(T / 10))
-      S = (S + T % 10 * (9 - M++ % 6)) % 11
-    return S ? S - 1 : 'k'
-  }
-}
-
 /**
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
@@ -144,9 +82,6 @@ function validate (model) {
       validations.EMAIL_USUARIO.pop()
   }
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
-    .then(() => {
-      return Checkit(rutValidation).run({RUT_USUARIO: model.attributes.RUT_USUARIO + '-' + model.attributes.DV_USUARIO})
-    })
     .then(() => {
       // If password isn't a hash, update it before saving
       if (! /^\$2[ayb]\$.{56}$/.test(model.attributes.DESC_PASSWORD))

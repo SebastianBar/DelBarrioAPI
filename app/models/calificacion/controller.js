@@ -37,7 +37,6 @@ function GET (req, res) {
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario emisor de esta calificación.
  * @param {integer} req.body.NUMR_VALOR - Calificación en formato numérico.
  * @param {string} req.body.DESC_CALIFICACION - Texto adjunto a calificación (opcional).
- * @param {boolean} req.body.FLAG_VIGENTE - Define si la calificación está activa (opcional, por defecto true).
  * @param {boolean} req.body.FLAG_BAN - Define si la calificación está baneada (opcional, por defecto false).
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la calificación (opcional, por defecto now()).
  * @return {json} Calificación. En caso fallido, mensaje de error.
@@ -48,7 +47,6 @@ function POST (req, res) {
     IDEN_USUARIO:       req.body.IDEN_USUARIO,
     NUMR_VALOR:         req.body.NUMR_VALOR,
     DESC_CALIFICACION:  req.body.DESC_CALIFICACION,
-    FLAG_VIGENTE:       req.body.FLAG_VIGENTE,
     FLAG_BAN:           req.body.FLAG_BAN,
     FECH_CREACION:      req.body.FECH_CREACION
   }).save()
@@ -69,7 +67,6 @@ function POST (req, res) {
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario emisor de esta calificación (opcional).
  * @param {integer} req.body.NUMR_VALOR - Calificación en formato numérico (opcional).
  * @param {string} req.body.DESC_CALIFICACION - Texto adjunto a calificación (opcional).
- * @param {boolean} req.body.FLAG_VIGENTE - Define si la calificación está activa (opcional).
  * @param {boolean} req.body.FLAG_BAN - Define si la calificación está baneada (opcional).
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la calificación (opcional).
  * @return {json} Mensaje de éxito o error.
@@ -83,7 +80,6 @@ function PUT (req, res) {
         IDEN_USUARIO:       (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
         NUMR_VALOR:         (typeof req.body.NUMR_VALOR === 'undefined') ? entity.get('NUMR_VALOR') : req.body.NUMR_VALOR,
         DESC_CALIFICACION:  (typeof req.body.DESC_CALIFICACION === 'undefined') ? entity.get('DESC_CALIFICACION') : req.body.DESC_CALIFICACION,
-        FLAG_VIGENTE:       (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
         FLAG_BAN:           (typeof req.body.FLAG_BAN === 'undefined') ? entity.get('FLAG_BAN') : req.body.FLAG_BAN,
         FECH_CREACION:      (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION
       })

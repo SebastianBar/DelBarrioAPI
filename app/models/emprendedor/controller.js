@@ -33,20 +33,26 @@ function GET (req, res) {
 
 /**
  * Agregar nuevo emprendedor.
- * @param {integer} req.body.IDEN_USUARIO - ID de usuario (opcional).
+ * @param {integer} req.body.IDEN_USUARIO - ID de usuario.
+ * @param {integer} req.body.RUT_EMPRENDEDOR - RUT del emprendedor sin dígito verificador.
+ * @param {string} req.body.DV_EMPRENDEDOR - Dígito verificador del RUT del emprendedor.
  * @param {string} req.body.DESC_EMPRENDEDOR - Descripción breve de la empresa.
  * @param {string} req.body.DESC_CLAVE_MUNICIPALIDAD - Clave otorgada por la Municipalidad para permitir el registro en el sistema.
- * @param {string} req.body.DESC_NOMBRE_FANTASIA - Nombre de fantasía de la Empresa.
+ * @param {string} req.body.DESC_NOMBRE_FANTASIA - Nombre de fantasía de la empresa.
  * @param {string} req.body.DESC_NOMBRE_EMPRESA - Nombre de la empresa ante el SII.
+ * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional, por defecto false).
  * @return {json} Emprendedor. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
     IDEN_USUARIO:             req.body.IDEN_USUARIO,
+    RUT_EMPRENDEDOR:          req.body.RUT_EMPRENDEDOR,
+    DV_EMPRENDEDOR:           req.body.DV_EMPRENDEDOR,
     DESC_EMPRENDEDOR:         req.body.DESC_EMPRENDEDOR,
     DESC_CLAVE_MUNICIPALIDAD: req.body.DESC_CLAVE_MUNICIPALIDAD,
     DESC_NOMBRE_FANTASIA:     req.body.DESC_NOMBRE_FANTASIA,
-    DESC_NOMBRE_EMPRESA:      req.body.DESC_NOMBRE_EMPRESA
+    DESC_NOMBRE_EMPRESA:      req.body.DESC_NOMBRE_EMPRESA,
+    FLAG_VALIDADO:            req.body.FLAG_VALIDADO
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
@@ -61,11 +67,14 @@ function POST (req, res) {
 /**
  * Actualiza un emprendedor.
  * @param {integer} req.params.id - ID del emprendedor.
+ * @param {integer} req.body.RUT_EMPRENDEDOR - RUT del emprendedor sin dígito verificador (opcional).
+ * @param {string} req.body.DV_EMPRENDEDOR - Dígito verificador del RUT del emprendedor (opcional).
  * @param {integer} req.body.IDEN_USUARIO - ID de usuario (opcional).
  * @param {string} req.body.DESC_EMPRENDEDOR - Descripción breve de la empresa (opcional).
  * @param {string} req.body.DESC_CLAVE_MUNICIPALIDAD - Clave otorgada por la Municipalidad para permitir el registro en el sistema (opcional).
  * @param {string} req.body.DESC_NOMBRE_FANTASIA - Nombre de fantasía de la Empresa (opcional).
  * @param {string} req.body.DESC_NOMBRE_EMPRESA - Nombre de la empresa ante el SII (opcional).
+ * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional).
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
@@ -74,10 +83,13 @@ function PUT (req, res) {
     .then(entity => {
       entity.save({
         IDEN_USUARIO:             (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
+        RUT_EMPRENDEDOR:          (typeof req.body.RUT_EMPRENDEDOR === 'undefined') ? entity.get('RUT_EMPRENDEDOR') : req.body.RUT_EMPRENDEDOR,
+        DV_EMPRENDEDOR:           (typeof req.body.DV_EMPRENDEDOR === 'undefined') ? entity.get('DV_EMPRENDEDOR') : req.body.DV_EMPRENDEDOR,
         DESC_EMPRENDEDOR:         (typeof req.body.DESC_EMPRENDEDOR === 'undefined') ? entity.get('DESC_EMPRENDEDOR') : req.body.DESC_EMPRENDEDOR,
         DESC_CLAVE_MUNICIPALIDAD: (typeof req.body.DESC_CLAVE_MUNICIPALIDAD === 'undefined') ? entity.get('DESC_CLAVE_MUNICIPALIDAD') : req.body.DESC_CLAVE_MUNICIPALIDAD,
         DESC_NOMBRE_FANTASIA:     (typeof req.body.DESC_NOMBRE_FANTASIA === 'undefined') ? entity.get('DESC_NOMBRE_FANTASIA') : req.body.DESC_NOMBRE_FANTASIA,
-        DESC_NOMBRE_EMPRESA:      (typeof req.body.DESC_NOMBRE_EMPRESA === 'undefined') ? entity.get('DESC_NOMBRE_EMPRESA') : req.body.DESC_NOMBRE_EMPRESA
+        DESC_NOMBRE_EMPRESA:      (typeof req.body.DESC_NOMBRE_EMPRESA === 'undefined') ? entity.get('DESC_NOMBRE_EMPRESA') : req.body.DESC_NOMBRE_EMPRESA,
+        FLAG_VALIDADO:            (typeof req.body.FLAG_VALIDADO === 'undefined') ? entity.get('FLAG_VALIDADO') : req.body.FLAG_VALIDADO
       })
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})

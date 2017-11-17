@@ -9,7 +9,7 @@ import Checkit from 'checkit'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos'], columns: ['IDEN_USUARIO', 'IDEN_ROL', 'RUT_USUARIO', 'DV_USUARIO', 'EMAIL_USUARIO', 'FLAG_VIGENTE', 'FLAG_BAN']})
+    new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -21,7 +21,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch({withRelated: ['telefonos'], columns: ['IDEN_USUARIO', 'IDEN_ROL', 'RUT_USUARIO', 'DV_USUARIO', 'EMAIL_USUARIO', 'FLAG_VIGENTE', 'FLAG_BAN']})
+    new Collection().fetch({withRelated: ['telefonos']})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
       }).catch(err => {
@@ -34,19 +34,15 @@ function GET (req, res) {
 /**
  * Agregar nuevo usuario.
  * @param {integer} req.body.IDEN_ROL - ID de Rol del usuario.
- * @param {integer} req.body.RUT_USUARIO - RUT del usuario sin dígito verificador.
- * @param {string} req.body.DV_USUARIO - Dígito verificador del RUT del usuario.
  * @param {string} req.body.EMAIL_USUARIO - Correo electrónico del usuario.
  * @param {string} req.body.DESC_PASSWORD - Contraseña del usuario (en texto plano).
- * @param {string} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional, por defecto true).
- * @param {string} req.body.FLAG_BAN - Define si el usuario está baneado (opcional, por defecto false).
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional, por defecto true).
+ * @param {boolean} req.body.FLAG_BAN - Define si el usuario está baneado (opcional, por defecto false).
  * @return {json} Usuario. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
     IDEN_ROL:       req.body.IDEN_ROL,
-    RUT_USUARIO:    req.body.RUT_USUARIO,
-    DV_USUARIO:     req.body.DV_USUARIO,
     EMAIL_USUARIO:  req.body.EMAIL_USUARIO,
     DESC_PASSWORD:  req.body.DESC_PASSWORD,
     FLAG_VIGENTE:   req.body.FLAG_VIGENTE,
@@ -65,12 +61,10 @@ function POST (req, res) {
 /**
  * Actualiza un usuario.
  * @param {integer} req.params.id - ID del usuario.
- * @param {integer} req.body.RUT_USUARIO - RUT del usuario sin dígito verificador (opcional).
- * @param {string} req.body.DV_USUARIO - Dígito verificador del RUT del usuario (opcional).
  * @param {string} req.body.EMAIL_USUARIO - Correo electrónico del usuario (opcional).
  * @param {string} req.body.DESC_PASSWORD - Contraseña del usuario (opcional, en texto plano).
- * @param {string} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional).
- * @param {string} req.body.FLAG_BAN - Define si el usuario está baneado (opcional).
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si el usuario está activo (opcional).
+ * @param {boolean} req.body.FLAG_BAN - Define si el usuario está baneado (opcional).
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
@@ -78,8 +72,6 @@ function PUT (req, res) {
     .fetch({require: true})
     .then(entity => {
       entity.save({
-        RUT_USUARIO:    (typeof req.body.RUT_USUARIO === 'undefined') ? entity.get('RUT_USUARIO') : req.body.RUT_USUARIO,
-        DV_USUARIO:     (typeof req.body.DV_USUARIO === 'undefined') ? entity.get('DV_USUARIO') : req.body.DV_USUARIO,
         EMAIL_USUARIO:  (typeof req.body.EMAIL_USUARIO === 'undefined') ? entity.get('EMAIL_USUARIO') : req.body.EMAIL_USUARIO,
         DESC_PASSWORD:  (typeof req.body.DESC_PASSWORD === 'undefined') ? entity.get('DESC_PASSWORD') : req.body.DESC_PASSWORD,
         FLAG_VIGENTE:   (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,

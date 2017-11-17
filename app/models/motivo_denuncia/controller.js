@@ -34,11 +34,13 @@ function GET (req, res) {
 /**
  * Agregar nuevo motivo de denuncia.
  * @param {string} req.body.NOMB_MOTIVO_DENUNCIA - Nombre descriptivo del motivo de denuncia.
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional, por defecto true).
  * @return {json} Motivo de denuncia. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
-    NOMB_MOTIVO_DENUNCIA:  req.body.NOMB_MOTIVO_DENUNCIA
+    NOMB_MOTIVO_DENUNCIA: req.body.NOMB_MOTIVO_DENUNCIA,
+    FLAG_VIGENTE:         req.body.FLAG_VIGENTE
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})

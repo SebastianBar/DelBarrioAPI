@@ -35,7 +35,7 @@ const fileFilter = function (req, file, cb) {
   cb({message: 'File upload only supports the following filetypes - ' + filetypes})
 }
 
-const upload = multer({ storage: storage, fileFilter: fileFilter }).fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 5 }])
+const upload = multer({ storage: storage, fileFilter: fileFilter }).fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 4 }])
 
 function deleteFiles (files) {
   Object.keys(files).forEach(key => {

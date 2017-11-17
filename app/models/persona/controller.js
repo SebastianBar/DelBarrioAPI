@@ -33,20 +33,20 @@ function GET (req, res) {
 
 /**
  * Agregar nueva persona.
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona.
  * @param {string} req.body.NOMBRES - Nombres de la persona.
  * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona.
  * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona.
  * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona.
- * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona.
  * @return {json} Persona. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
+    IDEN_USUARIO:           req.body.IDEN_USUARIO,
     NOMBRES:                req.body.NOMBRES,
     APELLIDO_PATERNO:       req.body.APELLIDO_PATERNO,
     APELLIDO_MATERNO:       req.body.APELLIDO_MATERNO,
-    FECH_FECHA_NACIMIENTO:  req.body.FECH_FECHA_NACIMIENTO,
-    IDEN_USUARIO:           req.body.IDEN_USUARIO
+    FECH_FECHA_NACIMIENTO:  req.body.FECH_FECHA_NACIMIENTO
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})
@@ -61,11 +61,11 @@ function POST (req, res) {
 /**
  * Actualiza una persona.
  * @param {integer} req.params.id - ID de la persona.
+ * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona (opcional).
  * @param {string} req.body.NOMBRES - Nombres de la persona (opcional).
  * @param {string} req.body.APELLIDO_PATERNO - Apellido paterno de la persona (opcional).
  * @param {string} req.body.APELLIDO_MATERNO - Apellido materno de la persona (opcional).
  * @param {date} req.body.FECH_FECHA_NACIMIENTO - Fecha de nacimiento de la persona (opcional).
- * @param {integer} req.body.IDEN_USUARIO - ID de Usuario al que corresponde esta persona (opcional).
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
@@ -73,11 +73,11 @@ function PUT (req, res) {
     .fetch({require: true})
     .then(entity => {
       entity.save({
+        IDEN_USUARIO:           (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
         NOMBRES:                (typeof req.body.NOMBRES === 'undefined') ? entity.get('NOMBRES') : req.body.NOMBRES,
         APELLIDO_PATERNO:       (typeof req.body.APELLIDO_PATERNO === 'undefined') ? entity.get('APELLIDO_PATERNO') : req.body.APELLIDO_PATERNO,
         APELLIDO_MATERNO:       (typeof req.body.APELLIDO_MATERNO === 'undefined') ? entity.get('APELLIDO_MATERNO') : req.body.APELLIDO_MATERNO,
-        FECH_FECHA_NACIMIENTO:  (typeof req.body.FECH_FECHA_NACIMIENTO === 'undefined') ? entity.get('FECH_FECHA_NACIMIENTO') : req.body.FECH_FECHA_NACIMIENTO,
-        IDEN_USUARIO:           (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO
+        FECH_FECHA_NACIMIENTO:  (typeof req.body.FECH_FECHA_NACIMIENTO === 'undefined') ? entity.get('FECH_FECHA_NACIMIENTO') : req.body.FECH_FECHA_NACIMIENTO
       })
         .then(() => {
           res.json({error: false, data: {message: 'Entity successfully updated'}})
