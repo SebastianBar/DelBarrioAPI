@@ -6,7 +6,7 @@ const labels = {
   IDEN_PUBLICACION: 'ID de publicación',
   IDEN_USUARIO: 'ID de usuario',
   NUMR_VALOR: 'Valor de calificación',
-  DESC_CALIFICACION: 'Texto de calificación'
+  DESC_CALIFICACION: 'Texto de calificación',
   FLAG_BAN: 'Baneo'
 }
 
