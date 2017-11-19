@@ -7,7 +7,6 @@ const labels = {
   RUT_EMPRENDEDOR: 'RUT',
   DV_EMPRENDEDOR: 'Dígito verificador',
   DESC_EMPRENDEDOR: 'Descripción del emprendedor',
-  DESC_CLAVE_MUNICIPALIDAD: 'Clave de municipalidad',
   DESC_NOMBRE_FANTASIA: 'Nombre de fantasía del emprendedor',
   DESC_NOMBRE_EMPRESA: 'Nombre real de la empresa',
   FLAG_VALIDADO: 'Validación de cuenta'
@@ -63,10 +62,6 @@ const validations = {
   }, {
     rule: 'maxLength:255',
     label: labels.DESC_EMPRENDEDOR
-  }],
-  DESC_CLAVE_MUNICIPALIDAD: [{
-    rule: 'required',
-    label: labels.DESC_CLAVE_MUNICIPALIDAD
   }],
   DESC_NOMBRE_FANTASIA: [{
     rule: 'required',

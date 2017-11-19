@@ -22,7 +22,8 @@ function GET (req, res) {
       })
   } else {
     new Collection().fetch({withRelated: ['categoria', 'oferta', {'imagenes': query => {
-      query.orderBy('IDEN_IMAGEN').limit(1)
+      query.orderBy('IDEN_IMAGEN')
+      // query.limit(1) <- PG 10 exclusive
     }}
     ]})
       .then(entities => {

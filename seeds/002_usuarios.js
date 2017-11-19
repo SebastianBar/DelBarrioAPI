@@ -37,7 +37,7 @@ exports.seed = function (knex) {
           return knex.select('IDEN_USUARIO', 'EMAIL_USUARIO').from('USR_USUARIOS')
             .then(usuarios => {
               return knex('PER_EMPRENDEDORES').insert([
-                {IDEN_USUARIO: usuarios.find(usuario => usuario.EMAIL_USUARIO === 'emprendedor@test.com').IDEN_USUARIO, RUT_EMPRENDEDOR: 14735068, DV_EMPRENDEDOR: '6', DESC_EMPRENDEDOR: 'Vendo los mejores cuchuflí de Providencia', DESC_CLAVE_MUNICIPALIDAD: '123456789', DESC_NOMBRE_FANTASIA: 'Cuchuflí Master', DESC_NOMBRE_EMPRESA: 'María Joaquina e hijos Limitada'}
+                {IDEN_USUARIO: usuarios.find(usuario => usuario.EMAIL_USUARIO === 'emprendedor@test.com').IDEN_USUARIO, RUT_EMPRENDEDOR: 14735068, DV_EMPRENDEDOR: '6', DESC_EMPRENDEDOR: 'Vendo los mejores cuchuflí de Providencia', DESC_NOMBRE_FANTASIA: 'Cuchuflí Master', DESC_NOMBRE_EMPRESA: 'María Joaquina e hijos Limitada'}
               ])
             })
         })

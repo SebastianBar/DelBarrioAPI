@@ -90,7 +90,6 @@ exports.up = function (knex) {
       table.integer('RUT_EMPRENDEDOR').notNull()
       table.string('DV_EMPRENDEDOR', 1).notNull()
       table.string('DESC_EMPRENDEDOR')
-      table.string('DESC_CLAVE_MUNICIPALIDAD').notNull()
       table.string('DESC_NOMBRE_FANTASIA').notNull()
       table.string('DESC_NOMBRE_EMPRESA').notNull()
       table.boolean('FLAG_VALIDADO').notNull().defaultTo(false)
