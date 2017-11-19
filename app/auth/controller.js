@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import strategie from './jwt-strategie'
+import strategie from '../middlewares/jwt-strategie'
 import { comparePass, filter } from './_helpers'
 import { Model } from '../models/usuario/model'
 
@@ -44,7 +44,7 @@ function authenticate (req, res) {
 }
 
 function getUsuario (req, res) {
-  new Model({IDEN_USUARIO: req.user.attributes.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
+  new Model({IDEN_USUARIO: req.user.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
     .then(user => {      
       res.json({ error: false, data: filter.getUsuario(user) })
     })

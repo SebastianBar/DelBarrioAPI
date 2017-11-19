@@ -28,7 +28,7 @@ var filter = {
   getUsuario: function (entity) {
     var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
     omit.push(Object.keys(entity.relations.emprendedor.attributes).length === 0 ? 'emprendedor' : 'persona')
-    return omitDeep(entity.toJSON(), omit)
+    return omitDeep(entity, omit)
   }
 }
 

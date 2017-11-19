@@ -5,7 +5,7 @@ import express from 'express'
 import cors from 'cors'
 import cn from './config'
 import passport from 'passport'
-import strategy from './app/auth/jwt-strategie'
+import strategy from './app/middlewares/jwt-strategie'
 
 //LOG
 import logger from 'simple-express-logger'
