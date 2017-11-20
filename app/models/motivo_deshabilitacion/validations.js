@@ -12,10 +12,10 @@ const validations = {
     rule: 'required',
     label: labels.NOMB_MOTIVO_DESHABILITACION
   }, {
-    rule: 'minLength:4',
+    rule: 'minLength:5',
     label: labels.NOMB_MOTIVO_DESHABILITACION
   }, {
-    rule: 'maxLength:20',
+    rule: 'maxLength:100',
     label: labels.NOMB_MOTIVO_DESHABILITACION
   }],
   FLAG_VIGENTE: [{

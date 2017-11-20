@@ -12,6 +12,12 @@ const Model = bookshelf.Model.extend({
   telefonos: function () {
     return this.hasMany(require('../telefono/model').Model, 'IDEN_USUARIO')
   },
+  persona: function () {
+    return this.hasOne(require('../persona/model').Model, 'IDEN_USUARIO')
+  },
+  emprendedor: function () {
+    return this.hasOne(require('../emprendedor/model').Model, 'IDEN_USUARIO')
+  },
   initialize: function () {
     this.on('saving', validate, this)
   }

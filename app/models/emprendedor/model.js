@@ -11,8 +11,11 @@ const Model = bookshelf.Model.extend({
   rubros: function () {
     return this.belongsToMany(require('../rubro/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
   },
+  imagen: function () {
+    return this.hasOne(require('../imagen/model').Model, 'IDEN_EMPRENDEDOR')
+  },
   publicaciones: function () {
-    return this.hasMany(require('../publicacion/model').Model, 'IDEN_PUBLICACION')
+    return this.hasMany(require('../publicacion/model').Model, 'IDEN_EMPRENDEDOR')
   },
   initialize: function () {
     this.on('saving', validate, this)

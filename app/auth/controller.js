@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
-import strategie from './jwt-strategie'
-import authHelpers from './_helpers'
+import strategie from '../middlewares/jwt-strategie'
+import { comparePass, filter } from './_helpers'
 import { Model } from '../models/usuario/model'
 
 /**
@@ -16,16 +16,20 @@ function authenticate (req, res) {
     new Model({EMAIL_USUARIO: email}).fetch()
       .then(user => {
         if (user) {
-          if(user.attributes.FLAG_VIGENTE) {
-            if(authHelpers.comparePass(password, user.attributes.DESC_PASSWORD)) {
-              var payload = {id: user.attributes.IDEN_USUARIO}
-              var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
-              res.json({error: false, data: {token: token}})
+          if(comparePass(password, user.attributes.DESC_PASSWORD)) {
+            if(user.attributes.FLAG_VIGENTE) {
+              if(!user.attributes.FLAG_BAN) {
+                var payload = {id: user.attributes.IDEN_USUARIO}
+                var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
+                res.json({error: false, data: {token: token}})
+              } else {
+                res.status(401).json({error: true, data: {message: 'Cuenta baneada'}})
+              }
             } else {
-              res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
+              res.status(401).json({error: true, data: {message: 'Cuenta deshabilitada'}})
             }
           } else {
-            res.status(401).json({error: true, data: {message: 'Cuenta deshabilitada'}})
+            res.status(401).json({error: true, data: {message: 'Contraseña incorrecta'}})
           }
         } else {
           res.status(404).json({error: true, data: {message: 'Usuario no encontrado'}})
@@ -40,7 +44,10 @@ function authenticate (req, res) {
 }
 
 function getUsuario (req, res) {
-  res.json({error: false, data: req.user.toJSON()})
+  new Model({IDEN_USUARIO: req.user.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
+    .then(user => {      
+      res.json({ error: false, data: filter.getUsuario(user) })
+    })
 }
 
 /* Se exporta el método */

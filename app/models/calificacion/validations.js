@@ -6,7 +6,8 @@ const labels = {
   IDEN_PUBLICACION: 'ID de publicación',
   IDEN_USUARIO: 'ID de usuario',
   NUMR_VALOR: 'Valor de calificación',
-  DESC_CALIFICACION: 'Texto de calificación'
+  DESC_CALIFICACION: 'Texto de calificación',
+  FLAG_BAN: 'Baneo'
 }
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
@@ -62,6 +63,10 @@ const validations = {
   }, {
     rule: 'maxLength:255',
     label: labels.DESC_CALIFICACION
+  }],
+  FLAG_BAN: [{
+    rule: 'boolean',
+    label: labels.FLAG_BAN
   }]
 }
 

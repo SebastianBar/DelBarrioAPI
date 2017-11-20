@@ -1,5 +1,6 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
+import { filter } from './_helpers'
 
 /**
  * Obtener motivos de deshabilitación.
@@ -14,7 +15,7 @@ function GET (req, res) {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: entity.toJSON()})
+          res.json({error: false, data: filter.GETsingle(entity)})
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -34,11 +35,13 @@ function GET (req, res) {
 /**
  * Agregar nuevo motivo de deshabilitación.
  * @param {string} req.body.NOMB_MOTIVO_DESHABILITACION - Nombre descriptivo del motivo de deshabilitación.
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional, por defecto true).
  * @return {json} Motivo de deshabilitación. En caso fallido, mensaje de error.
  */
 function POST (req, res) {
   new Model({
-    NOMB_MOTIVO_DESHABILITACION:  req.body.NOMB_MOTIVO_DESHABILITACION
+    NOMB_MOTIVO_DESHABILITACION:  req.body.NOMB_MOTIVO_DESHABILITACION,
+    FLAG_VIGENTE:                 req.body.FLAG_VIGENTE
   }).save()
     .then(entity => {
       res.json({error: false, data: entity.toJSON()})

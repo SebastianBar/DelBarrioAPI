@@ -8,17 +8,20 @@ const Model = bookshelf.Model.extend({
   emprendedor: function () {
     return this.belongsTo(require('../emprendedor/model').Model, 'IDEN_EMPRENDEDOR')
   },
-  tipo_publicacion: function () {
-    return this.belongsTo(require('../tipo_publicacion/model').Model, 'IDEN_TIPO_PUBLICACION')
-  },
   categoria: function () {
     return this.belongsTo(require('../categoria/model').Model, 'IDEN_CATEGORIA')
   },
-  ofertas: function () {
-    return this.hasMany(require('../oferta/model').Model, 'IDEN_PUBLICACION')
+  imagenes: function () {
+    return this.hasMany(require('../imagen/model').Model, 'IDEN_PUBLICACION')
+  },
+  oferta: function () {
+    return this.hasOne(require('../oferta/model').Model, 'IDEN_PUBLICACION')
   },
   comentarios: function () {
     return this.hasMany(require('../comentario/model').Model, 'IDEN_PUBLICACION')
+  },
+  calificaciones: function () {
+    return this.hasMany(require('../calificacion/model').Model, 'IDEN_PUBLICACION')
   },
   initialize: function () {
     this.on('saving', validate, this)

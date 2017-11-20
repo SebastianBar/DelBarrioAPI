@@ -11,12 +11,12 @@ import routesPersona from './models/persona/routes'
 import routesFaq from './models/faq/routes'
 import routesMotivoDeshabilitacion from './models/motivo_deshabilitacion/routes'
 import routesMotivoDenuncia from './models/motivo_denuncia/routes'
-import routesTipoPublicacion from './models/tipo_publicacion/routes'
 import routesPublicacion from './models/publicacion/routes'
 import routesOferta from './models/oferta/routes'
 import routesComentario from './models/comentario/routes'
 import routesCalificacion from './models/calificacion/routes'
 import routesRespuesta from './models/respuesta/routes'
+import routesImagen from './models/imagen/routes'
 
 /*
 * Todas las rutas públicas para desarrollo
@@ -35,12 +35,12 @@ const routes = [
   routesFaq,
   routesMotivoDeshabilitacion,
   routesMotivoDenuncia,
-  routesTipoPublicacion,
   routesPublicacion,
   routesOferta,
   routesComentario,
   routesCalificacion,
-  routesRespuesta
+  routesRespuesta,
+  routesImagen
 ]
 
 export default routes

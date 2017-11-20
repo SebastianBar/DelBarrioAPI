@@ -3,15 +3,31 @@ import { knex } from '../../connection'
 
 // Nombres de atributos en formato legible
 const labels = {
+  IDEN_USUARIO: 'ID de usuario',
   NOMBRES: 'Nombres',
   APELLIDO_PATERNO: 'Apellido Paterno',
   APELLIDO_MATERNO: 'Apellido Materno',
-  FECH_FECHA_NACIMIENTO: 'Fecha de Nacimiento',
-  IDEN_USUARIO: 'ID de usuario'
+  FECH_FECHA_NACIMIENTO: 'Fecha de Nacimiento'
 }
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
+  IDEN_USUARIO: [{
+    rule: 'required',
+    label: labels.IDEN_USUARIO
+  }, {
+    rule: 'number',
+    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
+  }, {
+    rule: function (val){
+      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
+        .then(resp => {
+          if (resp.length == 0){
+            throw new Error(labels.IDEN_USUARIO + ' no existe')
+          }
+        })
+    }
+  }],
   NOMBRES: [{
     rule: 'required',
     label: labels.NOMB_FAQ
@@ -45,23 +61,7 @@ const validations = {
   FECH_FECHA_NACIMIENTO: [{
     rule: 'required',
     label: labels.FECH_FECHA_NACIMIENTO
-  }],
-  IDEN_USUARIO: [{
-    rule: 'required',
-    label: labels.IDEN_USUARIO
-  }, {
-    rule: 'number',
-    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
-  }, {
-    rule: function (val){
-      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_USUARIO + ' no existe')
-          }
-        })
-    }
-  }],
+  }]
 }
 
 /**

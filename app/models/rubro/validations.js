@@ -2,7 +2,7 @@ import Checkit from 'checkit'
 
 // Nombres de atributos en formato legible
 const labels = {
-  NOMB_RUBRO: 'Nombre del rol',
+  NOMB_RUBRO: 'Nombre del rubro',
   FLAG_VIGENTE: 'Vigencia'
 }
 
@@ -10,13 +10,16 @@ const labels = {
 const validations = {
   NOMB_RUBRO: [{
     rule: 'required',
-    label: labels.NOMB_ROL
+    label: labels.NOMB_RUBRO
   }, {
     rule: 'string',
-    label: labels.NOMB_ROL
+    label: labels.NOMB_RUBRO
   }, {
-    rule: 'maxLength:255',
-    label: labels.NOMB_ROL
+    rule: 'minLength:5',
+    label: labels.NOMB_RUBRO
+  }, {
+    rule: 'maxLength:50',
+    label: labels.NOMB_RUBRO
   }],
   FLAG_VIGENTE: [{
     rule: 'boolean',

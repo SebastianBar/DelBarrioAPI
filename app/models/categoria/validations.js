@@ -17,7 +17,7 @@ const validations = {
     rule: 'minLength:5',
     label: labels.NOMB_CATEGORIA
   }, {
-    rule: 'maxLength:20',
+    rule: 'maxLength:50',
     label: labels.NOMB_CATEGORIA
   }],
   IDEN_CATEGORIA_PADRE: ['number', function (id) {
