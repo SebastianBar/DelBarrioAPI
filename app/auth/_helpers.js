@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs'
-import omitDeep from 'omit-deep'
-import _ from 'lodash'
+const bcrypt = require('bcryptjs')
+const omitDeep = require('omit-deep')
+const _ = require('lodash')
 
 /**
  * Comparación de una contraseña respecto a su hash.
