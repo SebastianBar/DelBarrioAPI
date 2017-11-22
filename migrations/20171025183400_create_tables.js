@@ -142,6 +142,7 @@ exports.up = function (knex) {
       table.string('NOMB_PUBLICACION').notNull()
       table.text('DESC_PUBLICACION', 'longtext')
       table.integer('NUMR_PRECIO').unsigned().notNull()
+      table.integer('NUMR_CONTADOR').unsigned().notNull().defaultTo(0)
       table.boolean('FLAG_CONTENIDO_ADULTO').notNull().defaultTo(false)
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(false)
       table.boolean('FLAG_BAN').notNull().defaultTo(false)

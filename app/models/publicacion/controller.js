@@ -9,12 +9,26 @@ import Checkit from 'checkit'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'categoria', 'imagenes', 'oferta', 'comentarios', 'comentarios.usuario', 'comentarios.usuario.persona', 'comentarios.respuesta', 'calificaciones']})
+    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'categoria', 'imagenes', 'oferta', 'comentarios', 'comentarios.respuesta', 'calificaciones']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
           res.json({error: false, data: entity.toJSON()})
+          // Incrementar contador
+          new Model({IDEN_PUBLICACION: entity.attributes.IDEN_PUBLICACION})
+            .fetch({require: true, withColums: ['IDEN_PUBLICACION']})
+            .then(entity => {
+              entity.save({
+                NUMR_CONTADOR: entity.get('NUMR_CONTADOR') + 1,
+              })
+                .catch(() => {
+                  // Do nothing
+                })
+            })
+            .catch(() => {
+              // Do nothing
+            })
         }
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
@@ -43,6 +57,7 @@ function GET (req, res) {
  * @param {string} req.body.NOMB_PUBLICACION - Título de la publicación.
  * @param {string} req.body.DESC_PUBLICACION - Texto descriptivo de la publicación.
  * @param {integer} req.body.NUMR_PRECIO - Precio de publicación.
+ * @param {integer} req.body.NUMR_CONTADOR - Contador de visitas de publicación (opcional, por defecto 0).
  * @param {boolean} req.body.FLAG_CONTENIDO_ADULTO - Define si la publicación posee contenido adulto (opcional, por defecto false).
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la publicación está activa (opcional, por defecto false).
  * @param {boolean} req.body.FLAG_BAN - Define si la publicación está baneada (opcional, por defecto false).
@@ -57,6 +72,7 @@ function POST (req, res) {
     NOMB_PUBLICACION:       req.body.NOMB_PUBLICACION,
     DESC_PUBLICACION:       req.body.DESC_PUBLICACION,
     NUMR_PRECIO:            req.body.NUMR_PRECIO,
+    NUMR_CONTADOR:          req.body.NUMR_CONTADOR,
     FLAG_CONTENIDO_ADULTO:  req.body.FLAG_CONTENIDO_ADULTO,
     FLAG_VIGENTE:           req.body.FLAG_VIGENTE,
     FLAG_BAN:               req.body.FLAG_BAN,
@@ -81,6 +97,7 @@ function POST (req, res) {
  * @param {string} req.body.NOMB_PUBLICACION - Título de la publicación (opcional).
  * @param {string} req.body.DESC_PUBLICACION - Texto descriptivo de la publicación (opcional).
  * @param {integer} req.body.NUMR_PRECIO - Precio de publicación (opcional).
+ * @param {integer} req.body.NUMR_CONTADOR - Contador de visitas de publicación (opcional).
  * @param {boolean} req.body.FLAG_CONTENIDO_ADULTO - Define si la publicación posee contenido adulto (opcional).
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la publicación está activa (opcional).
  * @param {boolean} req.body.FLAG_BAN - Define si la publicación está baneada (opcional).
@@ -98,6 +115,7 @@ function PUT (req, res) {
         NOMB_PUBLICACION:       (typeof req.body.NOMB_PUBLICACION === 'undefined') ? entity.get('NOMB_PUBLICACION') : req.body.NOMB_PUBLICACION,
         DESC_PUBLICACION:       (typeof req.body.DESC_PUBLICACION === 'undefined') ? entity.get('DESC_PUBLICACION') : req.body.DESC_PUBLICACION,
         NUMR_PRECIO:            (typeof req.body.NUMR_PRECIO === 'undefined') ? entity.get('NUMR_PRECIO') : req.body.NUMR_PRECIO,
+        NUMR_CONTADOR:          (typeof req.body.NUMR_CONTADOR === 'undefined') ? entity.get('NUMR_CONTADOR') : req.body.NUMR_CONTADOR,
         FLAG_CONTENIDO_ADULTO:  (typeof req.body.FLAG_CONTENIDO_ADULTO === 'undefined') ? entity.get('FLAG_CONTENIDO_ADULTO') : req.body.FLAG_CONTENIDO_ADULTO,
         FLAG_VIGENTE:           (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
         FLAG_BAN:               (typeof req.body.FLAG_BAN === 'undefined') ? entity.get('FLAG_BAN') : req.body.FLAG_BAN,
