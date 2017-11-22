@@ -9,7 +9,9 @@ import Checkit from 'checkit'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'categoria', 'imagenes', 'oferta', 'comentarios', 'comentarios.respuesta', 'calificaciones']})
+    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'categoria', 'imagenes', 'oferta', 'calificaciones', {'comentarios': query => {
+      query.orderBy('IDEN_COMENTARIO', 'asc')
+    }}, 'comentarios.respuesta']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -38,7 +40,7 @@ function GET (req, res) {
     new Collection().fetch({withRelated: ['categoria', 'oferta', {'imagenes': query => {
       query.orderBy('IDEN_IMAGEN')
       query.limit(1)
-    }}  
+    }}
     ]})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
