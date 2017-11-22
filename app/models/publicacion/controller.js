@@ -9,7 +9,7 @@ import Checkit from 'checkit'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'categoria', 'imagenes', 'oferta', 'calificaciones', {'comentarios': query => {
+    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'etiquetas', 'categoria', 'imagenes', 'oferta', 'calificaciones', {'comentarios': query => {
       query.orderBy('IDEN_COMENTARIO', 'asc')
     }}, 'comentarios.respuesta']})
       .then(entity => {
