@@ -11,9 +11,19 @@ import _ from 'lodash'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: ['emprendedor', 'etiquetas', 'categoria', 'imagenes', 'oferta', 'calificaciones', {'comentarios': query => {
-      query.orderBy('IDEN_COMENTARIO', 'asc')
-    }}, 'comentarios.respuesta']})
+    new Model({IDEN_PUBLICACION: id}).fetch({withRelated: [
+      'emprendedor',
+      'etiquetas',
+      'categoria',
+      'imagenes',
+      'oferta',
+      {'calificaciones': query => {
+        query.orderBy('IDEN_CALIFICACION', 'desc')
+      }},
+      {'comentarios': query => {
+        query.orderBy('IDEN_COMENTARIO', 'desc')
+      }},
+      'comentarios.respuesta']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
