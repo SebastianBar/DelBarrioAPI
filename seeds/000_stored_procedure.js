@@ -1,5 +1,5 @@
 exports.seed = function (knex) {
-  return knex.raw('DROP FUNCTION search_posts(character varying);')
+  return knex.raw('DROP FUNCTION IF EXISTS search_posts(character varying);')
     .then(() => {
       return knex.raw(`CREATE OR REPLACE FUNCTION search_posts(que VARCHAR(255))
       RETURNS TABLE ( "IDEN_PUBLICACION" INTEGER ) AS $$
