@@ -6,7 +6,7 @@ const Model = bookshelf.Model.extend({
   tableName: 'PER_RUBROS',
   idAttribute: 'IDEN_RUBRO',
   emprendedores: function () {
-    return this.belongsToMany(require('../emprendedor/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_RUBRO', 'IDEN_EMPRENDEDOR')
+    return this.hasMany(require('../emprendedor/model').Model, 'IDEN_RUBRO')
   },
   initialize: function () {
     this.on('saving', validate, this)

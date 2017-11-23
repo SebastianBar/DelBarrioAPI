@@ -6,7 +6,6 @@ exports.up = function (knex) {
     .then(createPerTelefonos)
     .then(createPerRubros)
     .then(createPerEmprendedores)
-    .then(createPerRubrosEmprendedores)
     .then(createPerPersonas)
     .then(createReqCategorias)
     .then(createReqPublicaciones)
@@ -78,7 +77,7 @@ exports.up = function (knex) {
   function createPerRubros () {
     return knex.schema.createTableIfNotExists('PER_RUBROS', table => {
       table.increments('IDEN_RUBRO').unsigned().primary()
-      table.string('NOMB_RUBRO', 50).notNull()
+      table.string('NOMB_RUBRO', 100).notNull()
       table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
     })
   }
@@ -87,6 +86,7 @@ exports.up = function (knex) {
     return knex.schema.createTableIfNotExists('PER_EMPRENDEDORES', table => {
       table.increments('IDEN_EMPRENDEDOR').unsigned().primary()
       table.integer('IDEN_USUARIO').unsigned().notNull()
+      table.integer('IDEN_RUBRO').unsigned()
       table.integer('RUT_EMPRENDEDOR').notNull()
       table.string('DV_EMPRENDEDOR', 1).notNull()
       table.string('DESC_EMPRENDEDOR')
@@ -95,17 +95,7 @@ exports.up = function (knex) {
       table.boolean('FLAG_VALIDADO').notNull().defaultTo(false)
         
       table.foreign('IDEN_USUARIO').references('USR_USUARIOS.IDEN_USUARIO').onDelete('CASCADE').onUpdate('CASCADE')
-    })
-  }
-
-  function createPerRubrosEmprendedores () {
-    return knex.schema.createTableIfNotExists('PER_RUBROS_EMPRENDEDORES', table => {
-      table.increments('IDEN_RUBROS_EMPRENDEDORES').unsigned().primary()
-      table.integer('IDEN_RUBRO').unsigned().notNull()
-      table.integer('IDEN_EMPRENDEDOR').unsigned().notNull()
-        
       table.foreign('IDEN_RUBRO').references('PER_RUBROS.IDEN_RUBRO').onDelete('CASCADE').onUpdate('CASCADE')
-      table.foreign('IDEN_EMPRENDEDOR').references('PER_EMPRENDEDORES.IDEN_EMPRENDEDOR').onDelete('CASCADE').onUpdate('CASCADE')
     })
   }
 
@@ -324,7 +314,6 @@ exports.down = function (knex) {
     .dropTableIfExists('REQ_PUBLICACIONES')
     .dropTableIfExists('REQ_CATEGORIAS')
     .dropTableIfExists('PER_PERSONAS')
-    .dropTableIfExists('PER_RUBROS_EMPRENDEDORES')
     .dropTableIfExists('PER_EMPRENDEDORES')
     .dropTableIfExists('PER_RUBROS')
     .dropTableIfExists('PER_TELEFONOS')
