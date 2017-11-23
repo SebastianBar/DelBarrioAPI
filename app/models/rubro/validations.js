@@ -18,7 +18,7 @@ const validations = {
     rule: 'minLength:5',
     label: labels.NOMB_RUBRO
   }, {
-    rule: 'maxLength:50',
+    rule: 'maxLength:100',
     label: labels.NOMB_RUBRO
   }],
   FLAG_VIGENTE: [{
