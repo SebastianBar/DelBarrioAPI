@@ -18,7 +18,9 @@ function GET (req, res) {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
         } else {
-          res.json({error: false, data: entity.toJSON()})
+          let jsonEntity = entity.toJSON()
+          jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
+          res.json({error: false, data: jsonEntity})
           // Incrementar contador
           new Model({IDEN_PUBLICACION: entity.attributes.IDEN_PUBLICACION})
             .fetch({require: true, withColums: ['IDEN_PUBLICACION']})
@@ -39,13 +41,18 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch({withRelated: ['categoria', 'oferta', {'imagenes': query => {
+    new Collection().orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
       query.orderBy('IDEN_IMAGEN')
       query.limit(1)
     }}
     ]})
       .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
+        let jsonEntities = entities.toJSON()
+        jsonEntities.forEach(jsonEntity => {
+          jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
+          delete jsonEntity.calificaciones
+        })
+        res.json({error: false, data: jsonEntities})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
