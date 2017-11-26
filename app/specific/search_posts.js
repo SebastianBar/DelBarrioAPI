@@ -1,4 +1,6 @@
 import { bookshelf } from '../connection'
+import _ from 'lodash'
+import publicacionController from '../models/publicacion/controller'
 
 function POST (req, res) {
   if(!req.body.search) {
@@ -7,7 +9,8 @@ function POST (req, res) {
     bookshelf.knex.raw('SELECT * FROM search_posts(?::varchar)', [req.body.search])
       .then(data => {
         if(data.rows.length > 0) {
-          res.json({ error: false, data: data.rows})
+          req.body.ids = _.map(data.rows, 'IDEN_PUBLICACION')
+          return publicacionController.GET(req, res)
         } else {
           res.status(404).json({ error: true, data: { message: 'No results found' } })
         }

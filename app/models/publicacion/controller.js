@@ -51,11 +51,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
-      query.orderBy('IDEN_IMAGEN')
-      query.limit(1)
-    }}
-    ]})
+    GETAllHelper(req.body.ids)
       .then(entities => {
         let jsonEntities = entities.toJSON()
         jsonEntities.forEach(jsonEntity => {
@@ -68,6 +64,26 @@ function GET (req, res) {
         throw err
       })
   }
+}
+
+/**
+ * Retorna instancia de colección
+ * @param {array} ids Arreglo con ID's de publicación (opcional)
+ */
+function GETAllHelper (ids = undefined) {
+  if(ids) {
+    return new Collection().query('where', 'IDEN_PUBLICACION', 'IN', ids).orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
+      query.orderBy('IDEN_IMAGEN')
+      query.limit(1)
+    }}
+    ]})
+  }
+
+  return new Collection().orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
+    query.orderBy('IDEN_IMAGEN')
+    query.limit(1)
+  }}
+  ]})
 }
 
 /**
