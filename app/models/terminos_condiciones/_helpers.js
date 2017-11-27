@@ -25,7 +25,7 @@ const fileFilter = function (req, file, cb) {
 const upload = multer({ storage: storage, fileFilter: fileFilter }).single('TERMINOS_CONDICIONES')
 
 function renameOldFile () {
-  fs.rename('public\\TERMINOS_CONDICIONES.pdf', 'public\\TERMINOS_CONDICIONES_' + new Date().getTime() + '.pdf', err => {
+  fs.rename('public/TERMINOS_CONDICIONES.pdf', 'public/TERMINOS_CONDICIONES_' + new Date().getTime() + '.pdf', err => {
     if(err) {
       // Do nothing, file doesn't seems to exist
     }
@@ -33,7 +33,7 @@ function renameOldFile () {
 }
 
 function renameNewFile (file) {
-  fs.rename(file.path, 'public\\TERMINOS_CONDICIONES.pdf', err => {
+  fs.rename(file.path, 'public/TERMINOS_CONDICIONES.pdf', err => {
     if(err) {
       // Do nothing, file doesn't seems to exist
     }
