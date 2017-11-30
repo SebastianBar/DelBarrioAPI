@@ -13,6 +13,8 @@ function GET (req, res) {
   if(id != 0) {
     new Model({IDEN_PUBLICACION: id}).fetch({withRelated: [
       'emprendedor',
+      'emprendedor.rubro',
+      'emprendedor.usuario.telefonos',
       'etiquetas',
       'categoria',
       'imagenes',
@@ -51,14 +53,14 @@ function GET (req, res) {
         throw err
       })
   } else {
-    GETAllHelper(req.body.ids)
+    GETAllHelper(req.body.ids, req.body.page)
       .then(entities => {
         let jsonEntities = entities.toJSON()
         jsonEntities.forEach(jsonEntity => {
           jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
           delete jsonEntity.calificaciones
         })
-        res.json({error: false, data: jsonEntities})
+        res.json({error: false, data: jsonEntities, pagination: entities.pagination})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})
         throw err
@@ -70,16 +72,16 @@ function GET (req, res) {
  * Retorna instancia de colección
  * @param {array} ids Arreglo con ID's de publicación (opcional)
  */
-function GETAllHelper (ids = undefined) {
+function GETAllHelper (ids = undefined, page = 1) {
   if(ids) {
-    return new Collection().query('where', 'IDEN_PUBLICACION', 'IN', ids).orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
+    return new Collection().query('where', 'IDEN_PUBLICACION', 'IN', ids).orderBy('IDEN_PUBLICACION').fetchPage({page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
       query.orderBy('IDEN_IMAGEN')
       query.limit(1)
     }}
     ]})
   }
 
-  return new Collection().orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
+  return new Collection().orderBy('IDEN_PUBLICACION').fetchPage({page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
     query.orderBy('IDEN_IMAGEN')
     query.limit(1)
   }}

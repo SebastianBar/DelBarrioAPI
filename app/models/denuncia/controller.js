@@ -9,7 +9,7 @@ import Checkit from 'checkit'
 function GET (req, res) {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
-    new Model({IDEN_DENUNCIA: id}).fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'motivo_denuncia', 'resolucion_denuncia']})
+    new Model({IDEN_DENUNCIA: id}).fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona']})
       .then(entity => {
         if(!entity) {
           res.status(404).json({error: true, data: {message: 'Entity not found'}})
@@ -21,7 +21,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    new Collection().fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'motivo_denuncia', 'resolucion_denuncia']})
+    new Collection().fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona']})
       .then(entities => {
         res.json({error: false, data: entities.toJSON()})
       }).catch(err => {

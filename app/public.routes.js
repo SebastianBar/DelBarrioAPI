@@ -9,7 +9,6 @@ import routesPublicacion from './models/publicacion/public.routes'
 import routesOferta from './models/oferta/public.routes'
 import routesImagen from './models/imagen/public.routes'
 import routesUsuario from './models/usuario/public.routes'
-import routesResolucionDenuncia from './models/resolucion_denuncia/public.routes'
 
 import searchPosts from './specific/public.routes'
 
@@ -28,8 +27,7 @@ const routes = [
   routesOferta,
   routesImagen,
   searchPosts,
-  routesUsuario,
-  routesResolucionDenuncia
+  routesUsuario
 ]
 
 export default routes

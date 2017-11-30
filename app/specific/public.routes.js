@@ -3,6 +3,6 @@ import express from 'express'
 const app = express.Router()
 
 app.route('/search')
-  .post   ((req,res) => search.POST(req, res))
+  .get   ((req,res) => search.GET(req, res))
 
 export default app

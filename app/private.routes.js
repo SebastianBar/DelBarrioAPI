@@ -17,6 +17,7 @@ import routesTelefono from './models/telefono/private.routes'
 import routesUsuario from './models/usuario/private.routes'
 import routesTerminosCondiciones from './models/terminos_condiciones/private.routes'
 import routesDenuncia from './models/denuncia/private.routes'
+import routesResolucionDenuncia from './models/resolucion_denuncia/private.routes'
 
 const routes = [
   routesInicio,
@@ -37,7 +38,8 @@ const routes = [
   routesTelefono,
   routesUsuario,
   routesTerminosCondiciones,
-  routesDenuncia
+  routesDenuncia,
+  routesResolucionDenuncia
 ]
 
 export default routes

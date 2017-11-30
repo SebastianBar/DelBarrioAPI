@@ -2,7 +2,7 @@ import { bookshelf } from '../connection'
 import _ from 'lodash'
 import publicacionController from '../models/publicacion/controller'
 
-function POST (req, res) {
+function GET (req, res) {
   if(!req.body.search) {
     res.status(400).json({ error: true, data: { message: 'search parameter is required' } })
   } else {
@@ -24,5 +24,5 @@ function POST (req, res) {
 
 /* Se exportan los métodos */
 module.exports = {
-  POST
+  GET
 }
