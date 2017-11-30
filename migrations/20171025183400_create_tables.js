@@ -134,7 +134,8 @@ exports.up = function (knex) {
       table.integer('NUMR_PRECIO').unsigned().notNull()
       table.integer('NUMR_CONTADOR').unsigned().notNull().defaultTo(0)
       table.boolean('FLAG_CONTENIDO_ADULTO').notNull().defaultTo(false)
-      table.boolean('FLAG_VIGENTE').notNull().defaultTo(false)
+      table.boolean('FLAG_VIGENTE').notNull().defaultTo(true)
+      table.boolean('FLAG_VALIDADO').notNull().defaultTo(false)
       table.boolean('FLAG_BAN').notNull().defaultTo(false)
       table.dateTime('FECH_CREACION').notNull().defaultTo(knex.raw('now()'))
 

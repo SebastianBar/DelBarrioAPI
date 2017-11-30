@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 /**
  * Obtener publicaciones.
- * @param {integer} req.params.id - ID de publicación (opcional).
+ * @param {number} req.params.id - ID de publicación (opcional).
  * @return {json} Publicación(es). En caso fallido, mensaje de error.
  */
 function GET (req, res) {
@@ -53,7 +53,7 @@ function GET (req, res) {
         throw err
       })
   } else {
-    GETAllHelper(req.body.ids, req.body.page)
+    GETAllHelper(req.query.ids, req.query.page)
       .then(entities => {
         let jsonEntities = entities.toJSON()
         jsonEntities.forEach(jsonEntity => {
@@ -70,11 +70,12 @@ function GET (req, res) {
 
 /**
  * Retorna instancia de colección
- * @param {array} ids Arreglo con ID's de publicación (opcional)
+ * @param {...number} ids Arreglo con ID's de publicación (opcional)
+ * @param {number} page Número de página a obtener (opcional)
  */
 function GETAllHelper (ids = undefined, page = 1) {
   if(ids) {
-    return new Collection().query('where', 'IDEN_PUBLICACION', 'IN', ids).orderBy('IDEN_PUBLICACION').fetchPage({page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
+    return new Model().query(q => { q.where('IDEN_PUBLICACION', 'in', ids) }).orderBy('IDEN_PUBLICACION', 'desc').fetchPage({page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
       query.orderBy('IDEN_IMAGEN')
       query.limit(1)
     }}
@@ -98,7 +99,8 @@ function GETAllHelper (ids = undefined, page = 1) {
  * @param {integer} req.body.NUMR_PRECIO - Precio de publicación.
  * @param {integer} req.body.NUMR_CONTADOR - Contador de visitas de publicación (opcional, por defecto 0).
  * @param {boolean} req.body.FLAG_CONTENIDO_ADULTO - Define si la publicación posee contenido adulto (opcional, por defecto false).
- * @param {boolean} req.body.FLAG_VIGENTE - Define si la publicación está activa (opcional, por defecto false).
+ * @param {boolean} req.body.FLAG_VIGENTE - Define si la publicación está activa (opcional, por defecto true).
+ * @param {boolean} req.body.FLAG_VALIDADO - Define si la publicación ha sido aprobada por un administrador (opcional, por defecto false).
  * @param {boolean} req.body.FLAG_BAN - Define si la publicación está baneada (opcional, por defecto false).
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la publicación (opcional, por defecto now()).
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
@@ -115,6 +117,7 @@ function POST (req, res) {
     NUMR_CONTADOR:          req.body.NUMR_CONTADOR,
     FLAG_CONTENIDO_ADULTO:  req.body.FLAG_CONTENIDO_ADULTO,
     FLAG_VIGENTE:           req.body.FLAG_VIGENTE,
+    FLAG_VALIDADO:          req.body.FLAG_VALIDADO,
     FLAG_BAN:               req.body.FLAG_BAN,
     FECH_CREACION:          req.body.FECH_CREACION
   }).save()
@@ -154,6 +157,7 @@ function POST (req, res) {
  * @param {integer} req.body.NUMR_CONTADOR - Contador de visitas de publicación (opcional).
  * @param {boolean} req.body.FLAG_CONTENIDO_ADULTO - Define si la publicación posee contenido adulto (opcional).
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la publicación está activa (opcional).
+ * @param {boolean} req.body.FLAG_VALIDADO - Define si la publicación ha sido aprobada por un administrador (opcional).
  * @param {boolean} req.body.FLAG_BAN - Define si la publicación está baneada (opcional).
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la publicación (opcional).
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
@@ -173,6 +177,7 @@ function PUT (req, res) {
         NUMR_CONTADOR:          (typeof req.body.NUMR_CONTADOR === 'undefined') ? entity.get('NUMR_CONTADOR') : req.body.NUMR_CONTADOR,
         FLAG_CONTENIDO_ADULTO:  (typeof req.body.FLAG_CONTENIDO_ADULTO === 'undefined') ? entity.get('FLAG_CONTENIDO_ADULTO') : req.body.FLAG_CONTENIDO_ADULTO,
         FLAG_VIGENTE:           (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
+        FLAG_VALIDADO:          (typeof req.body.FLAG_VALIDADO === 'undefined') ? entity.get('FLAG_VALIDADO') : req.body.FLAG_VALIDADO,
         FLAG_BAN:               (typeof req.body.FLAG_BAN === 'undefined') ? entity.get('FLAG_BAN') : req.body.FLAG_BAN,
         FECH_CREACION:          (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION
       })
