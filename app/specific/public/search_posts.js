@@ -1,6 +1,6 @@
-import { bookshelf } from '../connection'
+import { bookshelf } from '../../connection'
 import _ from 'lodash'
-import publicacionController from '../models/publicacion/controller'
+import publicacionController from '../../models/publicacion/controller'
 
 function GET (req, res) {
   if(!req.query.search) {

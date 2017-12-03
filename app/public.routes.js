@@ -10,7 +10,7 @@ import routesOferta from './models/oferta/public.routes'
 import routesImagen from './models/imagen/public.routes'
 import routesUsuario from './models/usuario/public.routes'
 
-import searchPosts from './specific/public.routes'
+import specificRoutes from './specific/public.routes'
 
 /*
 * Todas las rutas públicas para desarrollo
@@ -26,7 +26,7 @@ const routes = [
   routesPublicacion,
   routesOferta,
   routesImagen,
-  searchPosts,
+  specificRoutes,
   routesUsuario
 ]
 

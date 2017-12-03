@@ -1,6 +1,7 @@
 import express from 'express'
-import search from './search_posts'
-import index from './index'
+import search from './public/search_posts'
+import index from './public/index'
+
 const app = express.Router()
 
 app.route('/search')

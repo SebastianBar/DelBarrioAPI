@@ -19,6 +19,8 @@ import routesTerminosCondiciones from './models/terminos_condiciones/private.rou
 import routesDenuncia from './models/denuncia/private.routes'
 import routesResolucionDenuncia from './models/resolucion_denuncia/private.routes'
 
+import specificRoutes from './specific/private.routes'
+
 const routes = [
   routesInicio,
   routesAuth,
@@ -39,7 +41,8 @@ const routes = [
   routesUsuario,
   routesTerminosCondiciones,
   routesDenuncia,
-  routesResolucionDenuncia
+  routesResolucionDenuncia,
+  specificRoutes
 ]
 
 export default routes

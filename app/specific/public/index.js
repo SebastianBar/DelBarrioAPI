@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { Collection as Publicaciones } from '../models/publicacion/model'
-import { Collection as Emprendedores } from '../models/emprendedor/model'
+import { Collection as Publicaciones } from '../../models/publicacion/model'
+import { Collection as Emprendedores } from '../../models/emprendedor/model'
 
 function GET (req, res) {
   new Publicaciones().orderBy('IDEN_PUBLICACION').fetch({withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
