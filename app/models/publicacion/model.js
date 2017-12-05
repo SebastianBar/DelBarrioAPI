@@ -11,6 +11,9 @@ const Model = bookshelf.Model.extend({
   categoria: function () {
     return this.belongsTo(require('../categoria/model').Model, 'IDEN_CATEGORIA')
   },
+  etiquetas: function () {
+    return this.belongsToMany(require('../etiqueta/model').Model, 'REQ_PUBLICACIONES_ETIQUETAS', 'IDEN_PUBLICACION', 'IDEN_ETIQUETA')
+  },
   imagenes: function () {
     return this.hasMany(require('../imagen/model').Model, 'IDEN_PUBLICACION')
   },

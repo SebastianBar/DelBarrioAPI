@@ -5,6 +5,9 @@ import validate from './validations'
 const Model = bookshelf.Model.extend({
   tableName: 'REQ_MOTIVOS_DENUNCIA',
   idAttribute: 'IDEN_MOTIVO_DENUNCIA',
+  denuncias: function () {
+    return this.hasMany(require('../denuncia/model').Model, 'IDEN_MOTIVO_DENUNCIA')
+  },
   initialize: function () {
     this.on('saving', validate, this)
   }

@@ -6,7 +6,7 @@ import { Model } from '../models/usuario/model'
  * Definir modalidad de la estrategia a utilizar, junto a la private key.
  */
 const jwtOptions = {
-  jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderWithScheme('JWT'),
+  jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: cn.secret
 }
 

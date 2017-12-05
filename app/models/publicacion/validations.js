@@ -9,6 +9,7 @@ const labels = {
   NOMB_PUBLICACION: 'Nombre de publicación',
   DESC_PUBLICACION: 'Descripción de publicación',
   NUMR_PRECIO: 'Precio de publicación',
+  NUMR_CONTADOR: 'Contador de visitas de publicación',
   FLAG_CONTENIDO_ADULTO: 'Contenido adulto',
   FLAG_VIGENTE: 'Vigencia',
   FLAG_BAN: 'Baneo'
@@ -81,6 +82,10 @@ const validations = {
   }, {
     rule: 'number',
     message: labels.NUMR_PRECIO + ' debe ser integer'
+  }],
+  NUMR_CONTADOR: [{
+    rule: 'number',
+    message: labels.NUMR_CONTADOR + ' debe ser integer'
   }],
   FLAG_CONTENIDO_ADULTO: [{
     rule: 'required',

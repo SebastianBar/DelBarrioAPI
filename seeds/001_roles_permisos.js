@@ -15,7 +15,7 @@ exports.seed = function (knex) {
         // CODI_PERMISO 1xx : Visualizar
         {CODI_PERMISO: 101, NOMB_PERMISO: 'Ver motivos de denuncia'},
         {CODI_PERMISO: 102, NOMB_PERMISO: 'Ver motivos de deshabilitación'},
-        {CODI_PERMISO: 103, NOMB_PERMISO: 'Ver usuarios (Objeto completo)'},
+        {CODI_PERMISO: 103, NOMB_PERMISO: 'Ver emprendedor (Objeto completo)'},
         {CODI_PERMISO: 104, NOMB_PERMISO: 'Ver comentarios'},
         {CODI_PERMISO: 105, NOMB_PERMISO: 'Ver respuestas'},
         {CODI_PERMISO: 106, NOMB_PERMISO: 'Ver calificaciones'},
@@ -34,7 +34,7 @@ exports.seed = function (knex) {
         {CODI_PERMISO: 208, NOMB_PERMISO: 'Administrar cuenta Administrador (a si mismo)'},
         {CODI_PERMISO: 209, NOMB_PERMISO: 'Administrar cuentas Cliente (por Administrador)'},
         {CODI_PERMISO: 210, NOMB_PERMISO: 'Administrar cuentas Emprendedor (por Administrador)'},
-        {CODI_PERMISO: 211, NOMB_PERMISO: 'Administrar cuentass Administrador (por Super Administrador)'},
+        {CODI_PERMISO: 211, NOMB_PERMISO: 'Administrar cuentas Administrador (por Super Administrador)'},
         {CODI_PERMISO: 212, NOMB_PERMISO: 'Administrar publicaciones (por Emprendedor emisor)'},
         {CODI_PERMISO: 213, NOMB_PERMISO: 'Administrar publicaciones (por Administrador)'},
         {CODI_PERMISO: 214, NOMB_PERMISO: 'Administrar ofertas'},
@@ -48,10 +48,12 @@ exports.seed = function (knex) {
         {CODI_PERMISO: 222, NOMB_PERMISO: 'Agregar denuncias'},
         {CODI_PERMISO: 223, NOMB_PERMISO: 'Agregar resoluciones de denuncia'},
         {CODI_PERMISO: 224, NOMB_PERMISO: 'Agregar deshabilitaciones de cuenta'},
+        {CODI_PERMISO: 225, NOMB_PERMISO: 'Agregar emprendedor'},
+        {CODI_PERMISO: 226, NOMB_PERMISO: 'Administrar imágenes propias'},
         // CODI_PERMISO 3xx : Eliminar
         {CODI_PERMISO: 301, NOMB_PERMISO: 'Eliminar FAQs'},
         {CODI_PERMISO: 302, NOMB_PERMISO: 'Eliminar imágenes'},
-        
+        {CODI_PERMISO: 303, NOMB_PERMISO: 'Eliminar teléfonos (a si mismo)'},
       ])
     })
     .then(() => {
@@ -75,6 +77,8 @@ exports.seed = function (knex) {
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 220).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 222).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 224).IDEN_PERMISO},
+                // Clientes - Eliminar
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 101).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 303).IDEN_PERMISO},
                 // Emprendedores - Visualizar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 102).IDEN_PERMISO},
@@ -92,8 +96,10 @@ exports.seed = function (knex) {
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 217).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 222).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 224).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 226).IDEN_PERMISO},
                 // Emprendedores - Eliminar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 302).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 102).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 303).IDEN_PERMISO},
                 // Administradores - Visualizar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 102).IDEN_PERMISO},
@@ -118,9 +124,11 @@ exports.seed = function (knex) {
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 219).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 221).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 223).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 225).IDEN_PERMISO},
                 // Administradores - Eliminar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 301).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 302).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 103).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 303).IDEN_PERMISO},
                 // Super Administradores - Visualizar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 101).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 102).IDEN_PERMISO},
@@ -145,9 +153,11 @@ exports.seed = function (knex) {
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 219).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 221).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 223).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 225).IDEN_PERMISO},
                 // Super Administradores - Eliminar
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 301).IDEN_PERMISO},
                 {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 302).IDEN_PERMISO},
+                {IDEN_ROL: roles.find(rol => rol.CODI_ROL === 104).IDEN_ROL, IDEN_PERMISO: permisos.find(permiso => permiso.CODI_PERMISO === 303).IDEN_PERMISO},
               ])
             })
         })

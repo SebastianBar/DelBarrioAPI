@@ -4,6 +4,7 @@ import { knex } from '../../connection'
 // Nombres de atributos en formato legible
 const labels = {
   IDEN_USUARIO: 'ID de usuario',
+  IDEN_RUBRO: 'ID de rubro',
   RUT_EMPRENDEDOR: 'RUT',
   DV_EMPRENDEDOR: 'Dígito verificador',
   DESC_EMPRENDEDOR: 'Descripción del emprendedor',
@@ -26,6 +27,19 @@ const validations = {
         .then(resp => {
           if (resp.length == 0){
             throw new Error(labels.IDEN_USUARIO + ' no existe')
+          }
+        })
+    }
+  }],
+  IDEN_RUBRO: [{
+    rule: 'number',
+    message: labels.IDEN_RUBRO + ' debe ser de tipo "integer"'
+  }, {
+    rule: function (val){
+      return knex('PER_RUBROS').where('IDEN_RUBRO', '=', val)
+        .then(resp => {
+          if (resp.length == 0){
+            throw new Error(labels.IDEN_RUBRO + ' no existe')
           }
         })
     }

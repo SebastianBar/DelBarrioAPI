@@ -1,7 +1,7 @@
 import { Model, Collection } from './model'
 import Checkit from 'checkit'
 import validate from './validations'
-import { upload, deleteFiles, errorHandling } from './_helpers'
+import { upload, deleteFiles, deleteFile, errorHandling } from './_helpers'
 
 /**
  * Obtener imágenes.
@@ -125,32 +125,44 @@ function POST (req, res) {
  * @return {json} Mensaje de éxito o error.
  */
 function PUT (req, res) {
-  new Model({IDEN_COMENTARIO: req.params.id})
-    .fetch({require: true})
-    .then(entity => {
-      entity.save({
-        IDEN_PUBLICACION: (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
-        IDEN_EMPRENDEDOR: (typeof req.body.IDEN_EMPRENDEDOR === 'undefined') ? entity.get('IDEN_EMPRENDEDOR') : req.body.IDEN_EMPRENDEDOR,
-        URL_IMAGEN:       (typeof req.body.URL_IMAGEN === 'undefined') ? entity.get('URL_IMAGEN') : req.body.URL_IMAGEN
-      })
-        .then(() => {
-          res.json({error: false, data: {message: 'Entity successfully updated'}})
+  upload(req, res, err => {
+    if(err) {
+      res.status(400).json({error: true, data: err})
+    } else {
+      new Model({IDEN_IMAGEN: req.params.id})
+        .fetch({require: true})
+        .then(entity => {
+          let newUrl
+          deleteFile(entity.attributes.URL_IMAGEN)
+          if(req.files.avatar) {
+            newUrl = req.files.avatar[0].destination + req.files.avatar[0].filename
+          }
+          else if(req.files.gallery) {
+            newUrl = req.files.gallery[0].destination + req.files.gallery[0].filename
+          }
+          entity.save({
+            URL_IMAGEN: (typeof newUrl === 'undefined') ? entity.get('URL_IMAGEN') : newUrl
+          })
+            .then(() => {
+              res.json({error: false, data: {message: 'Entity successfully updated'}})
+            })
+            .catch(Checkit.Error, err => {
+              res.status(400).json({error: true, data: err})
+            })
+            .catch(err => {
+              res.status(500).json({error: true, data: {message: 'Internal error'}})
+              throw err
+            })
         })
-        .catch(Checkit.Error, err => {
-          res.status(400).json({error: true, data: err})
+        .catch(Model.NotFoundError, () => {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
         })
         .catch(err => {
           res.status(500).json({error: true, data: {message: 'Internal error'}})
           throw err
         })
-    })
-    .catch(Model.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+    }
+  })
 }
 
 /**
@@ -160,11 +172,23 @@ function PUT (req, res) {
  */
 function DELETE (req, res) {
   new Model({IDEN_IMAGEN: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Entity successfully deleted'}})
+    .fetch({require: true})
+    .then(entity => {
+      deleteFile(entity.attributes.URL_IMAGEN)
+      new Model({IDEN_IMAGEN: req.params.id})
+        .destroy({require: true})
+        .then(() => {
+          res.json({error: false, data: {message: 'Entity successfully deleted'}})
+        })
+        .catch(Model.NoRowsDeletedError, () => {
+          res.status(404).json({error: true, data: {message: 'Entity not found'}})
+        })
+        .catch(err => {
+          res.status(500).json({error: true, data: {message: 'Internal error'}})
+          throw err
+        })
     })
-    .catch(Model.NoRowsDeletedError, () => {
+    .catch(Model.NotFoundError, () => {
       res.status(404).json({error: true, data: {message: 'Entity not found'}})
     })
     .catch(err => {

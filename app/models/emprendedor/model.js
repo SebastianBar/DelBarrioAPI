@@ -8,8 +8,8 @@ const Model = bookshelf.Model.extend({
   usuario: function () {
     return this.belongsTo(require('../usuario/model').Model, 'IDEN_USUARIO')
   },
-  rubros: function () {
-    return this.belongsToMany(require('../rubro/model').Model, 'PER_RUBROS_EMPRENDEDORES', 'IDEN_EMPRENDEDOR', 'IDEN_RUBRO')
+  rubro: function () {
+    return this.belongsTo(require('../rubro/model').Model, 'IDEN_RUBRO')
   },
   imagen: function () {
     return this.hasOne(require('../imagen/model').Model, 'IDEN_EMPRENDEDOR')

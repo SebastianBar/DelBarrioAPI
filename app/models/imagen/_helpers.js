@@ -49,6 +49,14 @@ function deleteFiles (files) {
   })
 }
 
+function deleteFile (path) {
+  fs.unlink(path, err => { 
+    if(err) {
+      // Do nothing
+    }
+  })
+}
+
 const errorHandling = {
   EmprendedorUniqueConstraintError: function (err){
     if (!err) return false
@@ -61,5 +69,6 @@ const errorHandling = {
 module.exports = {
   upload,
   deleteFiles,
+  deleteFile,
   errorHandling
 }

@@ -36,9 +36,12 @@ exports.seed = function (knex) {
         .then(() => {
           return knex.select('IDEN_USUARIO', 'EMAIL_USUARIO').from('USR_USUARIOS')
             .then(usuarios => {
-              return knex('PER_EMPRENDEDORES').insert([
-                {IDEN_USUARIO: usuarios.find(usuario => usuario.EMAIL_USUARIO === 'emprendedor@test.com').IDEN_USUARIO, RUT_EMPRENDEDOR: 14735068, DV_EMPRENDEDOR: '6', DESC_EMPRENDEDOR: 'Vendo los mejores cuchuflí de Providencia', DESC_NOMBRE_FANTASIA: 'Cuchuflí Master', DESC_NOMBRE_EMPRESA: 'María Joaquina e hijos Limitada'}
-              ])
+              return knex.select('IDEN_RUBRO', 'NOMB_RUBRO').from('PER_RUBROS')
+                .then(rubros => {
+                  return knex('PER_EMPRENDEDORES').insert([
+                    {IDEN_USUARIO: usuarios.find(usuario => usuario.EMAIL_USUARIO === 'emprendedor@test.com').IDEN_USUARIO, IDEN_RUBRO: rubros.find(rubro => rubro.NOMB_RUBRO === 'Comercio al por Mayor y Menor, Rep. Veh. Automotores / Enseres Domésticos').IDEN_RUBRO, RUT_EMPRENDEDOR: 14735068, DV_EMPRENDEDOR: '6', DESC_EMPRENDEDOR: 'Vendo los mejores cuchuflí de Providencia', DESC_NOMBRE_FANTASIA: 'Cuchuflí Master', DESC_NOMBRE_EMPRESA: 'María Joaquina e hijos Limitada'}
+                  ])
+                })
             })
         })
         .then(() => {
