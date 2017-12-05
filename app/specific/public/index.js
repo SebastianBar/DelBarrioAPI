@@ -12,7 +12,7 @@ function GET (req, res) {
       jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
       delete jsonEntity.calificaciones
     })
-    pubs = _.take((_.orderBy(pubs, ['NUMR_CALIFICACION', 'asc'])), 12)
+    pubs = _.take((_.orderBy(pubs, ['NUMR_CALIFICACION'], ['desc'])), 12)
     new Emprendedores().fetch({withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen']})
       .then(emprendedores => {
         let empr = _.sampleSize(emprendedores.toJSON(), 10)
