@@ -2,6 +2,7 @@ import express from 'express'
 import clientes from './private/clientes'
 import administradores from './private/administradores'
 import comentarios from './private/miscomentarios'
+import publicaciones from './private/mispublicaciones'
 
 import inject from '../middlewares/injection'
 
@@ -15,5 +16,8 @@ app.route('/administradores')
 
 app.route('/miscomentarios')
   .get   (inject.IDEN_EMPRENDEDOR(), (req,res) => comentarios.GET(req, res))
+
+app.route('/mispublicaciones')
+  .get   (inject.IDEN_EMPRENDEDOR(), (req,res) => publicaciones.GET(req, res))
 
 export default app
