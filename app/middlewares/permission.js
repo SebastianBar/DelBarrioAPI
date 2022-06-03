@@ -1,7 +1,7 @@
-import _ from 'lodash'
+// import _ from 'lodash'
 
 // middleware for doing role-based permissions
-function permit (...allowed) {
+function permit (/* ...allowed */) {
   // const isAllowed = permisos => _.intersection(permisos, allowed).length > 0
 
   // return a middleware

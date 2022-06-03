@@ -1,8 +1,6 @@
 'use strict'
 // Dependencies injection
-import bodyParser from 'body-parser'
 import express from 'express'
-import cors from 'cors'
 import cn from './config'
 import passport from 'passport'
 import strategy from './app/middlewares/jwt-strategie'
@@ -37,28 +35,18 @@ const accessLogStream = rfs(`${moment().format('DD-MM-YYYY')}_access.log`, {
 // =============================================================================
 passport.use(strategy.strategy)
 
-// CORS CONFIGURATION
-// =============================================================================
-var corsOptions = {
-  credentials: true,
-  origin: function (origin, callback) {
-    callback(null, true)
-  }
-}
-
 // MIDLEWARES
 // =============================================================================
 app.use(logger())
 app.use(morgan('combined', {stream: accessLogStream} ))
 app.use(passport.initialize())
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
-// app.use(cors())
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 
 // INCLUDE ROUTES - PRIVATE AND PUBLIC
 // =============================================================================
-publicRoutes.map (p => app.use('/', cors(corsOptions), p) )
-privateRoutes.map(p => app.use('/private', cors(corsOptions), passport.authenticate('jwt', { session: false }), p) )
+publicRoutes.map (p => app.use('/', p) )
+privateRoutes.map(p => app.use('/private', passport.authenticate('jwt', { session: false }), p) )
 
 app.listen(cn.apiPort, () => { console.log(`API REST corriendo en ${cn.apiHost}:${cn.apiPort}`) }) // eslint-disable-line no-console
 
