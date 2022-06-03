@@ -24,7 +24,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_EMPRENDEDOR + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('PER_EMPRENDEDORES').where('IDEN_EMPRENDEDOR', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -40,7 +40,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_CATEGORIA + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_CATEGORIAS').where('IDEN_CATEGORIA', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -108,7 +108,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

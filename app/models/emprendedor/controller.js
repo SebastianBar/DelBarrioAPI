@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID del emprendedor (opcional).
  * @return {json} Emprendedor(es). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_EMPRENDEDOR: id}).fetch({withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen']})
@@ -43,7 +43,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional, por defecto false).
  * @return {json} Emprendedor. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_USUARIO:             req.body.IDEN_USUARIO,
     IDEN_RUBRO:               req.body.IDEN_RUBRO,
@@ -77,7 +77,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_EMPRENDEDOR: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -116,7 +116,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID del emprendedor.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_EMPRENDEDOR: req.params.id})
     .destroy({require: true})
     .then(() => {

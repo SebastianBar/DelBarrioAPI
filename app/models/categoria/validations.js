@@ -20,7 +20,7 @@ const validations = {
     rule: 'maxLength:50',
     label: labels.NOMB_CATEGORIA
   }],
-  IDEN_CATEGORIA_PADRE: ['number', function (id) {
+  IDEN_CATEGORIA_PADRE: ['number', id => {
     return knex('REQ_CATEGORIAS').where('IDEN_CATEGORIA', '=', id).then(resp => {
       if(resp.length == 0) throw new Error(labels.IDEN_CATEGORIA_PADRE + ' no existe')
       if(resp[0].IDEN_CATEGORIA_PADRE != null) throw new Error(labels.IDEN_CATEGORIA_PADRE + ' no puede poseer padre')
@@ -36,7 +36,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

@@ -22,7 +22,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -35,7 +35,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_RUBRO + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('PER_RUBROS').where('IDEN_RUBRO', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -61,7 +61,7 @@ const validations = {
     rule: 'maxLength:1',
     label: labels.DV_EMPRENDEDOR
   }, {
-    rule: function (val) {
+    rule: val => {
       return new Promise(resolve => {
         resolve((val != '0' && val != '1' && val != '2' && val != '3' && val != '4' && val != '5' && val != '6' && val != '7' && val != '8' && val != '9' && val != 'k'  && val != 'K'))
       })
@@ -100,7 +100,7 @@ const validations = {
 // Validación exclusiva para RUT mediante Checkit
 const rutValidation = {
   RUT_EMPRENDEDOR: [{
-    rule: function (val) {
+    rule: val => {
       return new Promise(resolve => {
         resolve(Fn.rutValidate(val))
       })
@@ -135,7 +135,7 @@ const Fn = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
     .then(() => {
       return Checkit(rutValidation).run({RUT_EMPRENDEDOR: model.attributes.RUT_EMPRENDEDOR + '-' + model.attributes.DV_EMPRENDEDOR})

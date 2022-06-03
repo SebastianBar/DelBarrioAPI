@@ -6,7 +6,7 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de rubro (opcional).
  * @return {json} Rubro(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_RUBRO: id}).fetch()
@@ -37,7 +37,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el rubro está activo (opcional, por defecto true).
  * @return {json} Rubro. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     NOMB_RUBRO:   req.body.NOMB_RUBRO,
     FLAG_VIGENTE: req.body.FLAG_VIGENTE
@@ -59,7 +59,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el rubro está activo (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_RUBRO: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -90,7 +90,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID del rubro.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_RUBRO: req.params.id})
     .destroy({require: true})
     .then(() => {

@@ -19,7 +19,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -32,7 +32,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_CALIFICACION + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_CALIFICACIONES').where('IDEN_CALIFICACION', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -45,7 +45,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_COMENTARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_COMENTARIOS').where('IDEN_COMENTARIO', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -61,7 +61,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -77,7 +77,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_MOTIVO_DENUNCIA + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_MOTIVOS_DENUNCIA').where('IDEN_MOTIVO_DENUNCIA', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -106,7 +106,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

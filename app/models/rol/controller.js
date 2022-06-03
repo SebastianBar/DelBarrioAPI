@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de rol (opcional).
  * @return {json} Rol(es). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_ROL: id}).fetch({withRelated: ['permisos']})
@@ -37,7 +37,7 @@ function GET (req, res) {
  * @param {string} req.body.NOMB_ROL - Nombre del rol.
  * @return {json} Rol. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     CODI_ROL: req.body.CODI_ROL,
     NOMB_ROL: req.body.NOMB_ROL
@@ -59,7 +59,7 @@ function POST (req, res) {
  * @param {string} req.body.NOMB_ROL - Nombre del rol (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_ROL: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -90,7 +90,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de rol.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_ROL: req.params.id})
     .destroy({require: true})
     .then(() => {

@@ -8,7 +8,7 @@ import { upload, deleteFiles, deleteFile, errorHandling } from './_helpers'
  * @param {integer} req.params.id - ID de imagen (opcional).
  * @return {json} Imagen(es). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_IMAGEN: id}).fetch()
@@ -40,7 +40,7 @@ function GET (req, res) {
  * @param {string} req.body.URL_IMAGEN - URL de la imagen.
  * @return {json} Comentario. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   upload(req, res, err => {
     if(err) {
       res.status(400).json({error: true, data: err})
@@ -124,7 +124,7 @@ function POST (req, res) {
  * @param {string} req.body.URL_IMAGEN - URL de la imagen (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   upload(req, res, err => {
     if(err) {
       res.status(400).json({error: true, data: err})
@@ -170,7 +170,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de la imagen.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_IMAGEN: req.params.id})
     .fetch({require: true})
     .then(entity => {

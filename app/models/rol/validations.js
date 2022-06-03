@@ -16,7 +16,7 @@ const validations = {
     rule: 'number',
     message: labels.CODI_ROL + ' debe ser integer'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('SIS_ROLES').where('CODI_ROL', '=', val)
         .then(resp => {
           if (resp.length > 0){
@@ -41,7 +41,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

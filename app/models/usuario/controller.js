@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de usuario (opcional).
  * @return {json} Usuario(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_USUARIO: id}).fetch({withRelated: ['telefonos']})
@@ -40,7 +40,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_BAN - Define si el usuario está baneado (opcional, por defecto false).
  * @return {json} Usuario. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_ROL:       req.body.IDEN_ROL,
     EMAIL_USUARIO:  req.body.EMAIL_USUARIO,
@@ -67,7 +67,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_BAN - Define si el usuario está baneado (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_USUARIO: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -98,7 +98,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID del usuario.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_USUARIO: req.params.id})
     .destroy({require: true})
     .then(() => {

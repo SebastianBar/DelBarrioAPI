@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de teléfono (opcional).
  * @return {json} Teléfono(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_FONO: id}).fetch({withRelated: ['usuario']})
@@ -38,7 +38,7 @@ function GET (req, res) {
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono.
  * @return {json} Teléfono. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     CODI_FONO:    req.body.CODI_FONO,
     NUMR_FONO:    req.body.NUMR_FONO,
@@ -62,7 +62,7 @@ function POST (req, res) {
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_FONO: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -94,7 +94,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de teléfono.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_FONO: req.params.id})
     .destroy({require: true})
     .then(() => {

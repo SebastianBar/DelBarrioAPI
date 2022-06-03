@@ -9,7 +9,7 @@ import { Model } from '../models/usuario/model'
  * @param {string} req.body.password - Contraseña del usuario a autenticar.
  * @return {json} Token JWT. En caso fallido, mensaje de error.
  */
-function authenticate (req, res) {
+const authenticate = (req, res) => {
   if(req.body.email && req.body.password){
     var email = req.body.email
     var password = req.body.password
@@ -43,7 +43,7 @@ function authenticate (req, res) {
   }
 }
 
-function getUsuario (req, res) {
+const getUsuario = (req, res) => {
   new Model({IDEN_USUARIO: req.user.IDEN_USUARIO}).fetch({ withRelated: ['rol', 'telefonos', 'persona', 'emprendedor'] })
     .then(user => {      
       res.json({ error: false, data: filter.getUsuario(user.toJSON()) })

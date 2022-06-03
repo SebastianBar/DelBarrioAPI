@@ -10,7 +10,7 @@ const labels = {
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
   CODI_PERMISO: [{
-    rule: ['number', function (cod) {
+    rule: ['number', cod => {
       return knex('SIS_PERMISOS').where('CODI_PERMISO', '=', cod).then(resp => {
         if(resp.length != 0) throw new Error(labels.CODI_PERMISO+' ya existe.')
       })
@@ -32,7 +32,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

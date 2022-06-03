@@ -8,7 +8,7 @@ const _ = require('lodash')
  * @param {string} databasePassword - Contraseña como hash bcrypt.
  * @return {boolean} Define si las contraseñas coinciden.
  */
-function comparePass (userPassword, databasePassword) {
+const comparePass = (userPassword, databasePassword) => {
   return bcrypt.compareSync(userPassword, databasePassword)
 }
 
@@ -17,7 +17,7 @@ function comparePass (userPassword, databasePassword) {
  * @param {string} password - Contraseña en texto plano.
  * @return {string} Contraseña como hash bcrypt.
  */
-function genHash (password) {
+const genHash = password => {
   const salt = bcrypt.genSaltSync()
   return bcrypt.hashSync(password, salt)
 }
@@ -25,8 +25,8 @@ function genHash (password) {
 /**
  * Funciones para filtrar datos de los retornos JSON
  */
-var filter = {
-  tokenPayload: function (entity) {
+const filter = {
+  tokenPayload: entity => {
     // Retornar objeto custom porque YOLO
     return {
       id: entity.IDEN_USUARIO,
@@ -35,7 +35,7 @@ var filter = {
       permisos: _.map(entity.rol.permisos, 'CODI_PERMISO')
     }
   },
-  getUsuario: function (entity) {
+  getUsuario: entity => {
     // Atributos a omitir del JSON recibido
     var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
     // Identifica si el usuario es una persona o emprendedor, y omitirá el objeto vacío

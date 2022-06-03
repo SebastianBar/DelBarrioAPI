@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha --compilers js:babel-register",
-    "test:watch": "mocha --watch --compilers js:babel-register",
+    "test": "mocha",
+    "test:watch": "mocha --watch",
     "lint": "eslint --ext .js ./",
     "migrate:run": "knex migrate:latest",
     "migrate:clean": "knex migrate:rollback",
@@ -38,7 +38,8 @@
     "passport-jwt": "^4.0.0",
     "pg": "^7.4.0",
     "rotating-file-stream": "^1.3.0",
-    "simple-express-logger": "^2.0.0"
+    "simple-express-logger": "^2.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",

@@ -18,7 +18,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -54,7 +54,7 @@ const validations = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   return Checkit(validations, {language: 'es'}).run(model.toJSON())
 }
 

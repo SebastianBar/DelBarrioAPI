@@ -7,7 +7,7 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de categoría (opcional).
  * @return {json} Categoría(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_CATEGORIA: id}).fetch({withRelated: ['subcategorias']})
@@ -43,7 +43,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la categoría está activa (opcional).
  * @return {json} Categoría. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     NOMB_CATEGORIA:       req.body.NOMB_CATEGORIA,
     IDEN_CATEGORIA_PADRE: req.body.IDEN_CATEGORIA_PADRE,
@@ -67,7 +67,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la categoría está activa (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_CATEGORIA: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -101,7 +101,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de la categoría.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_CATEGORIA: req.params.id})
     .destroy({require: true})
     .then(() => {

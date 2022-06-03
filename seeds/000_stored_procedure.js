@@ -1,7 +1,6 @@
-exports.seed = function (knex) {
-  return knex.raw('DROP FUNCTION IF EXISTS search_posts(character varying);')
-    .then(() => {
-      return knex.raw(`CREATE OR REPLACE FUNCTION search_posts(que VARCHAR(255))
+exports.seed = async knex => {
+  await knex.raw('DROP FUNCTION IF EXISTS search_posts(character varying);')
+  await knex.raw(`CREATE OR REPLACE FUNCTION search_posts(que VARCHAR(255))
       RETURNS TABLE ( "IDEN_PUBLICACION" INTEGER ) AS $$
       BEGIN
         RETURN QUERY 
@@ -14,8 +13,5 @@ exports.seed = function (knex) {
           GROUP BY pub."IDEN_PUBLICACION" ORDER BY COUNT(*);
       END;
       $$ LANGUAGE plpgsql;`)
-        .then(() => {
-          return knex.raw('CREATE INDEX ON "REQ_PUBLICACIONES" ("IDEN_PUBLICACION", "NOMB_PUBLICACION", "DESC_PUBLICACION");')
-        })
-    })
+  await knex.raw('CREATE INDEX ON "REQ_PUBLICACIONES" ("IDEN_PUBLICACION", "NOMB_PUBLICACION", "DESC_PUBLICACION");')
 }

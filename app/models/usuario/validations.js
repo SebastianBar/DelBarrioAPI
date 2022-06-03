@@ -20,7 +20,7 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_ROL + ' debe ser de tipo "integer"'
   }, {
-    rule: function (val){
+    rule: val => {
       return knex('SIS_ROLES').where('IDEN_ROL', '=', val)
         .then(resp => {
           if (resp.length == 0){
@@ -58,7 +58,7 @@ const validations = {
 
 // Validación de mail exclusiva para POST y PUT con EMAIL_USUARIO actualizado
 const mailComparison = {
-  rule: function (val){
+  rule: val => {
     return knex('USR_USUARIOS').where('EMAIL_USUARIO', '=', val)
       .then(resp => {
         if (resp.length > 0){
@@ -72,7 +72,7 @@ const mailComparison = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-function validate (model) {
+const validate = model => {
   var verificateMail = ((typeof model.attributes.IDEN_USUARIO === 'undefined') || model.attributes.EMAIL_USUARIO !== model._previousAttributes.EMAIL_USUARIO)
   if(verificateMail) {
     if(validations.EMAIL_USUARIO.length === 2)

@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de etiqueta (opcional).
  * @return {json} Etiqueta(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_ETIQUETA: id}).fetch()
@@ -36,7 +36,7 @@ function GET (req, res) {
  * @param {string} req.body.NOMB_ETIQUETA - Nombre de la etiqueta.
  * @return {json} Etiqueta. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     NOMB_ETIQUETA: req.body.NOMB_ETIQUETA
   }).save()
@@ -56,7 +56,7 @@ function POST (req, res) {
  * @param {string} req.body.NOMB_ETIQUETA - Nombre de la etiqueta (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_ETIQUETA: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -86,7 +86,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de la etiqueta.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_ETIQUETA: req.params.id})
     .destroy({require: true})
     .then(() => {

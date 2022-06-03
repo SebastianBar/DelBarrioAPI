@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de denuncia (opcional).
  * @return {json} Denuncia(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_DENUNCIA: id}).fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona']})
@@ -43,7 +43,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la denuncia está activa (opcional, por defecto true).
  * @return {json} Denuncia. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_PUBLICACION:     req.body.IDEN_PUBLICACION,
     IDEN_CALIFICACION:    req.body.IDEN_CALIFICACION,
@@ -77,7 +77,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la denuncia está activa (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_DENUNCIA: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -114,7 +114,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de denuncia.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_DENUNCIA: req.params.id})
     .destroy({require: true})
     .then(() => {

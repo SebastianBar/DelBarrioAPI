@@ -8,7 +8,7 @@ import _ from 'lodash'
  * @param {number} req.params.id - ID de publicación (opcional).
  * @return {json} Publicación(es). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_PUBLICACION: id}).fetch({withRelated: [
@@ -70,10 +70,10 @@ function GET (req, res) {
 
 /**
  * Retorna instancia de colección
- * @param {...number} ids Arreglo con ID's de publicación (opcional)
+ * @param {number[]} ids Arreglo con ID's de publicación (opcional)
  * @param {number} page Número de página a obtener (opcional)
  */
-function GETAllHelper (ids = undefined, page = 1) {
+const GETAllHelper = (ids, page = 1) => {
   if(ids) {
     return new Model().query(q => { q.where('IDEN_PUBLICACION', 'in', ids) }).orderBy('IDEN_PUBLICACION', 'desc').fetchPage({page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {'imagenes': query => {
       query.orderBy('IDEN_IMAGEN')
@@ -104,7 +104,7 @@ function GETAllHelper (ids = undefined, page = 1) {
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
  * @return {json} Publicación. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_EMPRENDEDOR:       req.body.IDEN_EMPRENDEDOR,
     IDEN_CATEGORIA:         req.body.IDEN_CATEGORIA,
@@ -161,7 +161,7 @@ function POST (req, res) {
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_PUBLICACION: req.params.id})
     .fetch({require: true, withRelated: ['etiquetas']})
     .then(entity => {
@@ -228,7 +228,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de la publicación.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_PUBLICACION: req.params.id})
     .destroy({require: true})
     .then(() => {
@@ -247,7 +247,7 @@ function DELETE (req, res) {
  * Busca ID's de Tags. En caso de no encontrar un tag, lo agregará y retornará su nuevo ID
  * @param {*} tags Arreglo de tags a buscar
  */
-function obtainTagIDs (tags) {
+const obtainTagIDs = tags => {
   let promises = []
 
   tags.forEach(tag => {

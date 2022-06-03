@@ -5,7 +5,7 @@ import { Collection } from '../../models/persona/model'
  * @param {integer} req.params.id - ID de persona (opcional).
  * @return {json} Persona(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   new Collection().fetch({withRelated: ['usuario', {'usuario.rol': query => {
     query.where('CODI_ROL', '103')
   }}

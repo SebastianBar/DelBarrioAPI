@@ -2,7 +2,7 @@ import { bookshelf } from '../../connection'
 import _ from 'lodash'
 import publicacionController from '../../models/publicacion/controller'
 
-function GET (req, res) {
+const GET = (req, res) => {
   if(!req.query.search) {
     res.status(400).json({ error: true, data: { message: 'search parameter is required' } })
   } else {

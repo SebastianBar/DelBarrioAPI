@@ -7,7 +7,7 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de FAQ (opcional).
  * @return {json} FAQ(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_FAQ: id}).fetch()
@@ -38,7 +38,7 @@ function GET (req, res) {
  * @param {string} req.body.DESC_FAQ - Descripción de FAQ.
  * @return {json} FAQ. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     NOMB_FAQ: req.body.NOMB_FAQ,
     DESC_FAQ: req.body.DESC_FAQ
@@ -60,7 +60,7 @@ function POST (req, res) {
  * @param {string} req.body.DESC_FAQ - Descripción de FAQ (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_FAQ: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -93,7 +93,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de FAQ.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_FAQ: req.params.id})
     .destroy({require: true})
     .then(() => {

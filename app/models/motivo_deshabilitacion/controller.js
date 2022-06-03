@@ -7,7 +7,7 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de motivo de deshabilitación (opcional).
  * @return {json} Motivo(s) de deshabilitación. En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_MOTIVO_DESHABILITACION: id}).fetch()
@@ -38,7 +38,7 @@ function GET (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional, por defecto true).
  * @return {json} Motivo de deshabilitación. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     NOMB_MOTIVO_DESHABILITACION:  req.body.NOMB_MOTIVO_DESHABILITACION,
     FLAG_VIGENTE:                 req.body.FLAG_VIGENTE
@@ -60,7 +60,7 @@ function POST (req, res) {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_MOTIVO_DESHABILITACION: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -91,7 +91,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID del motivo de deshabilitación.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_MOTIVO_DESHABILITACION: req.params.id})
     .destroy({require: true})
     .then(() => {

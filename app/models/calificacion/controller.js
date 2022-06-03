@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de calificación (opcional).
  * @return {json} Calificación(es). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_CALIFICACION: id}).fetch()
@@ -41,7 +41,7 @@ function GET (req, res) {
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la calificación (opcional, por defecto now()).
  * @return {json} Calificación. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_PUBLICACION:   req.body.IDEN_PUBLICACION,
     IDEN_USUARIO:       req.body.IDEN_USUARIO,
@@ -71,7 +71,7 @@ function POST (req, res) {
  * @param {date} req.body.FECH_CREACION - Fecha de creación de la calificación (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_CALIFICACION: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -108,7 +108,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de la calificación.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_CALIFICACION: req.params.id})
     .destroy({require: true})
     .then(() => {

@@ -7,7 +7,7 @@ import { upload, renameOldFile, renameNewFile } from './_helpers'
  * @param {integer} req.body.IDEN_USUARIO - ID de Usuario dueño del teléfono.
  * @return {json} Teléfono. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   upload(req, res, err => {
     if(req.file) {
       if(err) {

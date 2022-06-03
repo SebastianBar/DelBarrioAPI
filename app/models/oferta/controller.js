@@ -6,7 +6,7 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de oferta (opcional).
  * @return {json} Oferta(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
+const GET = (req, res) => {
   const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
   if(id != 0) {
     new Model({IDEN_OFERTA: id}).fetch({withRelated: ['publicacion']})
@@ -39,7 +39,7 @@ function GET (req, res) {
  * @param {integer} req.body.NUMR_PRECIO - Precio de la oferta.
  * @return {json} Oferta. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
+const POST = (req, res) => {
   new Model({
     IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
     FECH_INICIO:      req.body.FECH_INICIO,
@@ -65,7 +65,7 @@ function POST (req, res) {
  * @param {integer} req.body.NUMR_PRECIO - Precio de la oferta (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
+const PUT = (req, res) => {
   new Model({IDEN_OFERTA: req.params.id})
     .fetch({require: true})
     .then(entity => {
@@ -98,7 +98,7 @@ function PUT (req, res) {
  * @param {integer} req.params.id - ID de oferta.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
+const DELETE = (req, res) => {
   new Model({IDEN_OFERTA: req.params.id})
     .destroy({require: true})
     .then(() => {
