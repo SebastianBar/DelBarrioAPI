@@ -20,13 +20,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_ROL + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('SIS_ROLES').where('IDEN_ROL', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_ROL + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('SIS_ROLES').where('IDEN_ROL', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_ROL + ' no existe')
     }
   }],
   EMAIL_USUARIO: [{
@@ -58,13 +54,9 @@ const validations = {
 
 // Validación de mail exclusiva para POST y PUT con EMAIL_USUARIO actualizado
 const mailComparison = {
-  rule: val => {
-    return knex('USR_USUARIOS').where('EMAIL_USUARIO', '=', val)
-      .then(resp => {
-        if (resp.length > 0){
-          throw new Error(labels.EMAIL_USUARIO + ' ya está registrado')
-        }
-      })
+  rule: async val => {
+    const resp = await knex('USR_USUARIOS').where('EMAIL_USUARIO', '=', val)
+    if (resp.length > 0) throw new Error(labels.EMAIL_USUARIO + ' ya está registrado')
   }
 }
 
@@ -72,21 +64,22 @@ const mailComparison = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-const validate = model => {
+const validate = async model => {
   const verificateMail = ((typeof model.attributes.IDEN_USUARIO === 'undefined') || model.attributes.EMAIL_USUARIO !== model._previousAttributes.EMAIL_USUARIO)
-  if(verificateMail) {
-    if(validations.EMAIL_USUARIO.length === 2)
+  if (verificateMail) {
+    if (validations.EMAIL_USUARIO.length === 2)
       validations.EMAIL_USUARIO.push(mailComparison)
   } else {
-    if(validations.EMAIL_USUARIO.length === 3)
+    if (validations.EMAIL_USUARIO.length === 3)
       validations.EMAIL_USUARIO.pop()
   }
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
-    .then(() => {
-      // If password isn't a hash, update it before saving
-      if (! /^\$2[ayb]\$.{56}$/.test(model.attributes.DESC_PASSWORD))
-        model.attributes.DESC_PASSWORD = genHash(model.attributes.DESC_PASSWORD)
-    })
+
+  await Checkit(validations, { language: 'es' }).run(model.toJSON())
+
+  // If password isn't a hash, update it before saving
+  if (!/^\$2[ayb]\$.{56}$/.test(model.attributes.DESC_PASSWORD)) {
+    model.attributes.DESC_PASSWORD = genHash(model.attributes.DESC_PASSWORD)
+  }
 }
 
 // Se exporta la función

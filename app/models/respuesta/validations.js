@@ -16,13 +16,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_COMENTARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('REQ_COMENTARIOS').where('IDEN_COMENTARIO', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_COMENTARIO + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('REQ_COMENTARIOS').where('IDEN_COMENTARIO', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_COMENTARIO + ' no existe')
     }
   }],
   DESC_RESPUESTA: [{
@@ -39,7 +35,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta función

@@ -18,13 +18,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_PUBLICACION + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_PUBLICACION + ' no existe')
     }
   }],
   FECH_INICIO: [{
@@ -55,7 +51,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta la función

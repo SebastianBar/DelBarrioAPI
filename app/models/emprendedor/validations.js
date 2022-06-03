@@ -22,26 +22,18 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_USUARIO + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_USUARIO + ' no existe')
     }
   }],
   IDEN_RUBRO: [{
     rule: 'number',
     message: labels.IDEN_RUBRO + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('PER_RUBROS').where('IDEN_RUBRO', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_RUBRO + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('PER_RUBROS').where('IDEN_RUBRO', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_RUBRO + ' no existe')
     }
   }],
   RUT_EMPRENDEDOR: [{
@@ -61,13 +53,9 @@ const validations = {
     rule: 'maxLength:1',
     label: labels.DV_EMPRENDEDOR
   }, {
-    rule: val => {
-      return new Promise(resolve => {
-        resolve((val != '0' && val != '1' && val != '2' && val != '3' && val != '4' && val != '5' && val != '6' && val != '7' && val != '8' && val != '9' && val != 'k'  && val != 'K'))
-      })
-        .then(val => {
-          if(val) throw new Error(labels.DV_EMPRENDEDOR + ' inválido')
-        })
+    rule: async val => {
+      const result = (val != '0' && val != '1' && val != '2' && val != '3' && val != '4' && val != '5' && val != '6' && val != '7' && val != '8' && val != '9' && val != 'k' && val != 'K')
+      if (result) throw new Error(labels.DV_EMPRENDEDOR + ' inválido')
     }
   }],
   DESC_EMPRENDEDOR: [{
@@ -101,12 +89,8 @@ const validations = {
 const rutValidation = {
   RUT_EMPRENDEDOR: [{
     rule: val => {
-      return new Promise(resolve => {
-        resolve(Fn.rutValidate(val))
-      })
-        .then(val => {
-          if(!val) throw new Error('RUT inválido')
-        })
+      const resp = Fn.rutValidate(val)
+      if (!resp) throw new Error('RUT inválido')
     }
   }]
 }
@@ -135,11 +119,9 @@ const Fn = {
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
-    .then(() => {
-      return Checkit(rutValidation).run({RUT_EMPRENDEDOR: model.attributes.RUT_EMPRENDEDOR + '-' + model.attributes.DV_EMPRENDEDOR})
-    })
+const validate = async model => {
+  await Checkit(validations, { language: 'es' }).run(model.toJSON())
+  await Checkit(rutValidation).run({ RUT_EMPRENDEDOR: model.attributes.RUT_EMPRENDEDOR + '-' + model.attributes.DV_EMPRENDEDOR })
 }
 
 // Se exporta función

@@ -24,13 +24,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_EMPRENDEDOR + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('PER_EMPRENDEDORES').where('IDEN_EMPRENDEDOR', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_EMPRENDEDOR + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('PER_EMPRENDEDORES').where('IDEN_EMPRENDEDOR', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_EMPRENDEDOR + ' no existe')
     }
   }],
   IDEN_CATEGORIA: [{
@@ -40,13 +36,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_CATEGORIA + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('REQ_CATEGORIAS').where('IDEN_CATEGORIA', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_CATEGORIA + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('REQ_CATEGORIAS').where('IDEN_CATEGORIA', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_CATEGORIA + ' no existe')
     }
   }],
   CODI_TIPO_PUBLICACION: [{
@@ -109,7 +101,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta función

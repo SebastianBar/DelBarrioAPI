@@ -16,13 +16,9 @@ const validations = {
     rule: 'number',
     message: labels.CODI_ROL + ' debe ser integer'
   }, {
-    rule: val => {
-      return knex('SIS_ROLES').where('CODI_ROL', '=', val)
-        .then(resp => {
-          if (resp.length > 0){
-            throw new Error(labels.CODI_ROL + ' ya existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('SIS_ROLES').where('CODI_ROL', '=', val)
+      if (resp.length > 0) throw new Error(labels.CODI_ROL + ' ya existe')
     }
   }],
   NOMB_ROL: [{
@@ -42,7 +38,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta la función

@@ -10,10 +10,9 @@ const labels = {
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
   CODI_PERMISO: [{
-    rule: ['number', cod => {
-      return knex('SIS_PERMISOS').where('CODI_PERMISO', '=', cod).then(resp => {
-        if(resp.length != 0) throw new Error(labels.CODI_PERMISO+' ya existe.')
-      })
+    rule: ['number', async cod => {
+      const resp = await knex('SIS_PERMISOS').where('CODI_PERMISO', '=', cod)
+      if (resp.length != 0) throw new Error(labels.CODI_PERMISO + ' ya existe.')
     }]
   }],
   NOMB_PERMISO: [{
@@ -33,7 +32,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta función

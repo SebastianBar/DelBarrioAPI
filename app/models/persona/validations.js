@@ -19,13 +19,9 @@ const validations = {
     rule: 'number',
     message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
   }, {
-    rule: val => {
-      return knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
-        .then(resp => {
-          if (resp.length == 0){
-            throw new Error(labels.IDEN_USUARIO + ' no existe')
-          }
-        })
+    rule: async val => {
+      const resp = await knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
+      if (resp.length == 0) throw new Error(labels.IDEN_USUARIO + ' no existe')
     }
   }],
   NOMBRES: [{
@@ -69,7 +65,7 @@ const validations = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  return Checkit(validations, {language: 'es'}).run(model.toJSON())
+  return Checkit(validations, { language: 'es' }).run(model.toJSON())
 }
 
 // Se exporta función
