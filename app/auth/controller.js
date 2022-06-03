@@ -11,16 +11,16 @@ import { Model } from '../models/usuario/model'
  */
 const authenticate = (req, res) => {
   if(req.body.email && req.body.password){
-    var email = req.body.email
-    var password = req.body.password
+    const email = req.body.email
+    const password = req.body.password
     new Model({EMAIL_USUARIO: email}).fetch({withRelated: ['rol', 'rol.permisos', 'persona', 'emprendedor']})
       .then(user => {
         if (user) {
           if(comparePass(password, user.attributes.DESC_PASSWORD)) {
             if(user.attributes.FLAG_VIGENTE) {
               if(!user.attributes.FLAG_BAN) {
-                var payload = filter.tokenPayload(user.toJSON({ omitPivot: true }))
-                var token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
+                const payload = filter.tokenPayload(user.toJSON({ omitPivot: true }))
+                const token = jwt.sign(payload, strategie.jwtOptions.secretOrKey)
                 res.json({error: false, data: {token: token}})
               } else {
                 res.status(401).json({error: true, data: {message: 'Cuenta baneada'}})

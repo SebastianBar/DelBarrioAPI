@@ -13,9 +13,9 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = (req, file, cb) => {
-  var filetypes = /jpeg|jpg|png/
-  var mimetype = filetypes.test(file.mimetype)
-  var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
+  const filetypes = /jpeg|jpg|png/
+  const mimetype = filetypes.test(file.mimetype)
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
   
   if (mimetype && extname) {
     return cb(null, true)
@@ -48,7 +48,7 @@ const deleteFile = path => {
 const errorHandling = {
   EmprendedorUniqueConstraintError: err => {
     if (!err) return false
-    var re = /^req_imagenes_iden_emprendedor_unique/
+    const re = /^req_imagenes_iden_emprendedor_unique/
     return re.test(err.constraint)
   }
 }

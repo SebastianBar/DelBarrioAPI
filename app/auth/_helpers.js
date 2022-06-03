@@ -37,7 +37,7 @@ const filter = {
   },
   getUsuario: entity => {
     // Atributos a omitir del JSON recibido
-    var omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
+    const omit = ['IDEN_USUARIO', 'IDEN_ROL', 'DESC_PASSWORD', 'FLAG_VIGENTE', 'FLAG_BAN', 'IDEN_PERSONA']
     // Identifica si el usuario es una persona o emprendedor, y omitirá el objeto vacío
     omit.push(Object.keys(entity.emprendedor).length === 0 ? 'emprendedor' : 'persona')
     // Correr omitDeep y retornar JSON resultante

@@ -15,7 +15,7 @@ const GET = (req, res) => {
     pubs = _.take((_.orderBy(pubs, ['NUMR_CALIFICACION'], ['desc'])), 12)
     new Emprendedores().fetch({withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen']})
       .then(emprendedores => {
-        let empr = _.sampleSize(emprendedores.toJSON(), 10)
+        const empr = _.sampleSize(emprendedores.toJSON(), 10)
         res.json({error: false, data: { publicaciones: pubs, emprendedores: empr }})
       }).catch(err => {
         res.status(500).json({error: true, data: {message: 'Internal error'}})

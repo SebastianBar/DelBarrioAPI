@@ -73,7 +73,7 @@ const mailComparison = {
  * @param {bookshelf.Model} model Modelo a validar
  */
 const validate = model => {
-  var verificateMail = ((typeof model.attributes.IDEN_USUARIO === 'undefined') || model.attributes.EMAIL_USUARIO !== model._previousAttributes.EMAIL_USUARIO)
+  const verificateMail = ((typeof model.attributes.IDEN_USUARIO === 'undefined') || model.attributes.EMAIL_USUARIO !== model._previousAttributes.EMAIL_USUARIO)
   if(verificateMail) {
     if(validations.EMAIL_USUARIO.length === 2)
       validations.EMAIL_USUARIO.push(mailComparison)

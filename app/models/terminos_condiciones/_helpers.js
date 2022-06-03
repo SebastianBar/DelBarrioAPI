@@ -12,9 +12,9 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = (req, file, cb) => {
-  var filetypes = /pdf/
-  var mimetype = filetypes.test(file.mimetype)
-  var extname = filetypes.test(path.extname(file.originalname).toLowerCase())
+  const filetypes = /pdf/
+  const mimetype = filetypes.test(file.mimetype)
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
   
   if (mimetype && extname) {
     return cb(null, true)

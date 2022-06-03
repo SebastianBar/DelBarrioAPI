@@ -46,7 +46,7 @@ const POST = (req, res) => {
       res.status(400).json({error: true, data: err})
     } else {
       // Validar atributos IDEN_PUBLICACION o IDEN_EMPRENDEDOR
-      var model = new Model({
+      const model = new Model({
         IDEN_PUBLICACION: req.body.IDEN_PUBLICACION ? parseInt(req.body.IDEN_PUBLICACION) : undefined,
         IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? parseInt(req.body.IDEN_EMPRENDEDOR) : undefined
       })
@@ -73,7 +73,7 @@ const POST = (req, res) => {
             res.status(400).json({error: true, data: {message: 'IDEN_PUBLICACION is required for gallery uploading'}})
           }
           else {
-            var tempModelAttributes = []
+            let tempModelAttributes = []
             // Todo válido, fijar persistencia de archivos
             if(req.files.avatar){
               req.files.avatar.forEach(file => {
@@ -95,7 +95,7 @@ const POST = (req, res) => {
                 )
               })
             }
-            var collection = Collection.forge(tempModelAttributes)
+            const collection = Collection.forge(tempModelAttributes)
 
             collection.invokeThen('save').then(entities => {
               res.status(200).json({error:false, data: entities})

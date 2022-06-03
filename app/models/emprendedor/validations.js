@@ -116,15 +116,15 @@ const Fn = {
   rutValidate: fullRut => {
     if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(fullRut))
       return false
-    var tmp = fullRut.split('-')
-    var digv = tmp[1]
-    var rut = tmp[0]
+    const tmp = fullRut.split('-')
+    let digv = tmp[1]
+    const rut = tmp[0]
     if (digv == 'K') digv = 'k'
     return (Fn.dv(rut) == digv)
   },
   dv: T => {
-    var M = 0
-    var S = 1
+    let M = 0
+    let S = 1
     for (; T; T = Math.floor(T / 10))
       S = (S + T % 10 * (9 - M++ % 6)) % 11
     return S ? S - 1 : 'k'

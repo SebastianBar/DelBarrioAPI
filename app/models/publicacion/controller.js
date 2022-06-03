@@ -183,8 +183,8 @@ const PUT = (req, res) => {
           if(req.body.ETIQUETAS && Array.isArray(req.body.ETIQUETAS)) {
             obtainTagIDs(req.body.ETIQUETAS)
               .then(tagIDs => {
-                let attach = _.difference(tagIDs, entity.relations.etiquetas.pluck('IDEN_ETIQUETA'))
-                let detach = _.difference(entity.relations.etiquetas.pluck('IDEN_ETIQUETA'), tagIDs)
+                const attach = _.difference(tagIDs, entity.relations.etiquetas.pluck('IDEN_ETIQUETA'))
+                const detach = _.difference(entity.relations.etiquetas.pluck('IDEN_ETIQUETA'), tagIDs)
                 entity.etiquetas().attach(attach)
                   .then(() => {
                     entity.etiquetas().detach(detach)
@@ -251,7 +251,7 @@ const obtainTagIDs = tags => {
   let promises = []
 
   tags.forEach(tag => {
-    let promise = new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       return new Tag().where('NOMB_ETIQUETA', tag).fetch()
         .then(entity => {
           if (!entity) {

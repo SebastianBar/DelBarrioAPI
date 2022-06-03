@@ -4,7 +4,7 @@ import cn from '../config'
 const knex = require('knex')(cn.knexConfig)
 
 // Se inicializa el ORM
-var bookshelf = require('bookshelf')(knex)
+const bookshelf = require('bookshelf')(knex)
 
 // Inicializar plugins de bookshelf
 bookshelf.plugin('pagination')

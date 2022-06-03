@@ -3,9 +3,9 @@ const omitDeep = require('omit-deep')
 /**
  * Funciones para filtrar datos de los retornos JSON
  */
-var filter = {
+const filter = {
   GETsingle: entity => {
-    var omit = ['IDEN_RUBRO', 'FLAG_VIGENTE']
+    const omit = ['IDEN_RUBRO', 'FLAG_VIGENTE']
     return omitDeep(entity.toJSON(), omit)
   }
 }
