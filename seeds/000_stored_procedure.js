@@ -1,4 +1,4 @@
-exports.seed = async (knex) => {
+export const seed = async (knex) => {
   await knex.raw('DROP FUNCTION IF EXISTS search_posts(character varying);');
   await knex.raw(`CREATE OR REPLACE FUNCTION search_posts(que VARCHAR(255))
       RETURNS TABLE ( "IDEN_PUBLICACION" INTEGER ) AS $$

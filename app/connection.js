@@ -7,6 +7,3 @@ export const knex = Knex(cn.knexConfig);
 
 // Se inicializa el ORM
 export const bookshelf = Bookshelf(knex);
-
-// Inicializar plugins de bookshelf
-bookshelf.plugin('pagination');

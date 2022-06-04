@@ -1,4 +1,4 @@
-exports.seed = async (knex) => {
+export const seed = async (knex) => {
   await knex('REQ_CATEGORIAS').del();
 
   await knex('REQ_CATEGORIAS').insert([

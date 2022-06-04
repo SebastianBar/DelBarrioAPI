@@ -1,4 +1,4 @@
-exports.up = async (knex) => {
+export const up = async (knex) => {
   const createSisRoles = () => knex.schema.createTableIfNotExists('SIS_ROLES', (table) => {
     table.increments('IDEN_ROL').unsigned().primary();
     table.integer('CODI_ROL').notNull().unique();
@@ -251,7 +251,7 @@ exports.up = async (knex) => {
   await createReqDeshabilitacionesCuentas();
 };
 
-exports.down = async (knex) => {
+export const down = async (knex) => {
   await knex.schema.dropTableIfExists('REQ_DESHABILITACION_CUENTAS');
   await knex.schema.dropTableIfExists('REQ_MOTIVOS_DESHABILITACION');
   await knex.schema.dropTableIfExists('REQ_FAQ');

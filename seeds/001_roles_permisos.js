@@ -1,4 +1,4 @@
-exports.seed = async (knex) => {
+export const seed = async (knex) => {
   await knex('SIS_PERMISOS_ROLES').del();
   await knex('SIS_ROLES').del();
   await knex('SIS_PERMISOS').del();

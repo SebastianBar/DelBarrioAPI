@@ -1,6 +1,6 @@
-const hash = require('../app/auth/_helpers.js');
+import { genHash } from '../app/auth/_helpers.js';
 
-exports.seed = async (knex) => {
+export const seed = async (knex) => {
   await knex('PER_PERSONAS').del();
   await knex('PER_EMPRENDEDORES').del();
   await knex('PER_TELEFONOS').del();
@@ -10,16 +10,16 @@ exports.seed = async (knex) => {
 
   await knex('USR_USUARIOS').insert([
     {
-      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 101).IDEN_ROL, EMAIL_USUARIO: 'cliente@test.com', DESC_PASSWORD: hash.genHash('cliente'), FLAG_VIGENTE: true,
+      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 101).IDEN_ROL, EMAIL_USUARIO: 'cliente@test.com', DESC_PASSWORD: genHash('cliente'), FLAG_VIGENTE: true,
     },
     {
-      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 102).IDEN_ROL, EMAIL_USUARIO: 'emprendedor@test.com', DESC_PASSWORD: hash.genHash('emprendedor'), FLAG_VIGENTE: true,
+      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 102).IDEN_ROL, EMAIL_USUARIO: 'emprendedor@test.com', DESC_PASSWORD: genHash('emprendedor'), FLAG_VIGENTE: true,
     },
     {
-      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 103).IDEN_ROL, EMAIL_USUARIO: 'admin@test.com', DESC_PASSWORD: hash.genHash('admin'), FLAG_VIGENTE: true,
+      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 103).IDEN_ROL, EMAIL_USUARIO: 'admin@test.com', DESC_PASSWORD: genHash('admin'), FLAG_VIGENTE: true,
     },
     {
-      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 104).IDEN_ROL, EMAIL_USUARIO: 'superadmin@test.com', DESC_PASSWORD: hash.genHash('superadmin'), FLAG_VIGENTE: true,
+      IDEN_ROL: roles.find((rol) => rol.CODI_ROL === 104).IDEN_ROL, EMAIL_USUARIO: 'superadmin@test.com', DESC_PASSWORD: genHash('superadmin'), FLAG_VIGENTE: true,
     },
   ]);
 
