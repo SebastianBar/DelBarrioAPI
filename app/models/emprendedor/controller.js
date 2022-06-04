@@ -1,29 +1,29 @@
-import { Model, Collection } from './model'
-import Checkit from 'checkit'
+import Checkit from 'checkit';
+import { Model, Collection } from './model.js';
 
 /**
  * Obtener emprendedores.
  * @param {integer} req.params.id - ID del emprendedor (opcional).
  * @return {json} Emprendedor(es). En caso fallido, mensaje de error.
  */
-const GET = async (req, res) => {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id)) ? 0 : parseInt(req.params.id)
+export const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || Number.isNaN(req.params.id)) ? 0 : Number.parseInt(req.params.id, 10);
   try {
-    if (id != 0) {
-      const entity = await new Model({ IDEN_EMPRENDEDOR: id }).fetch({ withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen'] })
+    if (id !== 0) {
+      const entity = await new Model({ IDEN_EMPRENDEDOR: id }).fetch({ withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen'] });
       if (!entity) {
-        res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } });
       } else {
-        res.json({ error: false, data: entity.toJSON() })
+        res.json({ error: false, data: entity.toJSON() });
       }
     } else {
-      const entities = await new Collection().fetch({ withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen'] })
-      res.json({ error: false, data: entities.toJSON() })
+      const entities = await new Collection().fetch({ withRelated: ['usuario', 'usuario.telefonos', 'publicaciones', 'publicaciones.imagenes', 'rubro', 'imagen'] });
+      res.json({ error: false, data: entities.toJSON() });
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    res.status(500).json({ error: true, data: { message: 'Internal error' } });
   }
-}
+};
 
 /**
  * Agregar nuevo emprendedor.
@@ -37,7 +37,7 @@ const GET = async (req, res) => {
  * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional, por defecto false).
  * @return {json} Emprendedor. En caso fallido, mensaje de error.
  */
-const POST = async (req, res) => {
+export const POST = async (req, res) => {
   try {
     const entity = await new Model({
       IDEN_USUARIO: req.body.IDEN_USUARIO,
@@ -47,17 +47,17 @@ const POST = async (req, res) => {
       DESC_EMPRENDEDOR: req.body.DESC_EMPRENDEDOR,
       DESC_NOMBRE_FANTASIA: req.body.DESC_NOMBRE_FANTASIA,
       DESC_NOMBRE_EMPRESA: req.body.DESC_NOMBRE_EMPRESA,
-      FLAG_VALIDADO: req.body.FLAG_VALIDADO
-    }).save()
+      FLAG_VALIDADO: req.body.FLAG_VALIDADO,
+    }).save();
 
-    res.json({ error: false, data: entity.toJSON() })
+    res.json({ error: false, data: entity.toJSON() });
   } catch (err) {
     if (err instanceof Checkit.Error) {
-      res.status(400).json({ error: true, data: err })
+      res.status(400).json({ error: true, data: err });
     }
-    res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    res.status(500).json({ error: true, data: { message: 'Internal error' } });
   }
-}
+};
 
 /**
  * Actualiza un emprendedor.
@@ -72,9 +72,9 @@ const POST = async (req, res) => {
  * @param {boolean} req.body.FLAG_VALIDADO - Define si el emprendedor validó sus datos en sistema (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-const PUT = async (req, res) => {
+export const PUT = async (req, res) => {
   try {
-    const entity = await new Model({ IDEN_EMPRENDEDOR: req.params.id }).fetch({ require: true })
+    const entity = await new Model({ IDEN_EMPRENDEDOR: req.params.id }).fetch({ require: true });
     await entity.save({
       IDEN_USUARIO: (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
       IDEN_RUBRO: (typeof req.body.IDEN_RUBRO === 'undefined') ? entity.get('IDEN_RUBRO') : req.body.IDEN_RUBRO,
@@ -83,44 +83,35 @@ const PUT = async (req, res) => {
       DESC_EMPRENDEDOR: (typeof req.body.DESC_EMPRENDEDOR === 'undefined') ? entity.get('DESC_EMPRENDEDOR') : req.body.DESC_EMPRENDEDOR,
       DESC_NOMBRE_FANTASIA: (typeof req.body.DESC_NOMBRE_FANTASIA === 'undefined') ? entity.get('DESC_NOMBRE_FANTASIA') : req.body.DESC_NOMBRE_FANTASIA,
       DESC_NOMBRE_EMPRESA: (typeof req.body.DESC_NOMBRE_EMPRESA === 'undefined') ? entity.get('DESC_NOMBRE_EMPRESA') : req.body.DESC_NOMBRE_EMPRESA,
-      FLAG_VALIDADO: (typeof req.body.FLAG_VALIDADO === 'undefined') ? entity.get('FLAG_VALIDADO') : req.body.FLAG_VALIDADO
-    })
+      FLAG_VALIDADO: (typeof req.body.FLAG_VALIDADO === 'undefined') ? entity.get('FLAG_VALIDADO') : req.body.FLAG_VALIDADO,
+    });
 
-    res.json({ error: false, data: { message: 'Entity successfully updated' } })
+    res.json({ error: false, data: { message: 'Entity successfully updated' } });
   } catch (err) {
     if (err instanceof Checkit.Error) {
-      res.status(400).json({ error: true, data: err })
+      res.status(400).json({ error: true, data: err });
     } else if (err instanceof Model.NotFoundError) {
-      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
     } else {
-      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
     }
   }
-}
+};
 
 /**
  * Elimina un emprendedor.
  * @param {integer} req.params.id - ID del emprendedor.
  * @return {json} Mensaje de éxito o error.
  */
-const DELETE = async (req, res) => {
+export const DELETE = async (req, res) => {
   try {
-    await new Model({ IDEN_EMPRENDEDOR: req.params.id }).destroy({ require: true })
-    res.json({ error: false, data: { message: 'Entity successfully deleted' } })
+    await new Model({ IDEN_EMPRENDEDOR: req.params.id }).destroy({ require: true });
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } });
   } catch (err) {
     if (err instanceof Model.NoRowsDeletedError) {
-      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
     } else {
-      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
     }
   }
-
-}
-
-/* Se exportan los métodos */
-module.exports = {
-  GET,
-  POST,
-  PUT,
-  DELETE
-}
+};

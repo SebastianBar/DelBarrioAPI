@@ -1,5 +1,5 @@
-exports.seed = async knex => {
-  await knex('PER_RUBROS').del()
+exports.seed = async (knex) => {
+  await knex('PER_RUBROS').del();
 
   await knex('PER_RUBROS').insert([
     { NOMB_RUBRO: 'Agricultura, Ganadería, Caza y Silvicultura' },
@@ -20,6 +20,6 @@ exports.seed = async knex => {
     { NOMB_RUBRO: 'Otras Actividades de Servicios Comunitarias, Sociales y Personales' },
     { NOMB_RUBRO: 'Consejo De Administración de Edificios y Condominios' },
     { NOMB_RUBRO: 'Organizaciones Y Órganos Extraterritoriales' },
-    { NOMB_RUBRO: 'Sin Información' }
-  ])
-}
+    { NOMB_RUBRO: 'Sin Información' },
+  ]);
+};

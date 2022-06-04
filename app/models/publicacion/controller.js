@@ -1,17 +1,68 @@
-import { Model, Collection } from './model'
-import { Model as Tag } from '../etiqueta/model'
-import Checkit from 'checkit'
-import _ from 'lodash'
+import Checkit from 'checkit';
+import _ from 'lodash';
+import { Model, Collection } from './model.js';
+import { Model as Tag } from '../etiqueta/model.js';
+
+/**
+ * Retorna instancia de colección
+ * @param {number[]} ids Arreglo con ID's de publicación (opcional)
+ * @param {number} page Número de página a obtener (opcional)
+ */
+const GETAllHelper = (ids, page = 1) => {
+  if (ids) {
+    return new Model().query((q) => { q.where('IDEN_PUBLICACION', 'in', ids); }).orderBy('IDEN_PUBLICACION', 'desc').fetchPage({
+      page,
+      pageSize: 18,
+      withRelated: ['categoria', 'oferta', 'calificaciones', {
+        imagenes: (query) => {
+          query.orderBy('IDEN_IMAGEN');
+        },
+      },
+      ],
+    });
+  }
+
+  return new Collection().orderBy('IDEN_PUBLICACION').fetchPage({
+    page,
+    pageSize: 18,
+    withRelated: ['categoria', 'oferta', 'calificaciones', {
+      imagenes: (query) => {
+        query.orderBy('IDEN_IMAGEN');
+      },
+    },
+    ],
+  });
+};
+
+/**
+ * Busca ID's de Tags. En caso de no encontrar un tag, lo agregará y retornará su nuevo ID
+ * @param {*} tags Arreglo de tags a buscar
+ */
+const obtainTagIDs = async (tags) => {
+  const ids = [];
+
+  tags.forEach(async (tag) => {
+    const entity = await new Tag().where('NOMB_ETIQUETA', tag).fetch();
+    if (!entity) {
+      const newEntity = await new Tag({ NOMB_ETIQUETA: tag }).save();
+      ids.push(newEntity.attributes.IDEN_ETIQUETA);
+    } else {
+      ids.push(entity.attributes.IDEN_ETIQUETA);
+    }
+  });
+
+  return ids;
+};
 
 /**
  * Obtener publicaciones.
  * @param {number} req.params.id - ID de publicación (opcional).
  * @return {json} Publicación(es). En caso fallido, mensaje de error.
  */
-const GET = async (req, res) => {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id)) ? 0 : parseInt(req.params.id)
+export const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || Number.isNaN(req.params.id)) ? 0 : Number.parseInt(req.params.id, 10);
   try {
-    if (id != 0) {
+    if (id !== 0) {
       const entity = await new Model({ IDEN_PUBLICACION: id }).fetch({
         withRelated: [
           'emprendedor',
@@ -22,67 +73,40 @@ const GET = async (req, res) => {
           'imagenes',
           'oferta',
           {
-            'calificaciones': query => {
-              query.orderBy('IDEN_CALIFICACION', 'desc')
-            }
+            calificaciones: (query) => {
+              query.orderBy('IDEN_CALIFICACION', 'desc');
+            },
           },
           {
-            'comentarios': query => {
-              query.orderBy('IDEN_COMENTARIO', 'desc')
-            }
+            comentarios: (query) => {
+              query.orderBy('IDEN_COMENTARIO', 'desc');
+            },
           },
-          'comentarios.respuesta']
-      })
+          'comentarios.respuesta'],
+      });
       if (!entity) {
-        res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } });
       } else {
-        let jsonEntity = entity.toJSON()
-        jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
-        res.json({ error: false, data: jsonEntity })
+        const jsonEntity = entity.toJSON();
+        jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, (e) => e.NUMR_VALOR) : 0;
+        res.json({ error: false, data: jsonEntity });
         // Incrementar contador
-        const entityCounter = await new Model({ IDEN_PUBLICACION: entity.attributes.IDEN_PUBLICACION }).fetch({ require: true, withColums: ['IDEN_PUBLICACION'] })
-        await entityCounter.save({ NUMR_CONTADOR: entity.get('NUMR_CONTADOR') + 1 })
+        const entityCounter = await new Model({ IDEN_PUBLICACION: entity.attributes.IDEN_PUBLICACION }).fetch({ require: true, withColums: ['IDEN_PUBLICACION'] });
+        await entityCounter.save({ NUMR_CONTADOR: entity.get('NUMR_CONTADOR') + 1 });
       }
     } else {
-      const entities = await GETAllHelper(req.query.ids, req.query.page)
-      let jsonEntities = entities.toJSON()
-      jsonEntities.forEach(jsonEntity => {
-        jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, e => { return e.NUMR_VALOR }) : 0
-        delete jsonEntity.calificaciones
-      })
-      res.json({ error: false, data: jsonEntities, pagination: entities.pagination })
+      const entities = await GETAllHelper(req.query.ids, req.query.page);
+      const jsonEntities = entities.toJSON();
+      jsonEntities.forEach((jsonEntity) => {
+        jsonEntity.NUMR_CALIFICACION = jsonEntity.calificaciones.length >= 5 ? _.meanBy(jsonEntity.calificaciones, (e) => e.NUMR_VALOR) : 0;
+        delete jsonEntity.calificaciones;
+      });
+      res.json({ error: false, data: jsonEntities, pagination: entities.pagination });
     }
   } catch (err) {
-    res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    res.status(500).json({ error: true, data: { message: 'Internal error' } });
   }
-}
-
-/**
- * Retorna instancia de colección
- * @param {number[]} ids Arreglo con ID's de publicación (opcional)
- * @param {number} page Número de página a obtener (opcional)
- */
-const GETAllHelper = (ids, page = 1) => {
-  if (ids) {
-    return new Model().query(q => { q.where('IDEN_PUBLICACION', 'in', ids) }).orderBy('IDEN_PUBLICACION', 'desc').fetchPage({
-      page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {
-        'imagenes': query => {
-          query.orderBy('IDEN_IMAGEN')
-        }
-      }
-      ]
-    })
-  }
-
-  return new Collection().orderBy('IDEN_PUBLICACION').fetchPage({
-    page: page, pageSize: 18, withRelated: ['categoria', 'oferta', 'calificaciones', {
-      'imagenes': query => {
-        query.orderBy('IDEN_IMAGEN')
-      }
-    }
-    ]
-  })
-}
+};
 
 /**
  * Agregar nueva publicación.
@@ -101,7 +125,7 @@ const GETAllHelper = (ids, page = 1) => {
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
  * @return {json} Publicación. En caso fallido, mensaje de error.
  */
-const POST = async (req, res) => {
+export const POST = async (req, res) => {
   try {
     const entity = await new Model({
       IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR,
@@ -115,23 +139,23 @@ const POST = async (req, res) => {
       FLAG_VIGENTE: req.body.FLAG_VIGENTE,
       FLAG_VALIDADO: req.body.FLAG_VALIDADO,
       FLAG_BAN: req.body.FLAG_BAN,
-      FECH_CREACION: req.body.FECH_CREACION
-    }).save()
+      FECH_CREACION: req.body.FECH_CREACION,
+    }).save();
     if (req.body.ETIQUETAS && Array.isArray(req.body.ETIQUETAS)) {
-      const tagIDs = await obtainTagIDs(req.body.ETIQUETAS)
-      await entity.etiquetas().attach(tagIDs)
-      res.json({ error: false, data: entity.toJSON() })
+      const tagIDs = await obtainTagIDs(req.body.ETIQUETAS);
+      await entity.etiquetas().attach(tagIDs);
+      res.json({ error: false, data: entity.toJSON() });
     } else {
-      res.json({ error: false, data: entity.toJSON() })
+      res.json({ error: false, data: entity.toJSON() });
     }
   } catch (err) {
     if (err instanceof Checkit.Error) {
-      res.status(400).json({ error: true, data: err })
+      res.status(400).json({ error: true, data: err });
     } else {
-      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
     }
   }
-}
+};
 
 /**
  * Actualiza una publicación.
@@ -151,9 +175,9 @@ const POST = async (req, res) => {
  * @param {array} req.body.ETIQUETAS - Arreglo de strings que conformarán las etiquetas de la publicación (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-const PUT = async (req, res) => {
+export const PUT = async (req, res) => {
   try {
-    const entity = await new Model({ IDEN_PUBLICACION: req.params.id }).fetch({ require: true, withRelated: ['etiquetas'] })
+    const entity = await new Model({ IDEN_PUBLICACION: req.params.id }).fetch({ require: true, withRelated: ['etiquetas'] });
     await entity.save({
       IDEN_EMPRENDEDOR: (typeof req.body.IDEN_EMPRENDEDOR === 'undefined') ? entity.get('IDEN_EMPRENDEDOR') : req.body.IDEN_EMPRENDEDOR,
       IDEN_CATEGORIA: (typeof req.body.IDEN_CATEGORIA === 'undefined') ? entity.get('IDEN_CATEGORIA') : req.body.IDEN_CATEGORIA,
@@ -166,71 +190,43 @@ const PUT = async (req, res) => {
       FLAG_VIGENTE: (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
       FLAG_VALIDADO: (typeof req.body.FLAG_VALIDADO === 'undefined') ? entity.get('FLAG_VALIDADO') : req.body.FLAG_VALIDADO,
       FLAG_BAN: (typeof req.body.FLAG_BAN === 'undefined') ? entity.get('FLAG_BAN') : req.body.FLAG_BAN,
-      FECH_CREACION: (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION
-    })
+      FECH_CREACION: (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION,
+    });
     if (req.body.ETIQUETAS && Array.isArray(req.body.ETIQUETAS)) {
-      const tagIDs = await obtainTagIDs(req.body.ETIQUETAS)
-      const attach = _.difference(tagIDs, entity.relations.etiquetas.pluck('IDEN_ETIQUETA'))
-      const detach = _.difference(entity.relations.etiquetas.pluck('IDEN_ETIQUETA'), tagIDs)
-      await entity.etiquetas().attach(attach)
-      await entity.etiquetas().detach(detach)
-      res.json({ error: false, data: { message: 'Entity successfully updated' } })
+      const tagIDs = await obtainTagIDs(req.body.ETIQUETAS);
+      const attach = _.difference(tagIDs, entity.relations.etiquetas.pluck('IDEN_ETIQUETA'));
+      const detach = _.difference(entity.relations.etiquetas.pluck('IDEN_ETIQUETA'), tagIDs);
+      await entity.etiquetas().attach(attach);
+      await entity.etiquetas().detach(detach);
+      res.json({ error: false, data: { message: 'Entity successfully updated' } });
     } else {
-      res.json({ error: false, data: { message: 'Entity successfully updated' } })
+      res.json({ error: false, data: { message: 'Entity successfully updated' } });
     }
   } catch (err) {
     if (err instanceof Checkit.Error) {
-      res.status(400).json({ error: true, data: err })
+      res.status(400).json({ error: true, data: err });
     } else if (err instanceof Model.NotFoundError) {
-      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
     } else {
-      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
     }
   }
-}
+};
 
 /**
  * Elimina una publicación.
  * @param {integer} req.params.id - ID de la publicación.
  * @return {json} Mensaje de éxito o error.
  */
-const DELETE = async (req, res) => {
+export const DELETE = async (req, res) => {
   try {
-    await new Model({ IDEN_PUBLICACION: req.params.id }).destroy({ require: true })
-    res.json({ error: false, data: { message: 'Entity successfully deleted' } })
+    await new Model({ IDEN_PUBLICACION: req.params.id }).destroy({ require: true });
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } });
   } catch (err) {
     if (err instanceof Model.NotFoundError) {
-      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
     } else {
-      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
     }
   }
-}
-
-/**
- * Busca ID's de Tags. En caso de no encontrar un tag, lo agregará y retornará su nuevo ID
- * @param {*} tags Arreglo de tags a buscar
- */
-const obtainTagIDs = async tags => {
-  let ids = []
-
-  tags.forEach(async tag => {
-    const entity = await new Tag().where('NOMB_ETIQUETA', tag).fetch()
-    if (!entity) {
-      const newEntity = await new Tag({ NOMB_ETIQUETA: tag }).save()
-      ids.push(newEntity.attributes.IDEN_ETIQUETA)
-    } else {
-      ids.push(entity.attributes.IDEN_ETIQUETA)
-    }
-  })
-
-  return ids
-}
-
-/* Se exportan los métodos */
-module.exports = {
-  GET,
-  POST,
-  PUT,
-  DELETE
-}
+};

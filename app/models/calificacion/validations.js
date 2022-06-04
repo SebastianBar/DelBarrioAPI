@@ -1,5 +1,5 @@
-import Checkit from 'checkit'
-import { knex } from '../../connection'
+import Checkit from 'checkit';
+import { knex } from '../../connection.js';
 
 // Nombres de atributos en formato legible
 const labels = {
@@ -7,68 +7,66 @@ const labels = {
   IDEN_USUARIO: 'ID de usuario',
   NUMR_VALOR: 'Valor de calificación',
   DESC_CALIFICACION: 'Texto de calificación',
-  FLAG_BAN: 'Baneo'
-}
+  FLAG_BAN: 'Baneo',
+};
 
 // Valores nativos de validaciones checkit en https://github.com/tgriesser/checkit
 const validations = {
   IDEN_PUBLICACION: [{
     rule: 'required',
-    label: labels.IDEN_PUBLICACION
+    label: labels.IDEN_PUBLICACION,
   }, {
     rule: 'number',
-    message: labels.IDEN_PUBLICACION + ' debe ser de tipo "integer"'
+    message: `${labels.IDEN_PUBLICACION} debe ser de tipo "integer"`,
   }, {
-    rule: async val => {
-      const resp = await knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val)
-      if (resp.length === 0) throw new Error(labels.IDEN_PUBLICACION + ' no existe')
-    }
+    rule: async (val) => {
+      const resp = await knex('REQ_PUBLICACIONES').where('IDEN_PUBLICACION', '=', val);
+      if (resp.length === 0) throw new Error(`${labels.IDEN_PUBLICACION} no existe`);
+    },
   }],
   IDEN_USUARIO: [{
     rule: 'required',
-    label: labels.IDEN_USUARIO
+    label: labels.IDEN_USUARIO,
   }, {
     rule: 'number',
-    message: labels.IDEN_USUARIO + ' debe ser de tipo "integer"'
+    message: `${labels.IDEN_USUARIO} debe ser de tipo "integer"`,
   }, {
-    rule: async val => {
-      const resp = await knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val)
-      if (resp.length == 0) throw new Error(labels.IDEN_USUARIO + ' no existe')
-    }
+    rule: async (val) => {
+      const resp = await knex('USR_USUARIOS').where('IDEN_USUARIO', '=', val);
+      if (resp.length === 0) throw new Error(`${labels.IDEN_USUARIO} no existe`);
+    },
   }],
   NUMR_VALOR: [{
     rule: 'required',
-    label: labels.NUMR_VALOR
+    label: labels.NUMR_VALOR,
   }, {
     rule: 'number',
-    message: labels.NUMR_VALOR + ' debe ser de tipo "integer"'
+    message: `${labels.NUMR_VALOR} debe ser de tipo "integer"`,
   }, {
     rule: 'greaterThanEqualTo:1',
-    label: labels.NUMR_VALOR
+    label: labels.NUMR_VALOR,
   }, {
     rule: 'lessThanEqualTo:5',
-    label: labels.NUMR_VALOR
+    label: labels.NUMR_VALOR,
   }],
   DESC_CALIFICACION: [{
     rule: 'string',
-    message: labels.DESC_CALIFICACION + ' debe ser de tipo "string"'
+    message: `${labels.DESC_CALIFICACION} debe ser de tipo "string"`,
   }, {
     rule: 'maxLength:255',
-    label: labels.DESC_CALIFICACION
+    label: labels.DESC_CALIFICACION,
   }],
   FLAG_BAN: [{
     rule: 'boolean',
-    label: labels.FLAG_BAN
-  }]
-}
+    label: labels.FLAG_BAN,
+  }],
+};
 
 /**
  * Ejecuta validaciones de un modelo, retornando Promise
  * @param {bookshelf.Model} model Modelo a validar
  */
-const validate = model => {
-  return Checkit(validations, { language: 'es' }).run(model.toJSON())
-}
+const validate = (model) => Checkit(validations, { language: 'es' }).run(model.toJSON());
 
 // Se exporta función
-export default validate
+export default validate;

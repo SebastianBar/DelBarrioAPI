@@ -1,16 +1,12 @@
-import cn from '../config'
+import Knex from 'knex';
+import Bookshelf from 'bookshelf';
+import cn from '../config.js';
 
 // Se inicializa el Query Builder
-const knex = require('knex')(cn.knexConfig)
+export const knex = Knex(cn.knexConfig);
 
 // Se inicializa el ORM
-const bookshelf = require('bookshelf')(knex)
+export const bookshelf = Bookshelf(knex);
 
 // Inicializar plugins de bookshelf
-bookshelf.plugin('pagination')
-
-// Se exporta el ORM
-module.exports = {
-  bookshelf,
-  knex,
-}
+bookshelf.plugin('pagination');
