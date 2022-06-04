@@ -7,28 +7,22 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de motivo de denuncia (opcional).
  * @return {json} Motivo(s) de denuncia. En caso fallido, mensaje de error.
  */
-const GET = (req, res) => {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(id != 0) {
-    new Model({IDEN_MOTIVO_DENUNCIA: id}).fetch()
-      .then(entity => {
-        if(!entity) {
-          res.status(404).json({error: true, data: {message: 'Entity not found'}})
-        } else {
-          res.json({error: false, data: filter.GETsingle(entity)})
-        }
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
-  } else {
-    new Collection().fetch()
-      .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
+const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id)) ? 0 : parseInt(req.params.id)
+  try {
+    if (id != 0) {
+      const entity = await new Model({ IDEN_MOTIVO_DENUNCIA: id }).fetch()
+      if (!entity) {
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      } else {
+        res.json({ error: false, data: filter.GETsingle(entity) })
+      }
+    } else {
+      const entities = await new Collection().fetch()
+      res.json({ error: false, data: entities.toJSON() })
+    }
+  } catch (err) {
+    res.status(500).json({ error: true, data: { message: 'Internal error' } })
   }
 }
 
@@ -38,19 +32,20 @@ const GET = (req, res) => {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional, por defecto true).
  * @return {json} Motivo de denuncia. En caso fallido, mensaje de error.
  */
-const POST = (req, res) => {
-  new Model({
-    NOMB_MOTIVO_DENUNCIA: req.body.NOMB_MOTIVO_DENUNCIA,
-    FLAG_VIGENTE:         req.body.FLAG_VIGENTE
-  }).save()
-    .then(entity => {
-      res.json({error: false, data: entity.toJSON()})
-    }).catch(Checkit.Error, err => {
-      res.status(400).json({error: true, data: err})
-    }).catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const POST = async (req, res) => {
+  try {
+    const entity = await new Model({
+      NOMB_MOTIVO_DENUNCIA: req.body.NOMB_MOTIVO_DENUNCIA,
+      FLAG_VIGENTE: req.body.FLAG_VIGENTE
+    }).save()
+    res.json({ error: false, data: entity.toJSON() })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -60,30 +55,23 @@ const POST = (req, res) => {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si el motivo de deshabilitación está activo (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-const PUT = (req, res) => {
-  new Model({IDEN_MOTIVO_DENUNCIA: req.params.id})
-    .fetch({require: true})
-    .then(entity => {
-      entity.save({
-        NOMB_MOTIVO_DENUNCIA: (typeof req.body.NOMB_MOTIVO_DENUNCIA === 'undefined') ? entity.get('NOMB_MOTIVO_DENUNCIA') : req.body.NOMB_MOTIVO_DENUNCIA,
-        FLAG_VIGENTE:         (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
-      })
-        .then(() => {
-          res.json({error: false, data: {message: 'Entity successfully updated'}})
-        }).catch(Checkit.Error, err => {
-          res.status(400).json({error: true, data: err})
-        }).catch(err => {
-          res.status(500).json({error: true, data: {message: 'Internal error'}})
-          throw err
-        })
+const PUT = async (req, res) => {
+  try {
+    const entity = await new Model({ IDEN_MOTIVO_DENUNCIA: req.params.id }).fetch({ require: true })
+    await entity.save({
+      NOMB_MOTIVO_DENUNCIA: (typeof req.body.NOMB_MOTIVO_DENUNCIA === 'undefined') ? entity.get('NOMB_MOTIVO_DENUNCIA') : req.body.NOMB_MOTIVO_DENUNCIA,
+      FLAG_VIGENTE: (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE,
     })
-    .catch(Model.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+    res.json({ error: false, data: { message: 'Entity successfully updated' } })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else if (err instanceof Model.NotFoundError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -91,19 +79,17 @@ const PUT = (req, res) => {
  * @param {integer} req.params.id - ID del motivo de denuncia.
  * @return {json} Mensaje de éxito o error.
  */
-const DELETE = (req, res) => {
-  new Model({IDEN_MOTIVO_DENUNCIA: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Entity successfully deleted'}})
-    })
-    .catch(Model.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const DELETE = async (req, res) => {
+  try {
+    await new Model({ IDEN_MOTIVO_DENUNCIA: req.params.id }).destroy({ require: true })
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } })
+  } catch (err) {
+    if (err instanceof Model.NoRowsDeletedError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /* Se exportan los métodos */

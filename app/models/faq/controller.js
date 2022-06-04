@@ -7,28 +7,22 @@ import { filter } from './_helpers'
  * @param {integer} req.params.id - ID de FAQ (opcional).
  * @return {json} FAQ(s). En caso fallido, mensaje de error.
  */
-const GET = (req, res) => {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(id != 0) {
-    new Model({IDEN_FAQ: id}).fetch()
-      .then(entity => {
-        if(!entity) {
-          res.status(404).json({error: true, data: {message: 'Entity not found'}})
-        } else {
-          res.json({error: false, data: filter.GETsingle(entity)})
-        }
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
-  } else {
-    new Collection().fetch()
-      .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
+const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id)) ? 0 : parseInt(req.params.id)
+  try {
+    if (id != 0) {
+      const entity = await new Model({ IDEN_FAQ: id }).fetch()
+      if (!entity) {
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      } else {
+        res.json({ error: false, data: filter.GETsingle(entity) })
+      }
+    } else {
+      const entities = await new Collection().fetch()
+      res.json({ error: false, data: entities.toJSON() })
+    }
+  } catch (err) {
+    res.status(500).json({ error: true, data: { message: 'Internal error' } })
   }
 }
 
@@ -38,19 +32,20 @@ const GET = (req, res) => {
  * @param {string} req.body.DESC_FAQ - Descripción de FAQ.
  * @return {json} FAQ. En caso fallido, mensaje de error.
  */
-const POST = (req, res) => {
-  new Model({
-    NOMB_FAQ: req.body.NOMB_FAQ,
-    DESC_FAQ: req.body.DESC_FAQ
-  }).save()
-    .then(entity => {
-      res.json({error: false, data: entity.toJSON()})
-    }).catch(Checkit.Error, err => {
-      res.status(400).json({error: true, data: err})
-    }).catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const POST = async (req, res) => {
+  try {
+    const entity = await new Model({
+      NOMB_FAQ: req.body.NOMB_FAQ,
+      DESC_FAQ: req.body.DESC_FAQ
+    }).save()
+    res.json({ error: false, data: entity.toJSON() })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -60,32 +55,24 @@ const POST = (req, res) => {
  * @param {string} req.body.DESC_FAQ - Descripción de FAQ (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-const PUT = (req, res) => {
-  new Model({IDEN_FAQ: req.params.id})
-    .fetch({require: true})
-    .then(entity => {
-      entity.save({
-        NOMB_FAQ: (typeof req.body.NOMB_FAQ === 'undefined') ? entity.get('NOMB_FAQ') : req.body.NOMB_FAQ,
-        DESC_FAQ: (typeof req.body.DESC_FAQ === 'undefined') ? entity.get('DESC_FAQ') : req.body.DESC_FAQ
-      })
-        .then(() => {
-          res.json({error: false, data: {message: 'Entity successfully updated'}})
-        })
-        .catch(Checkit.Error, err => {
-          res.status(400).json({error: true, data: err})
-        })
-        .catch(err => {
-          res.status(500).json({error: true, data: {message: 'Internal error'}})
-          throw err
-        })
+const PUT = async (req, res) => {
+  try {
+    const entity = await new Model({ IDEN_FAQ: req.params.id }).fetch({ require: true })
+    await entity.save({
+      NOMB_FAQ: (typeof req.body.NOMB_FAQ === 'undefined') ? entity.get('NOMB_FAQ') : req.body.NOMB_FAQ,
+      DESC_FAQ: (typeof req.body.DESC_FAQ === 'undefined') ? entity.get('DESC_FAQ') : req.body.DESC_FAQ
     })
-    .catch(Model.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+
+    res.json({ error: false, data: { message: 'Entity successfully updated' } })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else if (err instanceof Model.NotFoundError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -93,19 +80,17 @@ const PUT = (req, res) => {
  * @param {integer} req.params.id - ID de FAQ.
  * @return {json} Mensaje de éxito o error.
  */
-const DELETE = (req, res) => {
-  new Model({IDEN_FAQ: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Entity successfully deleted'}})
-    })
-    .catch(Model.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const DELETE = async (req, res) => {
+  try {
+    await new Model({ IDEN_FAQ: req.params.id }).destroy({ require: true })
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } })
+  } catch (err) {
+    if (err instanceof Model.NoRowsDeletedError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /* Se exportan los métodos */

@@ -6,28 +6,22 @@ import Checkit from 'checkit'
  * @param {integer} req.params.id - ID de denuncia (opcional).
  * @return {json} Denuncia(s). En caso fallido, mensaje de error.
  */
-const GET = (req, res) => {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(id != 0) {
-    new Model({IDEN_DENUNCIA: id}).fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona']})
-      .then(entity => {
-        if(!entity) {
-          res.status(404).json({error: true, data: {message: 'Entity not found'}})
-        } else {
-          res.json({error: false, data: entity.toJSON()})
-        }
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
-  } else {
-    new Collection().fetch({withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona']})
-      .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
+const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id)) ? 0 : parseInt(req.params.id)
+  try {
+    if (id != 0) {
+      const entity = await new Model({ IDEN_DENUNCIA: id }).fetch({ withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona'] })
+      if (!entity) {
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+      } else {
+        res.json({ error: false, data: entity.toJSON() })
+      }
+    } else {
+      const entities = await new Collection().fetch({ withRelated: ['publicacion', 'calificacion', 'comentario', 'usuario', 'usuario.persona', 'usuario.emprendedor', 'motivo_denuncia', 'resolucion_denuncia', 'resolucion_denuncia.usuario', 'resolucion_denuncia.usuario.persona'] })
+      res.json({ error: false, data: entities.toJSON() })
+    }
+  } catch (err) {
+    res.status(500).json({ error: true, data: { message: 'Internal error' } })
   }
 }
 
@@ -43,25 +37,27 @@ const GET = (req, res) => {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la denuncia está activa (opcional, por defecto true).
  * @return {json} Denuncia. En caso fallido, mensaje de error.
  */
-const POST = (req, res) => {
-  new Model({
-    IDEN_PUBLICACION:     req.body.IDEN_PUBLICACION,
-    IDEN_CALIFICACION:    req.body.IDEN_CALIFICACION,
-    IDEN_COMENTARIO:      req.body.IDEN_COMENTARIO,
-    IDEN_USUARIO:         req.body.IDEN_USUARIO,
-    IDEN_MOTIVO_DENUNCIA: req.body.IDEN_MOTIVO_DENUNCIA,
-    DESC_DENUNCIA:        req.body.DESC_DENUNCIA,
-    FECH_CREACION:        req.body.FECH_CREACION,
-    FLAG_VIGENTE:         req.body.FLAG_VIGENTE
-  }).save()
-    .then(entity => {
-      res.json({error: false, data: entity.toJSON()})
-    }).catch(Checkit.Error, err => {
-      res.status(400).json({error: true, data: err})
-    }).catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const POST = async (req, res) => {
+  try {
+    const entity = await new Model({
+      IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
+      IDEN_CALIFICACION: req.body.IDEN_CALIFICACION,
+      IDEN_COMENTARIO: req.body.IDEN_COMENTARIO,
+      IDEN_USUARIO: req.body.IDEN_USUARIO,
+      IDEN_MOTIVO_DENUNCIA: req.body.IDEN_MOTIVO_DENUNCIA,
+      DESC_DENUNCIA: req.body.DESC_DENUNCIA,
+      FECH_CREACION: req.body.FECH_CREACION,
+      FLAG_VIGENTE: req.body.FLAG_VIGENTE
+    }).save()
+
+    res.json({ error: false, data: entity.toJSON() })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -77,36 +73,30 @@ const POST = (req, res) => {
  * @param {boolean} req.body.FLAG_VIGENTE - Define si la denuncia está activa (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-const PUT = (req, res) => {
-  new Model({IDEN_DENUNCIA: req.params.id})
-    .fetch({require: true})
-    .then(entity => {
-      entity.save({
-        IDEN_PUBLICACION:     (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
-        IDEN_CALIFICACION:    (typeof req.body.IDEN_CALIFICACION === 'undefined') ? entity.get('IDEN_CALIFICACION') : req.body.IDEN_CALIFICACION,
-        IDEN_COMENTARIO:      (typeof req.body.IDEN_COMENTARIO === 'undefined') ? entity.get('IDEN_COMENTARIO') : req.body.IDEN_COMENTARIO,
-        IDEN_USUARIO:         (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
-        IDEN_MOTIVO_DENUNCIA: (typeof req.body.IDEN_MOTIVO_DENUNCIA === 'undefined') ? entity.get('IDEN_MOTIVO_DENUNCIA') : req.body.IDEN_MOTIVO_DENUNCIA,
-        DESC_DENUNCIA:        (typeof req.body.DESC_DENUNCIA === 'undefined') ? entity.get('DESC_DENUNCIA') : req.body.DESC_DENUNCIA,
-        FECH_CREACION:        (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION,
-        FLAG_VIGENTE:         (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
-      })
-        .then(() => {
-          res.json({error: false, data: {message: 'Entity successfully updated'}})
-        }).catch(Checkit.Error, err => {
-          res.status(400).json({error: true, data: err})
-        }).catch(err => {
-          res.status(500).json({error: true, data: {message: 'Internal error'}})
-          throw err
-        })
+const PUT = async (req, res) => {
+  try {
+    const entity = await new Model({ IDEN_DENUNCIA: req.params.id }).fetch({ require: true })
+    await entity.save({
+      IDEN_PUBLICACION: (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
+      IDEN_CALIFICACION: (typeof req.body.IDEN_CALIFICACION === 'undefined') ? entity.get('IDEN_CALIFICACION') : req.body.IDEN_CALIFICACION,
+      IDEN_COMENTARIO: (typeof req.body.IDEN_COMENTARIO === 'undefined') ? entity.get('IDEN_COMENTARIO') : req.body.IDEN_COMENTARIO,
+      IDEN_USUARIO: (typeof req.body.IDEN_USUARIO === 'undefined') ? entity.get('IDEN_USUARIO') : req.body.IDEN_USUARIO,
+      IDEN_MOTIVO_DENUNCIA: (typeof req.body.IDEN_MOTIVO_DENUNCIA === 'undefined') ? entity.get('IDEN_MOTIVO_DENUNCIA') : req.body.IDEN_MOTIVO_DENUNCIA,
+      DESC_DENUNCIA: (typeof req.body.DESC_DENUNCIA === 'undefined') ? entity.get('DESC_DENUNCIA') : req.body.DESC_DENUNCIA,
+      FECH_CREACION: (typeof req.body.FECH_CREACION === 'undefined') ? entity.get('FECH_CREACION') : req.body.FECH_CREACION,
+      FLAG_VIGENTE: (typeof req.body.FLAG_VIGENTE === 'undefined') ? entity.get('FLAG_VIGENTE') : req.body.FLAG_VIGENTE
     })
-    .catch(Model.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+
+    res.json({ error: false, data: { message: 'Entity successfully updated' } })
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err })
+    } else if (err instanceof Model.NotFoundError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /**
@@ -114,19 +104,17 @@ const PUT = (req, res) => {
  * @param {integer} req.params.id - ID de denuncia.
  * @return {json} Mensaje de éxito o error.
  */
-const DELETE = (req, res) => {
-  new Model({IDEN_DENUNCIA: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Entity successfully deleted'}})
-    })
-    .catch(Model.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
+const DELETE = async (req, res) => {
+  try {
+    await new Model({ IDEN_DENUNCIA: req.params.id }).destroy({ require: true })
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } })
+  } catch (err) {
+    if (err instanceof Model.NoRowsDeletedError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } })
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } })
+    }
+  }
 }
 
 /* Se exportan los métodos */
