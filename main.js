@@ -27,8 +27,9 @@ const app = express();
 const logDirectory = path.join('log/');
 if (!fs.existsSync(logDirectory)) fs.mkdirSync(logDirectory);
 
-const accessLogStream = rfs(`${moment().format('DD-MM-YYYY')}_access.log`, {
+const accessLogStream = rfs.createStream(`${moment().format('DD-MM-YYYY')}_access.log`, {
   interval: '1d', // rotate daily  //   interval: '5s', // rotate 5 segundos
+  intervalBoundary: true,
   path: logDirectory,
 });
 
