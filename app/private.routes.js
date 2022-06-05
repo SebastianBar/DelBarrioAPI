@@ -1,25 +1,25 @@
-import routesInicio from './_inicio/routes'
-import routesAuth from './auth/private.routes'
-import routesCalificacion from './models/calificacion/private.routes'
-import routesCategoria from './models/categoria/private.routes'
-import routesComentario from './models/comentario/private.routes'
-import routesEmprendedor from './models/emprendedor/private.routes'
-import routesFaq from './models/faq/private.routes'
-import routesImagen from './models/imagen/private.routes'
-import routesMotivoDenuncia from './models/motivo_denuncia/private.routes'
-import routesMotivoDeshabilitacion from './models/motivo_deshabilitacion/private.routes'
-import routesOferta from './models/oferta/private.routes'
-import routesPersona from './models/persona/private.routes'
-import routesPublicacion from './models/publicacion/private.routes'
-import routesRespuesta from './models/respuesta/private.routes'
-import routesRubro from './models/rubro/private.routes'
-import routesTelefono from './models/telefono/private.routes'
-import routesUsuario from './models/usuario/private.routes'
-import routesTerminosCondiciones from './models/terminos_condiciones/private.routes'
-import routesDenuncia from './models/denuncia/private.routes'
-import routesResolucionDenuncia from './models/resolucion_denuncia/private.routes'
+import routesInicio from './_inicio/routes.js';
+import routesAuth from './auth/private.routes.js';
+import routesCalificacion from './models/calificacion/private.routes.js';
+import routesCategoria from './models/categoria/private.routes.js';
+import routesComentario from './models/comentario/private.routes.js';
+import routesEmprendedor from './models/emprendedor/private.routes.js';
+import routesFaq from './models/faq/private.routes.js';
+import routesImagen from './models/imagen/private.routes.js';
+import routesMotivoDenuncia from './models/motivo_denuncia/private.routes.js';
+import routesMotivoDeshabilitacion from './models/motivo_deshabilitacion/private.routes.js';
+import routesOferta from './models/oferta/private.routes.js';
+import routesPersona from './models/persona/private.routes.js';
+import routesPublicacion from './models/publicacion/private.routes.js';
+import routesRespuesta from './models/respuesta/private.routes.js';
+import routesRubro from './models/rubro/private.routes.js';
+import routesTelefono from './models/telefono/private.routes.js';
+import routesUsuario from './models/usuario/private.routes.js';
+import routesTerminosCondiciones from './models/terminos_condiciones/private.routes.js';
+import routesDenuncia from './models/denuncia/private.routes.js';
+import routesResolucionDenuncia from './models/resolucion_denuncia/private.routes.js';
 
-import specificRoutes from './specific/private.routes'
+import specificRoutes from './specific/private.routes.js';
 
 const routes = [
   routesInicio,
@@ -42,7 +42,7 @@ const routes = [
   routesTerminosCondiciones,
   routesDenuncia,
   routesResolucionDenuncia,
-  specificRoutes
-]
+  specificRoutes,
+];
 
-export default routes
+export default routes;

@@ -1,40 +1,40 @@
-import { bookshelf } from '../../connection'
-import validate from './validations'
+import { bookshelf } from '../../connection.js';
+import validate from './validations.js';
+import { Model as PublicacionModel } from '../publicacion/model.js';
+import { Model as CalificacionModel } from '../calificacion/model.js';
+import { Model as ComentarioModel } from '../comentario/model.js';
+import { Model as UsuarioModel } from '../usuario/model.js';
+import { Model as MotivoDenunciaModel } from '../motivo_denuncia/model.js';
+import { Model as ResolucionDenunciaModel } from '../resolucion_denuncia/model.js';
 
 /* Se define el modelo */
-const Model = bookshelf.Model.extend({
+export const Model = bookshelf.Model.extend({
   tableName: 'REQ_DENUNCIAS',
   idAttribute: 'IDEN_DENUNCIA',
-  publicacion: function () {
-    return this.belongsTo(require('../publicacion/model').Model, 'IDEN_PUBLICACION')
+  publicacion() {
+    return this.belongsTo(PublicacionModel, 'IDEN_PUBLICACION');
   },
-  calificacion: function () {
-    return this.belongsTo(require('../calificacion/model').Model, 'IDEN_CALIFICACION')
+  calificacion() {
+    return this.belongsTo(CalificacionModel, 'IDEN_CALIFICACION');
   },
-  comentario: function () {
-    return this.belongsTo(require('../comentario/model').Model, 'IDEN_COMENTARIO')
+  comentario() {
+    return this.belongsTo(ComentarioModel, 'IDEN_COMENTARIO');
   },
-  usuario: function () {
-    return this.belongsTo(require('../usuario/model').Model, 'IDEN_USUARIO')
+  usuario() {
+    return this.belongsTo(UsuarioModel, 'IDEN_USUARIO');
   },
-  motivo_denuncia: function () {
-    return this.belongsTo(require('../motivo_denuncia/model').Model, 'IDEN_MOTIVO_DENUNCIA')
+  motivo_denuncia() {
+    return this.belongsTo(MotivoDenunciaModel, 'IDEN_MOTIVO_DENUNCIA');
   },
-  resolucion_denuncia: function () {
-    return this.hasOne(require('../resolucion_denuncia/model').Model, 'IDEN_DENUNCIA')
+  resolucion_denuncia() {
+    return this.hasOne(ResolucionDenunciaModel, 'IDEN_DENUNCIA');
   },
-  initialize: function () {
-    this.on('saving', validate, this)
-  }
-})
+  initialize() {
+    this.on('saving', validate, this);
+  },
+});
 
 /* Se define colección a partir del modelo */
-const Collection = bookshelf.Collection.extend({
-  model: Model
-})
-
-/* Se exportan las constantes */
-module.exports = {
-  Model,
-  Collection,
-}
+export const Collection = bookshelf.Collection.extend({
+  model: Model,
+});

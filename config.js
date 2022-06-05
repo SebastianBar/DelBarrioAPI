@@ -1,59 +1,58 @@
-'use strict'
-import knexFile from './knexfile'
+import knexFile from './knexfile.js';
 
-let   SECRET
-let   SECRET_ENCRYPT
-let   API_PORT     
-let   API_HOST
-let   KNEX_CONFIG
-let   MAIL
-let   MAIL_NAME
-let   MAIL_PSW
-let   MAIL_FROM
-const env = process.env.NODE_ENV || 'development'
+let secret;
+let secretEncrypt;
+let apiPort;
+let apiHost;
+let knexConfig;
+let mail;
+let mailName;
+let mailPsw;
+let mailFrom;
+const env = process.env.NODE_ENV || 'development';
 
 switch (env) {
   case 'production':
-    SECRET = process.env.SECRET
-    SECRET_ENCRYPT = process.env.SECRET_ENCRYPT
+    secret = process.env.SECRET;
+    secretEncrypt = process.env.SECRET_ENCRYPT;
 
-    API_PORT = process.env.API_PORT
-    API_HOST = process.env.API_HOST
+    apiPort = process.env.API_PORT;
+    apiHost = process.env.API_HOST;
 
-    KNEX_CONFIG = knexFile.production
+    knexConfig = knexFile.production;
 
-    MAIL = process.env.MAIL
-    MAIL_NAME = process.env.MAIL_NAME
-    MAIL_PSW = process.env.MAIL_PSW
-    MAIL_FROM = process.env.MAIL_FROM
-    break
+    mail = process.env.MAIL;
+    mailName = process.env.MAIL_NAME;
+    mailPsw = process.env.MAIL_PSW;
+    mailFrom = process.env.MAIL_FROM;
+    break;
 
   case 'development':
-    SECRET = 'claveultrasecreta'
-    SECRET_ENCRYPT = 'provWeb'
+    secret = 'claveultrasecreta';
+    secretEncrypt = 'provWeb';
 
-    API_PORT = '3000'
-    API_HOST = 'http://localhost'
+    apiPort = '3000';
+    apiHost = 'http://localhost';
 
-    KNEX_CONFIG = knexFile.development
+    knexConfig = knexFile.development;
 
-    MAIL = ''
-    MAIL_NAME = ''
-    MAIL_PSW = ''
-    MAIL_FROM = ''
-    break
+    mail = '';
+    mailName = '';
+    mailPsw = '';
+    mailFrom = '';
+    break;
   default:
-    break
+    break;
 }
 
-module.exports = {
-  secret: SECRET,
-  secretEncrypt:SECRET_ENCRYPT,
-  apiPort:API_PORT,
-  apiHost:API_HOST,
-  knexConfig:KNEX_CONFIG,
-  mail:MAIL,
-  mailName:MAIL_NAME,
-  mailPsw:MAIL_PSW,
-  mailFrom:MAIL_FROM
-}
+export default {
+  secret,
+  secretEncrypt,
+  apiPort,
+  apiHost,
+  knexConfig,
+  mail,
+  mailName,
+  mailPsw,
+  mailFrom,
+};
