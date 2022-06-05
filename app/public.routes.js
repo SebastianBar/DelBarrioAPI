@@ -1,17 +1,17 @@
-import routesInicio from './_inicio/routes'
-import routesAuth from './auth/public.routes'
-import routesRubro from './models/rubro/public.routes'
-import routesEmprendedor from './models/emprendedor/public.routes'
-import routesCategoria from './models/categoria/public.routes'
-import routesPersona from './models/persona/public.routes'
-import routesFaq from './models/faq/public.routes'
-import routesPublicacion from './models/publicacion/public.routes'
-import routesOferta from './models/oferta/public.routes'
-import routesImagen from './models/imagen/public.routes'
-import routesUsuario from './models/usuario/public.routes'
-import routesMotivoDenuncia from './models/motivo_denuncia/public.routes'
+import routesInicio from './_inicio/routes.js';
+import routesAuth from './auth/public.routes.js';
+import routesRubro from './models/rubro/public.routes.js';
+import routesEmprendedor from './models/emprendedor/public.routes.js';
+import routesCategoria from './models/categoria/public.routes.js';
+import routesPersona from './models/persona/public.routes.js';
+import routesFaq from './models/faq/public.routes.js';
+import routesPublicacion from './models/publicacion/public.routes.js';
+import routesOferta from './models/oferta/public.routes.js';
+import routesImagen from './models/imagen/public.routes.js';
+import routesUsuario from './models/usuario/public.routes.js';
+import routesMotivoDenuncia from './models/motivo_denuncia/public.routes.js';
 
-import specificRoutes from './specific/public.routes'
+import specificRoutes from './specific/public.routes.js';
 
 /*
 * Todas las rutas públicas para desarrollo
@@ -29,7 +29,7 @@ const routes = [
   routesImagen,
   specificRoutes,
   routesUsuario,
-  routesMotivoDenuncia
-]
+  routesMotivoDenuncia,
+];
 
-export default routes
+export default routes;

@@ -1,25 +1,20 @@
-import { bookshelf } from '../../connection'
-import validate from './validations'
+import { bookshelf } from '../../connection.js';
+import validate from './validations.js';
+import { Model as PermisoModel } from '../permiso/model.js';
 
 /* Se define el modelo */
-const Model = bookshelf.Model.extend({
+export const Model = bookshelf.Model.extend({
   tableName: 'SIS_ROLES',
   idAttribute: 'IDEN_ROL',
-  permisos: function () {
-    return this.belongsToMany(require('../permiso/model').Model, 'SIS_PERMISOS_ROLES', 'IDEN_ROL', 'IDEN_PERMISO')
+  permisos() {
+    return this.belongsToMany(PermisoModel, 'SIS_PERMISOS_ROLES', 'IDEN_ROL', 'IDEN_PERMISO');
   },
-  initialize: function () {
-    this.on('saving', validate, this)
-  }
-})
+  initialize() {
+    this.on('saving', validate, this);
+  },
+});
 
 /* Se define colección a partir del modelo */
-const Collection = bookshelf.Collection.extend({
-  model: Model
-})
-
-/* Exports all methods */
-module.exports = {
-  Model,
-  Collection,
-}
+export const Collection = bookshelf.Collection.extend({
+  model: Model,
+});

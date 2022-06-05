@@ -1,35 +1,29 @@
-import { Model, Collection } from './model'
-import Checkit from 'checkit'
+import Checkit from 'checkit';
+import { Model, Collection } from './model.js';
 
 /**
  * Obtener ofertas.
  * @param {integer} req.params.id - ID de oferta (opcional).
  * @return {json} Oferta(s). En caso fallido, mensaje de error.
  */
-function GET (req, res) {
-  const id = (typeof req.params.id === 'undefined' || isNaN(req.params.id) ) ? 0 : parseInt(req.params.id)
-  if(id != 0) {
-    new Model({IDEN_OFERTA: id}).fetch({withRelated: ['publicacion']})
-      .then(entity => {
-        if(!entity) {
-          res.status(404).json({error: true, data: {message: 'Entity not found'}})
-        } else {
-          res.json({error: false, data: entity.toJSON()})
-        }
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
-  } else {
-    new Collection().fetch({withRelated: ['publicacion']})
-      .then(entities => {
-        res.json({error: false, data: entities.toJSON()})
-      }).catch(err => {
-        res.status(500).json({error: true, data: {message: 'Internal error'}})
-        throw err
-      })
+export const GET = async (req, res) => {
+  const id = (typeof req.params.id === 'undefined' || Number.isNaN(req.params.id)) ? 0 : Number.parseInt(req.params.id, 10);
+  try {
+    if (id !== 0) {
+      const entity = await new Model({ IDEN_OFERTA: id }).fetch({ withRelated: ['publicacion'] });
+      if (!entity) {
+        res.status(404).json({ error: true, data: { message: 'Entity not found' } });
+      } else {
+        res.json({ error: false, data: entity.toJSON() });
+      }
+    } else {
+      const entities = await new Collection().fetch({ withRelated: ['publicacion'] });
+      res.json({ error: false, data: entities.toJSON() });
+    }
+  } catch (err) {
+    res.status(500).json({ error: true, data: { message: 'Internal error' } });
   }
-}
+};
 
 /**
  * Agregar nueva oferta.
@@ -39,22 +33,23 @@ function GET (req, res) {
  * @param {integer} req.body.NUMR_PRECIO - Precio de la oferta.
  * @return {json} Oferta. En caso fallido, mensaje de error.
  */
-function POST (req, res) {
-  new Model({
-    IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
-    FECH_INICIO:      req.body.FECH_INICIO,
-    FECH_TERMINO:     req.body.FECH_TERMINO,
-    NUMR_PRECIO:      req.body.NUMR_PRECIO
-  }).save()
-    .then(entity => {
-      res.json({error: false, data: entity.toJSON()})
-    }).catch(Checkit.Error, err => {
-      res.status(400).json({error: true, data: err})
-    }).catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
-}
+export const POST = async (req, res) => {
+  try {
+    const entity = await new Model({
+      IDEN_PUBLICACION: req.body.IDEN_PUBLICACION,
+      FECH_INICIO: req.body.FECH_INICIO,
+      FECH_TERMINO: req.body.FECH_TERMINO,
+      NUMR_PRECIO: req.body.NUMR_PRECIO,
+    }).save();
+    res.json({ error: false, data: entity.toJSON() });
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err });
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
+    }
+  }
+};
 
 /**
  * Actualiza una oferta.
@@ -65,58 +60,41 @@ function POST (req, res) {
  * @param {integer} req.body.NUMR_PRECIO - Precio de la oferta (opcional).
  * @return {json} Mensaje de éxito o error.
  */
-function PUT (req, res) {
-  new Model({IDEN_OFERTA: req.params.id})
-    .fetch({require: true})
-    .then(entity => {
-      entity.save({
-        IDEN_PUBLICACION: (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
-        FECH_INICIO:      (typeof req.body.FECH_INICIO === 'undefined') ? entity.get('FECH_INICIO') : req.body.FECH_INICIO,
-        FECH_TERMINO:     (typeof req.body.FECH_TERMINO === 'undefined') ? entity.get('FECH_TERMINO') : req.body.FECH_TERMINO,
-        NUMR_PRECIO:      (typeof req.body.NUMR_PRECIO === 'undefined') ? entity.get('NUMR_PRECIO') : req.body.NUMR_PRECIO
-      })
-        .then(() => {
-          res.json({error: false, data: {message: 'Entity successfully updated'}})
-        }).catch(Checkit.Error, err => {
-          res.status(400).json({error: true, data: err})
-        }).catch(err => {
-          res.status(500).json({error: true, data: {message: 'Internal error'}})
-          throw err
-        })
-    })
-    .catch(Model.NotFoundError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
-}
+export const PUT = async (req, res) => {
+  try {
+    const entity = await new Model({ IDEN_OFERTA: req.params.id }).fetch({ require: true });
+    await entity.save({
+      IDEN_PUBLICACION: (typeof req.body.IDEN_PUBLICACION === 'undefined') ? entity.get('IDEN_PUBLICACION') : req.body.IDEN_PUBLICACION,
+      FECH_INICIO: (typeof req.body.FECH_INICIO === 'undefined') ? entity.get('FECH_INICIO') : req.body.FECH_INICIO,
+      FECH_TERMINO: (typeof req.body.FECH_TERMINO === 'undefined') ? entity.get('FECH_TERMINO') : req.body.FECH_TERMINO,
+      NUMR_PRECIO: (typeof req.body.NUMR_PRECIO === 'undefined') ? entity.get('NUMR_PRECIO') : req.body.NUMR_PRECIO,
+    });
+    res.json({ error: false, data: { message: 'Entity successfully updated' } });
+  } catch (err) {
+    if (err instanceof Checkit.Error) {
+      res.status(400).json({ error: true, data: err });
+    } else if (err instanceof Model.NotFoundError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
+    }
+  }
+};
 
 /**
  * Elimina una oferta.
  * @param {integer} req.params.id - ID de oferta.
  * @return {json} Mensaje de éxito o error.
  */
-function DELETE (req, res) {
-  new Model({IDEN_OFERTA: req.params.id})
-    .destroy({require: true})
-    .then(() => {
-      res.json({error: false, data: {message: 'Entity successfully deleted'}})
-    })
-    .catch(Model.NoRowsDeletedError, () => {
-      res.status(404).json({error: true, data: {message: 'Entity not found'}})
-    })
-    .catch(err => {
-      res.status(500).json({error: true, data: {message: 'Internal error'}})
-      throw err
-    })
-}
-
-/* Se exportan los métodos */
-module.exports = {
-  GET,
-  POST,
-  PUT,
-  DELETE
-}
+export const DELETE = async (req, res) => {
+  try {
+    await new Model({ IDEN_OFERTA: req.params.id }).destroy({ require: true });
+    res.json({ error: false, data: { message: 'Entity successfully deleted' } });
+  } catch (err) {
+    if (err instanceof Model.NoRowsDeletedError) {
+      res.status(404).json({ error: true, data: { message: 'Entity not found' } });
+    } else {
+      res.status(500).json({ error: true, data: { message: 'Internal error' } });
+    }
+  }
+};

@@ -6,7 +6,6 @@ Template considerando buenas prácticas en el desarrollo de una API, las tecnolo
 
 * [Express 4](http://expressjs.com/es/)
 * Node 8x
-* Cors
 * Logger
 * PostgreSQL
 * Morgan (Logs diarios en archivos planos)
