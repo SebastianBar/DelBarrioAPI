@@ -4,10 +4,11 @@ const injection = {
   /**
    * Inyectar el atributo IDEN_USUARIO del usuario autenticado al payload entrante
    */
-  IDEN_USUARIO: () => (req) => {
+  IDEN_USUARIO: () => (req, _res, next) => {
     if (req.user) {
       req.body.IDEN_USUARIO = req.user.IDEN_USUARIO;
     }
+    next();
   },
   IDEN_EMPRENDEDOR: () => async (req, _res, next) => {
     if (req.user && req.user.rol.CODI_ROL === 102) {
