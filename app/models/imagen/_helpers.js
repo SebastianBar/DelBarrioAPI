@@ -49,7 +49,6 @@ export const deleteFile = (filePath) => {
 export const errorHandling = {
   EmprendedorUniqueConstraintError: (err) => {
     if (!err) return false;
-    const re = /^req_imagenes_iden_emprendedor_unique/;
-    return re.test(err.constraint);
+    return err.constraint.startsWith('req_imagenes_iden_emprendedor_unique');
   },
 };

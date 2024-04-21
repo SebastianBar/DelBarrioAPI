@@ -17,7 +17,7 @@ export const jwtOptions = {
 export const strategy = new passportJWT.Strategy(jwtOptions, (async (jwtPayload, next) => {
   try {
     const user = await new Model({ IDEN_USUARIO: jwtPayload.id }).fetch({ columns: ['IDEN_USUARIO', 'IDEN_ROL', 'EMAIL_USUARIO', 'FLAG_VIGENTE', 'FLAG_BAN'], withRelated: ['rol', 'rol.permisos'] });
-    if (user && user.attributes.FLAG_VIGENTE && !user.attributes.FLAG_BAN) {
+    if (user?.attributes.FLAG_VIGENTE && !user.attributes.FLAG_BAN) {
       next(null, user.toJSON());
     } else {
       next(null, false);

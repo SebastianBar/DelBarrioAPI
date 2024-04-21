@@ -88,7 +88,7 @@ const validations = {
 // Función de validación a utilizar en conjunto a rutValidation
 const Fn = {
   rutValidate: (fullRut) => {
-    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(fullRut)) return false;
+    if (!/^\d+[-|‐][0-9kK]$/.test(fullRut)) return false;
     const tmp = fullRut.split('-');
     let digv = tmp[1];
     const rut = tmp[0];
@@ -100,7 +100,7 @@ const Fn = {
     let S = 1;
     // eslint-disable-next-line
     for (; T; T = Math.floor(T / 10)) S = (S + T % 10 * (9 - M++ % 6)) % 11;
-    return S ? S - 1 : 'k';
+    return S ? `${S - 1}` : 'k';
   },
 };
 

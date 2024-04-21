@@ -40,63 +40,62 @@ export const POST = (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
       res.status(400).json({ error: true, data: err });
-    } else {
-      try {
-        // Validar atributos IDEN_PUBLICACION o IDEN_EMPRENDEDOR
-        const model = new Model({
-          IDEN_PUBLICACION: req.body.IDEN_PUBLICACION ? Number.parseInt(req.body.IDEN_PUBLICACION, 10) : undefined,
-          IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? Number.parseInt(req.body.IDEN_EMPRENDEDOR, 10) : undefined,
-        });
-        await validate(model);
-        if (!req.body.IDEN_PUBLICACION && !req.body.IDEN_EMPRENDEDOR) {
-          deleteFiles(req.files);
-          res.status(400).json({ error: true, data: { message: 'IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required' } });
-        } else if (!req.files.avatar && req.body.IDEN_EMPRENDEDOR) {
-          deleteFiles(req.files);
-          res.status(400).json({ error: true, data: { message: 'avatar is required for IDEN_EMPRENDEDOR' } });
-        } else if (req.files.avatar && !req.body.IDEN_EMPRENDEDOR) {
-          deleteFiles(req.files);
-          res.status(400).json({ error: true, data: { message: 'IDEN_EMPRENDEDOR is required for avatar uploading' } });
-        } else if (!req.files.gallery && req.body.IDEN_PUBLICACION) {
-          deleteFiles(req.files);
-          res.status(400).json({ error: true, data: { message: 'gallery is required for IDEN_PUBLICACION' } });
-        } else if (req.files.gallery && !req.body.IDEN_PUBLICACION) {
-          deleteFiles(req.files);
-          res.status(400).json({ error: true, data: { message: 'IDEN_PUBLICACION is required for gallery uploading' } });
-        } else {
-          const tempModelAttributes = [];
-          // Todo válido, fijar persistencia de archivos
-          if (req.files.avatar) {
-            req.files.avatar.forEach((file) => {
-              tempModelAttributes.push(
-                {
-                  IDEN_EMPRENDEDOR: req.body.IDEN_EMPRENDEDOR ? Number.parseInt(req.body.IDEN_EMPRENDEDOR, 10) : undefined,
-                  URL_IMAGEN: file.destination + file.filename,
-                },
-              );
-            });
-          } else if (req.files.gallery) {
-            req.files.gallery.forEach((file) => {
-              tempModelAttributes.push(
-                {
-                  IDEN_PUBLICACION: req.body.IDEN_PUBLICACION ? Number.parseInt(req.body.IDEN_PUBLICACION, 10) : undefined,
-                  URL_IMAGEN: file.destination + file.filename,
-                },
-              );
-            });
-          }
-          const collection = Collection.forge(tempModelAttributes);
+      return;
+    }
 
-          const entities = await collection.invokeThen('save');
-          res.status(200).json({ error: false, data: entities });
-        }
-      } catch (errDb) {
-        deleteFiles(req.files);
-        if (errorHandling.EmprendedorUniqueConstraintError(errDb)) {
-          res.status(400).json({ error: true, data: { message: 'IDEN_EMPRENDEDOR already has avatar' } });
-        } else {
-          res.status(500).json({ error: true, data: { message: 'Internal error' } });
-        }
+    try {
+      const { IDEN_PUBLICACION, IDEN_EMPRENDEDOR } = req.body;
+      const model = new Model({
+        IDEN_PUBLICACION: IDEN_PUBLICACION ? Number.parseInt(IDEN_PUBLICACION, 10) : undefined,
+        IDEN_EMPRENDEDOR: IDEN_EMPRENDEDOR ? Number.parseInt(IDEN_EMPRENDEDOR, 10) : undefined,
+      });
+
+      await validate(model);
+
+      const hasAvatar = req.files.avatar && req.files.avatar.length > 0;
+      const hasGallery = req.files.gallery && req.files.gallery.length > 0;
+
+      if (!IDEN_PUBLICACION && !IDEN_EMPRENDEDOR) {
+        throw new Error('IDEN_EMPRENDEDOR or IDEN_PUBLICACION is required');
+      } else if (IDEN_EMPRENDEDOR && !hasAvatar) {
+        throw new Error('avatar is required for IDEN_EMPRENDEDOR');
+      } else if (!IDEN_EMPRENDEDOR && hasAvatar) {
+        throw new Error('IDEN_EMPRENDEDOR is required for avatar uploading');
+      } else if (IDEN_PUBLICACION && !hasGallery) {
+        throw new Error('gallery is required for IDEN_PUBLICACION');
+      } else if (!IDEN_PUBLICACION && hasGallery) {
+        throw new Error('IDEN_PUBLICACION is required for gallery uploading');
+      }
+
+      const tempModelAttributes = [];
+
+      if (hasAvatar) {
+        req.files.avatar.forEach((file) => {
+          tempModelAttributes.push({
+            IDEN_EMPRENDEDOR: Number.parseInt(IDEN_EMPRENDEDOR, 10),
+            URL_IMAGEN: file.destination + file.filename,
+          });
+        });
+      } else if (hasGallery) {
+        req.files.gallery.forEach((file) => {
+          tempModelAttributes.push({
+            IDEN_PUBLICACION: Number.parseInt(IDEN_PUBLICACION, 10),
+            URL_IMAGEN: file.destination + file.filename,
+          });
+        });
+      }
+
+      const collection = Collection.forge(tempModelAttributes);
+      const entities = await collection.invokeThen('save');
+
+      res.json({ error: false, data: entities });
+    } catch (errDb) {
+      deleteFiles(req.files);
+
+      if (errorHandling.EmprendedorUniqueConstraintError(errDb)) {
+        res.status(400).json({ error: true, data: { message: 'IDEN_EMPRENDEDOR already has avatar' } });
+      } else {
+        res.status(500).json({ error: true, data: { message: 'Internal error' } });
       }
     }
   });
